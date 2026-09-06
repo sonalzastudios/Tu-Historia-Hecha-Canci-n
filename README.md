@@ -45,3 +45,6 @@ Ejecutar `supabase-schema.sql` en el SQL Editor del proyecto Supabase. Las tabla
 
 ## Pago
 V8 **todavía no cobra**. Registra la orden como `pending_payment`. El siguiente paso de producción es conectar el checkout y confirmar el pago por webhook antes de marcar una orden como pagada.
+
+## V9 — Genre artwork
+The genre showcase now includes custom lightweight SVG artwork for Corrido, Banda, Norteño, Cumbia, Mariachi and Más estilos. The art is decorative, responsive and integrated into each clickable genre card without reducing text readability.
