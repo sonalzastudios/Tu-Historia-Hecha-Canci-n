@@ -340,7 +340,9 @@
       '.hero-copy', '.hero-media', '.trust-strip-grid > div', '.quick-head', '.quick-card',
       '.manifest-kicker', '.manifest-copy', '.manifest-points article', '.latin-copy', '.latin-values article',
       '.genre-heading-main', '.genre-heading-side', '.genre-tile', '.service-card', '.pricing-tools',
-      '.process-intro', '.process-list article', '.delivery-card-pro', '.final-cta-inner', '.footer-panel'
+      '.process-intro', '.process-list article', '.delivery-card-pro', '.final-cta-inner', '.footer-panel',
+      '.flow-intro-bar', '.creative-rail', '.question-shell', '.order-hero', '.summary-card',
+      '.business-intro', '.business-panel', '.business-form', '.thanks-card'
     ];
     const nodes = [...new Set(selectors.flatMap(sel => [...document.querySelectorAll(sel)]))].filter(Boolean);
     if (!nodes.length) return;
@@ -371,7 +373,6 @@
       window.addEventListener('resize', syncSticky);
       syncSticky();
     }
-    setupRevealAnimations();
     const menuToggle = document.getElementById('menuToggle');
     const mobileNav = document.getElementById('mobileNav');
     if (menuToggle && mobileNav) {
@@ -877,5 +878,6 @@
     setupExitIntent();
   }
 
+  setupRevealAnimations();
   setupLocalePicker();
 })();
