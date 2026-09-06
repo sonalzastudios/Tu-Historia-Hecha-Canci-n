@@ -47,7 +47,17 @@
     'Canción personalizada':'Custom Song',
     'Registrando tu pedido…':'Registering your order…',
     'No pudimos registrar el pedido.':'We could not register the order.',
-    'No pudimos enviar la solicitud.':'We could not send the request.'
+    'No pudimos enviar la solicitud.':'We could not send the request.',
+    'Custom cover':'Custom cover',
+    'Portada personalizada para tu canción. Puedes escribir la idea visual o subir una foto de referencia.':'A custom cover for your song. You can describe the visual idea or upload a reference photo.',
+    'Escribe qué te gustaría ver en tu custom cover':'Write what you would like to see on your custom cover',
+    'Puedes describir personas, colores, estilo, fondo, texto o la emoción que quieres transmitir.':'You can describe people, colors, style, background, text, or the emotion you want to convey.',
+    'Upload foto you would like to use as cover':'Upload photo you would like to use as cover',
+    'La portada se usará en tamaño cuadrado. Trata de dejar visible lo más importante.':'The cover will be used in a square format. Try to keep the most important part visible.',
+    'Dinos qué sí o sí debe verse una vez que recortemos la imagen':'Tell us what absolutely must remain visible once we crop the image',
+    'Esto nos ayuda a no cortar justo lo importante cuando adaptemos la imagen al formato cuadrado.':'This helps us avoid cropping out what matters when we adapt the image to the square format.',
+    'Ejemplo: Un retrato elegante de mi papá con sombrero, tonos dorados, su nombre al frente y una vibra emotiva.':'Example: An elegant portrait of my dad with a hat, golden tones, his name on the front, and an emotional vibe.',
+    'Ejemplo: Que se vea completa la cara, el sombrero y el nombre Derek.':'Example: Make sure the full face, the hat, and the name Derek remain visible.'
   });
 
 
@@ -281,7 +291,10 @@
     frase: '',
     emocion: '',
     email: '',
-    telefono: ''
+    telefono: '',
+    coverPrompt: '',
+    coverCropMustShow: '',
+    coverImageName: ''
   };
 
   const load = () => {
@@ -725,6 +738,55 @@
     const checkoutBtn = document.getElementById('checkoutBtn');
     const addons = [...document.querySelectorAll('.addon')];
 
+    function bindCoverAddonInputs() {
+      const premiumToggle = document.querySelector('.addon[data-key="premium"]');
+      const detail = document.getElementById('premiumCoverOptions');
+      const promptInput = document.getElementById('coverPrompt');
+      const cropInput = document.getElementById('coverCropMustShow');
+      const fileInput = document.getElementById('coverFile');
+      const fileName = document.getElementById('coverFileName');
+      const previewWrap = document.getElementById('coverPreviewWrap');
+      const previewImage = document.getElementById('coverPreviewImage');
+      if (!premiumToggle || !detail) return;
+
+      if (promptInput) {
+        promptInput.value = data.coverPrompt || '';
+        promptInput.addEventListener('input', () => { data.coverPrompt = promptInput.value.trim(); save(data); });
+      }
+      if (cropInput) {
+        cropInput.value = data.coverCropMustShow || '';
+        cropInput.addEventListener('input', () => { data.coverCropMustShow = cropInput.value.trim(); save(data); });
+      }
+      if (fileInput) {
+        fileInput.addEventListener('change', () => {
+          const file = fileInput.files && fileInput.files[0];
+          if (!file) {
+            data.coverImageName = '';
+            save(data);
+            if (fileName) { fileName.hidden = true; fileName.textContent = ''; }
+            if (previewWrap) previewWrap.hidden = true;
+            if (previewImage) previewImage.removeAttribute('src');
+            return;
+          }
+          data.coverImageName = file.name;
+          save(data);
+          if (fileName) { fileName.hidden = false; fileName.textContent = file.name; }
+          if (previewWrap && previewImage && file.type && file.type.startsWith('image/')) {
+            const objectUrl = URL.createObjectURL(file);
+            previewImage.src = objectUrl;
+            previewWrap.hidden = false;
+          }
+        });
+        if (data.coverImageName && fileName) {
+          fileName.hidden = false;
+          fileName.textContent = data.coverImageName;
+        }
+      }
+      const sync = () => { detail.hidden = !premiumToggle.checked; };
+      premiumToggle.addEventListener('change', sync);
+      sync();
+    }
+
     const updateTotal = () => {
       const productKey = data.product === 'corrido' ? 'corrido' : 'song';
       const base = PRICING[productKey][currentCurrency];
@@ -754,6 +816,7 @@
       if (checkoutBtn) checkoutBtn.textContent = `${currentLanguage === 'en' ? 'Submit order' : 'Enviar pedido'} · ${formatMoney(total)} →`;
     };
 
+    bindCoverAddonInputs();
     addons.forEach(a => a.addEventListener('change', updateTotal));
     window.addEventListener('sonalza:currencychange', updateTotal);
     checkoutBtn?.addEventListener('click', async () => {

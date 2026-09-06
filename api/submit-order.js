@@ -62,7 +62,8 @@ module.exports = async function handler(req, res) {
       brief: {
         paraQuien: clean(draft.paraQuien, 100), nombre: clean(draft.nombre, 100), ocasion: clean(draft.ocasion, 120),
         genero: clean(draft.genero, 120), voz: clean(draft.voz, 80), idioma: clean(draft.idioma, 80),
-        cualidades: clean(draft.cualidades), recuerdo: clean(draft.recuerdo), frase: clean(draft.frase), emocion: clean(draft.emocion)
+        cualidades: clean(draft.cualidades), recuerdo: clean(draft.recuerdo), frase: clean(draft.frase), emocion: clean(draft.emocion),
+        customCoverPrompt: clean(draft.coverPrompt, 1500), customCoverMustShow: clean(draft.coverCropMustShow, 800), customCoverImageName: clean(draft.coverImageName, 180)
       },
       source: {
         page: clean(body.page, 300), referrer: clean(body.referrer, 500), utm: body.utm || {}
@@ -92,9 +93,11 @@ module.exports = async function handler(req, res) {
       const rows = [
         ['Pedido', orderId], ['Región seleccionada', region], ['País detectado', detectedCountry || 'No disponible'], ['Verificación regional', regionMismatch ? 'REQUERIDA AL PAGAR' : 'Sin discrepancia'], ['Idioma del sitio', language.toUpperCase()], ['Producto', product === 'corrido' ? 'Corrido de Tu Vida' : 'Canción Personalizada'], ['Total', money(total,currency)],
         ['Cliente', draft.nombre], ['Para quién', draft.paraQuien], ['Ocasión', draft.ocasion], ['Género', draft.genero], ['Voz', draft.voz], ['Idioma', draft.idioma],
-        ['Email', email], ['Teléfono', draft.telefono || '—'], ['Extras', addons.join(', ') || 'Ninguno']
+        ['Email', email], ['Teléfono', draft.telefono || '—'], ['Extras', addons.join(', ') || 'Ninguno'],
+        ['Custom cover idea', draft.coverPrompt || '—'], ['Must remain visible after square crop', draft.coverCropMustShow || '—'], ['Reference photo', draft.coverImageName || '—']
       ];
-      const html = `<div style="font-family:Arial,sans-serif;color:#071a33;max-width:700px"><h1>Nuevo pedido SONALZA</h1><p><b>${esc(orderId)}</b> · ${esc(money(total,currency))}</p><table style="border-collapse:collapse;width:100%">${rows.map(([a,b])=>`<tr><td style="padding:8px;border-bottom:1px solid #eee;color:#667">${esc(a)}</td><td style="padding:8px;border-bottom:1px solid #eee"><b>${esc(b)}</b></td></tr>`).join('')}</table><h2>Historia</h2><p><b>Cualidades:</b><br>${esc(draft.cualidades)}</p><p><b>Recuerdo:</b><br>${esc(draft.recuerdo)}</p><p><b>Frase:</b><br>${esc(draft.frase || '—')}</p><p><b>Mensaje:</b><br>${esc(draft.emocion)}</p></div>`;
+      const customCoverHtml = addons.includes('premium') ? `<h2>Custom cover</h2><p><b>Idea visual:</b><br>${esc(draft.coverPrompt || '—')}</p><p><b>Qué debe verse tras el recorte cuadrado:</b><br>${esc(draft.coverCropMustShow || '—')}</p><p><b>Foto de referencia:</b><br>${esc(draft.coverImageName || '—')}</p>` : '';
+      const html = `<div style="font-family:Arial,sans-serif;color:#071a33;max-width:700px"><h1>Nuevo pedido SONALZA</h1><p><b>${esc(orderId)}</b> · ${esc(money(total,currency))}</p><table style="border-collapse:collapse;width:100%">${rows.map(([a,b])=>`<tr><td style="padding:8px;border-bottom:1px solid #eee;color:#667">${esc(a)}</td><td style="padding:8px;border-bottom:1px solid #eee"><b>${esc(b)}</b></td></tr>`).join('')}</table><h2>Historia</h2><p><b>Cualidades:</b><br>${esc(draft.cualidades)}</p><p><b>Recuerdo:</b><br>${esc(draft.recuerdo)}</p><p><b>Frase:</b><br>${esc(draft.frase || '—')}</p><p><b>Mensaje:</b><br>${esc(draft.emocion)}</p>${customCoverHtml}</div>`;
       const r = await fetch('https://api.resend.com/emails', {
         method:'POST',
         headers:{Authorization:`Bearer ${process.env.RESEND_API_KEY}`,'Content-Type':'application/json'},

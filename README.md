@@ -80,3 +80,7 @@ Genre cards now use editorial photo artwork derived from the approved SONALZA vi
 - Corrección opcional de dominios de correo comunes con un clic.
 - Formateo automático de teléfono al escribir, por ejemplo `(555) 555-5555`.
 - Pulido adicional de campos de contacto en móvil.
+
+
+## V16
+- Added Custom Cover addon inputs on checkout: visual prompt, optional reference image picker, and square-crop guidance notes.
