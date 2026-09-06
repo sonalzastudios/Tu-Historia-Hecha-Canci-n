@@ -307,3 +307,16 @@
 
   setupCurrencySwitch();
 })();
+
+// V6: quiet mobile conversion bar — appears only after the visitor has engaged.
+(function(){
+  const cta=document.getElementById('mobileCta');
+  if(!cta) return;
+  const update=()=>{
+    const shouldShow=window.innerWidth<=680 && window.scrollY>520;
+    cta.classList.toggle('visible',shouldShow);
+  };
+  window.addEventListener('scroll',update,{passive:true});
+  window.addEventListener('resize',update);
+  update();
+})();
