@@ -4,6 +4,8 @@ create table if not exists public.orders (
   created_at timestamptz not null default now(),
   status text not null default 'pending_payment',
   product text not null,
+  region text not null default 'US',
+  language text not null default 'en',
   currency text not null,
   total numeric not null,
   addons jsonb not null default '[]'::jsonb,
@@ -25,7 +27,9 @@ create table if not exists public.business_leads (
   project_type text,
   budget text,
   message text,
-  currency text
+  currency text,
+  region text not null default 'US',
+  language text not null default 'en'
 );
 
 create table if not exists public.exit_feedback (
@@ -33,9 +37,21 @@ create table if not exists public.exit_feedback (
   created_at timestamptz not null default now(),
   reason text,
   page text,
-  currency text
+  currency text,
+  region text,
+  language text
 );
 
 alter table public.orders enable row level security;
 alter table public.business_leads enable row level security;
 alter table public.exit_feedback enable row level security;
+
+-- If upgrading an existing database, run these once:
+alter table public.orders add column if not exists region text not null default 'US';
+alter table public.orders add column if not exists language text not null default 'en';
+
+alter table public.business_leads add column if not exists region text not null default 'US';
+alter table public.business_leads add column if not exists language text not null default 'en';
+
+alter table public.exit_feedback add column if not exists region text;
+alter table public.exit_feedback add column if not exists language text;

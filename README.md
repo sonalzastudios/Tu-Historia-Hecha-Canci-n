@@ -1,4 +1,5 @@
-# SONALZA Website V8
+# SONALZA Website V12
+
 
 V8 refina la experiencia con un enfoque **latino premium, didáctico y mobile-first**. Mantiene la identidad azul marino + naranja de SONALZA, pero evita clichés visuales y hace que el sitio se sienta diseñado a propósito.
 
@@ -54,3 +55,13 @@ V10: upgraded genre cards with richer editorial vector artwork and stronger visu
 
 ## V11
 Genre cards now use editorial photo artwork derived from the approved SONALZA visual concept, with live HTML text and responsive masking.
+
+
+## V12 · Mercado e idioma
+- Selector único de país + idioma.
+- Estados Unidos => USD; México => MXN. La moneda ya no se puede cambiar independientemente.
+- Detección inicial mediante `/api/geo` en Vercel.
+- Defaults: US => English, MX => Español. El usuario puede cambiar el idioma sin cambiar el país.
+- Precios de lanzamiento: US $49 / $249 / $499; MX $599 / $1,999 / $4,999.
+- Precios de referencia: US $79 / $349 / $699; MX $999 / $2,999 / $7,999.
+- El backend recalcula la moneda según el país, evitando que el frontend pueda enviar una moneda distinta.

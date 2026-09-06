@@ -1,10 +1,10 @@
 const PRICING = {
-  song: { USD: 39, MXN: 659 },
-  corrido: { USD: 199, MXN: 3359 },
-  premium: { USD: 29, MXN: 549 },
-  rush: { USD: 19, MXN: 349 },
-  video: { USD: 29, MXN: 549 },
-  second: { USD: 25, MXN: 449 }
+  song: { USD: 49, MXN: 599 },
+  corrido: { USD: 249, MXN: 1999 },
+  premium: { USD: 29, MXN: 299 },
+  rush: { USD: 19, MXN: 199 },
+  video: { USD: 29, MXN: 299 },
+  second: { USD: 25, MXN: 249 }
 };
 
 function clean(value, max = 5000) {
@@ -22,7 +22,9 @@ module.exports = async function handler(req, res) {
   try {
     const body = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : (req.body || {});
     const draft = body.draft || {};
-    const currency = body.currency === 'MXN' ? 'MXN' : 'USD';
+    const region = body.region === 'MX' ? 'MX' : 'US';
+    const language = body.language === 'es' ? 'es' : 'en';
+    const currency = region === 'MX' ? 'MXN' : 'USD';
     const product = draft.product === 'corrido' ? 'corrido' : 'song';
     const allowedAddons = ['premium','rush','video','second'];
     const addons = Array.isArray(body.addons) ? body.addons.filter(x => allowedAddons.includes(x)) : [];
@@ -39,6 +41,8 @@ module.exports = async function handler(req, res) {
       created_at: createdAt,
       status: 'pending_payment',
       product,
+      region,
+      language,
       currency,
       total,
       addons,
@@ -75,7 +79,7 @@ module.exports = async function handler(req, res) {
       const adminEmail = process.env.SONALZA_ORDERS_EMAIL || 'sonalzastudios@gmail.com';
       const from = process.env.SONALZA_FROM_EMAIL || 'SONALZA Orders <orders@sonalza.com>';
       const rows = [
-        ['Pedido', orderId], ['Producto', product === 'corrido' ? 'Corrido de Tu Vida' : 'Canción Personalizada'], ['Total', money(total,currency)],
+        ['Pedido', orderId], ['Región', region], ['Idioma del sitio', language.toUpperCase()], ['Producto', product === 'corrido' ? 'Corrido de Tu Vida' : 'Canción Personalizada'], ['Total', money(total,currency)],
         ['Cliente', draft.nombre], ['Para quién', draft.paraQuien], ['Ocasión', draft.ocasion], ['Género', draft.genero], ['Voz', draft.voz], ['Idioma', draft.idioma],
         ['Email', email], ['Teléfono', draft.telefono || '—'], ['Extras', addons.join(', ') || 'Ninguno']
       ];
