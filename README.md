@@ -1,25 +1,31 @@
-# SONALZA STUDIOS — Conversion Funnel Prototype
+# SONALZA STUDIOS — Prototipo web en español
 
-Static, dependency-free website prepared for GitHub -> Vercel deployment.
+Sitio estático y responsive preparado para el flujo Código -> GitHub -> Vercel.
 
-## Files
-- `index.html` — home page
-- `create.html` — 8-step song intake funnel
-- `order.html` — order review + upsells
-- `styles.css` — responsive visual system
-- `app.js` — form state, validation, order total and exit-intent survey
-- `vercel.json` — Vercel static-site config
+## Idioma
+- La interfaz pública está 100% en español.
+- Español será el idioma predeterminado del sitio.
+- La opción para cambiar la interfaz a inglés se agregará en una etapa posterior.
+- El formulario sí permite elegir el idioma de la canción: Español, Inglés o Bilingüe.
 
-## Run locally
-Open `index.html` in a browser, or use any static server.
+## Archivos
+- `index.html` — página principal
+- `create.html` — formulario de 8 pasos
+- `order.html` — resumen del pedido y extras
+- `styles.css` — diseño responsive
+- `app.js` — estado del formulario, validación, total y encuesta de abandono
+- `vercel.json` — configuración básica de Vercel
 
-## Current status
-This is a front-end MVP. Payment, email delivery, analytics, database storage and admin order workflow are intentionally not connected yet.
+## Estado actual
+Front-end MVP. Todavía no están conectados pagos, base de datos, email, analítica ni panel administrativo.
 
-## Suggested next integrations
-1. Stripe or another payment processor
-2. Supabase / Neon / Vercel Postgres for orders
-3. Resend for transactional email
-4. Vercel Analytics + Google Analytics / Ads conversion events
-5. Private admin order dashboard
-6. Audio samples and real customer reaction content
+## Próximas integraciones
+1. Publicar en GitHub
+2. Desplegar en Vercel
+3. Revisar versión móvil y desktop
+4. Checkout
+5. Base de datos de órdenes
+6. Emails transaccionales
+7. Analytics y conversiones
+8. Conectar `sonalza.com`
+9. Agregar selector Español / English
