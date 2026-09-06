@@ -2,6 +2,49 @@
   const STORAGE_KEY = 'sonalzaSongDraftV2';
   const FEEDBACK_KEY = 'sonalzaExitFeedbackV2';
   const page = document.body.dataset.page;
+  const CURRENCY_KEY = 'sonalzaCurrencyV3';
+  const PRICING = {
+    song: { USD: 59, MXN: 1099 },
+    premium: { USD: 29, MXN: 549 },
+    rush: { USD: 19, MXN: 349 },
+    video: { USD: 29, MXN: 549 },
+    second: { USD: 25, MXN: 449 }
+  };
+
+  let currentCurrency = localStorage.getItem(CURRENCY_KEY) === 'MXN' ? 'MXN' : 'USD';
+
+  const formatMoney = (amount, currency = currentCurrency) => {
+    const value = Number(amount || 0).toLocaleString(currency === 'MXN' ? 'es-MX' : 'en-US', { maximumFractionDigits: 0 });
+    return currency === 'MXN' ? `MX$${value}` : `US$${value}`;
+  };
+
+  function applyCurrencyDisplay() {
+    document.documentElement.dataset.currency = currentCurrency;
+    document.querySelectorAll('.currency-btn').forEach(btn => {
+      const active = btn.dataset.currency === currentCurrency;
+      btn.classList.toggle('active', active);
+      btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+    });
+    document.querySelectorAll('.price-value').forEach(el => {
+      const raw = currentCurrency === 'MXN' ? el.dataset.mxn : el.dataset.usd;
+      if (raw) el.textContent = formatMoney(raw);
+    });
+    document.querySelectorAll('.price-code').forEach(el => { el.textContent = currentCurrency; });
+  }
+
+  function setupCurrencySwitch() {
+    document.querySelectorAll('.currency-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const next = btn.dataset.currency === 'MXN' ? 'MXN' : 'USD';
+        if (next === currentCurrency) return;
+        currentCurrency = next;
+        localStorage.setItem(CURRENCY_KEY, currentCurrency);
+        applyCurrencyDisplay();
+        window.dispatchEvent(new CustomEvent('sonalza:currencychange', { detail: { currency: currentCurrency } }));
+      });
+    });
+    applyCurrencyDisplay();
+  }
 
   const defaultData = {
     paraQuien: '',
@@ -214,15 +257,35 @@
     }
 
     const totalEl = document.getElementById('total');
+    const basePriceEl = document.getElementById('basePrice');
+    const currencyLabel = document.getElementById('orderCurrencyLabel');
+    const checkoutBtn = document.getElementById('checkoutBtn');
     const addons = [...document.querySelectorAll('.addon')];
+
     const updateTotal = () => {
-      const total = 59 + addons.filter(x => x.checked).reduce((sum, x) => sum + Number(x.dataset.price), 0);
-      totalEl.textContent = `$${total}`;
+      const base = PRICING.song[currentCurrency];
+      let total = base;
+      if (basePriceEl) basePriceEl.textContent = formatMoney(base);
+      addons.forEach(addon => {
+        const key = addon.dataset.key;
+        const price = PRICING[key][currentCurrency];
+        const label = addon.closest('.upsell')?.querySelector('.addon-price');
+        if (label) label.textContent = `+${formatMoney(price)}`;
+        if (addon.checked) total += price;
+      });
+      if (totalEl) totalEl.textContent = formatMoney(total);
+      if (currencyLabel) currencyLabel.textContent = currentCurrency;
+      if (checkoutBtn) checkoutBtn.textContent = `Continuar al pago seguro · ${formatMoney(total)} →`;
     };
+
     addons.forEach(a => a.addEventListener('change', updateTotal));
-    document.getElementById('checkoutBtn')?.addEventListener('click', () => {
-      alert('El checkout seguro será la siguiente integración. Esta versión todavía es un prototipo y no realizará ningún cargo.');
+    window.addEventListener('sonalza:currencychange', updateTotal);
+    checkoutBtn?.addEventListener('click', () => {
+      alert(`El checkout seguro será la siguiente integración. La orden está configurada en ${currentCurrency}; esta versión de prueba no realizará ningún cargo.`);
     });
+    updateTotal();
     setupExitIntent();
   }
+
+  setupCurrencySwitch();
 })();

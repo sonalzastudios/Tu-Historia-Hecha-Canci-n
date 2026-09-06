@@ -1,25 +1,14 @@
-# SONALZA STUDIOS — Website V2
+# SONALZA Website V3
 
-Versión en español con identidad visual propia de SONALZA.
+Sitio estático responsive en español para SONALZA STUDIOS.
 
-## Archivos principales
-- `index.html` — landing page
-- `create.html` — brief creativo de 8 pasos
-- `order.html` — revisión del pedido y extras
-- `styles.css` — identidad visual y responsive
-- `app.js` — lógica del funnel y almacenamiento local
-- `assets/` — logotipos e imágenes proporcionadas por SONALZA
-- `vercel.json` — configuración para Vercel
-
-## Estado
-Prototipo funcional de frontend. No procesa pagos ni envía pedidos todavía.
-
-## Dirección visual
-- Azul marino profundo
-- Naranja SONALZA
-- Blanco
-- Amarillo/ámbar como acento
-- Composición inspirada en estudio musical, no en sitios de regalos
+## Cambios V3
+- Dirección visual más premium y limpia.
+- Hero reescrito con posicionamiento positivo.
+- Imagen de estudio corregida con `object-position` hacia el micrófono para evitar el texto del banner.
+- Selector persistente de moneda USD / MXN.
+- Precios fijos por moneda en homepage y resumen del pedido.
+- El selector de moneda se mantiene entre páginas con `localStorage`.
 
 ## Publicación
-Subir el contenido de esta carpeta al repositorio de GitHub `sonalza-web`. Vercel puede desplegar directamente desde ese repositorio.
+Subir el contenido de esta carpeta al mismo repositorio `sonalza-web` y permitir que Vercel haga el redeploy.

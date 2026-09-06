@@ -12,7 +12,13 @@
   <header class="flow-header">
     <div class="flow-header-inner">
       <a class="brand-lockup" href="index.html"><img src="assets/sonalza-mark.png" alt="" class="brand-mark"><span class="brand-word"><strong>SONALZA</strong><small>STUDIOS</small></span></a>
-      <a href="create.html" class="flow-exit">← Editar mi brief</a>
+      <div class="flow-head-actions">
+        <div class="currency-switch" role="group" aria-label="Elegir moneda">
+          <button type="button" class="currency-btn" data-currency="USD">USD</button>
+          <button type="button" class="currency-btn" data-currency="MXN">MXN</button>
+        </div>
+        <a href="create.html" class="flow-exit">← Editar mi brief</a>
+      </div>
     </div>
   </header>
 
@@ -34,13 +40,14 @@
       <section class="summary-card checkout-card">
         <div class="card-cap"><span>ORDEN / 02</span><span>PERSONALIZA</span></div>
         <h2>Tu pedido</h2>
-        <div class="summary-row base-row"><span>Canción personalizada</span><strong>$59</strong></div>
-        <label class="upsell"><input type="checkbox" class="addon" data-price="29"><span><strong>Recuerdo Premium <em>+$29</em></strong><small>Letra diseñada + tarjeta con QR + portada personalizada.</small></span></label>
-        <label class="upsell"><input type="checkbox" class="addon" data-price="19"><span><strong>Entrega prioritaria <em>+$19</em></strong><small>Tu pedido entra a la fila de producción prioritaria.</small></span></label>
-        <label class="upsell"><input type="checkbox" class="addon" data-price="29"><span><strong>Video vertical con letra <em>+$29</em></strong><small>Preparado para Reels, TikTok y Shorts.</small></span></label>
-        <label class="upsell"><input type="checkbox" class="addon" data-price="25"><span><strong>Segunda versión <em>+$25</em></strong><small>La misma historia con una segunda dirección musical.</small></span></label>
-        <div class="summary-row total-row"><span>Total</span><strong id="total">$59</strong></div>
-        <div class="notice"><strong>Checkout todavía no activado.</strong> Esta V2 es para aprobar diseño y funnel antes de conectar pagos y automatizaciones.</div>
+        <div class="summary-row base-row"><span>Canción personalizada</span><strong id="basePrice">US$59</strong></div>
+        <label class="upsell"><input type="checkbox" class="addon" data-key="premium"><span><strong>Recuerdo Premium <em class="addon-price">+US$29</em></strong><small>Letra diseñada + tarjeta con QR + portada personalizada.</small></span></label>
+        <label class="upsell"><input type="checkbox" class="addon" data-key="rush"><span><strong>Entrega prioritaria <em class="addon-price">+US$19</em></strong><small>Tu pedido entra a la fila de producción prioritaria.</small></span></label>
+        <label class="upsell"><input type="checkbox" class="addon" data-key="video"><span><strong>Video vertical con letra <em class="addon-price">+US$29</em></strong><small>Preparado para Reels, TikTok y Shorts.</small></span></label>
+        <label class="upsell"><input type="checkbox" class="addon" data-key="second"><span><strong>Segunda versión <em class="addon-price">+US$25</em></strong><small>La misma historia con una segunda dirección musical.</small></span></label>
+        <div class="summary-row total-row"><span>Total</span><strong id="total">US$59</strong></div>
+        <div class="currency-order-note"><span>Moneda del pedido</span><strong id="orderCurrencyLabel">USD</strong></div>
+        <div class="notice"><strong>Checkout todavía no activado.</strong> Esta versión es para aprobar experiencia, precios y funnel antes de conectar el procesador de pagos.</div>
         <button class="btn btn-primary full btn-xl" id="checkoutBtn">Continuar al pago seguro →</button>
       </section>
     </div>

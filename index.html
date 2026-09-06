@@ -8,7 +8,7 @@
   <meta name="description" content="SONALZA STUDIOS transforma historias reales en canciones personalizadas con identidad latina: corrido, banda, norteño, cumbia, mariachi y más.">
   <link rel="stylesheet" href="styles.css">
 </head>
-<body class="site">
+<body class="site" data-page="home">
 <header class="site-header">
   <div class="container nav">
     <a class="brand-lockup" href="index.html" aria-label="SONALZA STUDIOS, inicio">
@@ -20,8 +20,14 @@
       <a href="#estilos">Estilos</a>
       <a href="#servicios">Servicios</a>
       <a href="#proceso">Cómo funciona</a>
-      <a class="btn btn-primary btn-nav" href="create.html">Crear mi canción</a>
     </nav>
+    <div class="nav-actions">
+      <div class="currency-switch" role="group" aria-label="Elegir moneda">
+        <button type="button" class="currency-btn" data-currency="USD">USD</button>
+        <button type="button" class="currency-btn" data-currency="MXN">MXN</button>
+      </div>
+      <a class="btn btn-primary btn-nav" href="create.html">Crear mi canción</a>
+    </div>
   </div>
 </header>
 
@@ -32,26 +38,27 @@
     <div class="hero-angle hero-angle-two" aria-hidden="true"></div>
     <div class="container hero-v2-grid">
       <div class="hero-copy">
-        <div class="eyebrow light">ESTUDIO CREATIVO DE MÚSICA PERSONALIZADA</div>
-        <h1>Tu historia no necesita una canción genérica. <span>Necesita la suya.</span></h1>
-        <p>Cuéntanos lo que pasó, lo que sientes y lo que nunca quieres olvidar. SONALZA lo convierte en una canción hecha alrededor de tu historia y de tu cultura musical.</p>
+        <div class="eyebrow light">ESTUDIO DE MÚSICA PERSONALIZADA</div>
+        <h1>Tu historia, convertida en una canción <span>que solo puede ser tuya.</span></h1>
+        <p>Nombres, recuerdos, frases, lugares y momentos reales. En SONALZA construimos la letra y la dirección musical alrededor de lo que de verdad importa en tu historia.</p>
         <div class="cta-row">
           <a class="btn btn-primary btn-xl" href="create.html">Crear mi canción <span>→</span></a>
           <a class="text-link" href="#estilos">Explorar estilos <span>↘</span></a>
         </div>
         <div class="hero-proof" aria-label="Características principales">
-          <div><strong>01</strong><span>Historia real</span></div>
-          <div><strong>02</strong><span>Estilo elegido por ti</span></div>
-          <div><strong>03</strong><span>Hecha para una sola persona</span></div>
+          <div><strong>01</strong><span>Brief creativo guiado</span></div>
+          <div><strong>02</strong><span>Dirección musical a tu medida</span></div>
+          <div><strong>03</strong><span>1 revisión incluida</span></div>
         </div>
       </div>
 
       <div class="hero-media" aria-label="Estudio de grabación SONALZA">
-        <div class="studio-crop"></div>
-        <div class="media-topline"><span></span> SONALZA SESSION</div>
+        <img class="studio-crop" src="assets/studio-hero.png" alt="Micrófono y consola de un estudio de grabación SONALZA">
+        <div class="studio-shade" aria-hidden="true"></div>
+        <div class="media-topline"><span></span> PRODUCCIÓN PERSONALIZADA</div>
         <div class="media-card">
           <img src="assets/sonalza-mark.png" alt="Marca SONALZA" class="media-mark">
-          <div><small>AHORA CREANDO</small><strong>Tu historia. Tu canción.</strong></div>
+          <div><small>SONALZA STUDIOS</small><strong>Dirección creativa + producción musical</strong></div>
         </div>
         <div class="wave-bars" aria-hidden="true">
           <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
@@ -117,7 +124,7 @@
           <div class="service-tag">PARA REGALAR</div>
           <h3>Canción Personalizada</h3>
           <p class="service-desc">Cumpleaños, aniversario, agradecimiento, amor, amistad, familia o simplemente porque sí.</p>
-          <div class="service-price"><small>DESDE</small><strong>$59</strong></div>
+          <div class="service-price"><small>DESDE</small><strong class="price-value" data-usd="59" data-mxn="1099">US$59</strong><span class="price-code">USD</span></div>
           <ul><li>Canción completa personalizada</li><li>Género, voz e idioma</li><li>Brief guiado de tu historia</li><li>1 revisión incluida</li></ul>
           <a href="create.html" class="btn btn-primary full">Comenzar mi canción →</a>
         </article>
@@ -125,7 +132,7 @@
           <div class="service-tag">HISTORIA DE VIDA</div>
           <h3>Corrido de Tu Vida</h3>
           <p class="service-desc">Una narrativa más profunda para contar trayectoria, raíces, familia, sacrificios y legado.</p>
-          <div class="service-price"><small>DESDE</small><strong>$249</strong></div>
+          <div class="service-price"><small>DESDE</small><strong class="price-value" data-usd="249" data-mxn="4499">US$249</strong><span class="price-code">USD</span></div>
           <ul><li>Brief narrativo ampliado</li><li>Dirección regional mexicana</li><li>Mayor profundidad en la letra</li><li>Proceso premium</li></ul>
           <a href="create.html" class="btn btn-ghost full">Quiero contar mi historia →</a>
         </article>
@@ -133,12 +140,19 @@
           <div class="service-tag">PARA NEGOCIOS</div>
           <h3>Jingle & Brand Music</h3>
           <p class="service-desc">Hooks, jingles y piezas musicales para marcas, productos, anuncios y contenido social.</p>
-          <div class="service-price"><small>DESDE</small><strong>$699</strong></div>
+          <div class="service-price"><small>DESDE</small><strong class="price-value" data-usd="699" data-mxn="12599">US$699</strong><span class="price-code">USD</span></div>
           <ul><li>Brief comercial</li><li>Versiones cortas para redes</li><li>Opciones instrumental y vocal</li><li>Licencia según proyecto</li></ul>
           <a href="#contacto" class="btn btn-ghost full">Solicitar información →</a>
         </article>
       </div>
-      <p class="price-note">* Precios mostrados como estructura de lanzamiento y sujetos a ajustes antes de activar el checkout.</p>
+      <div class="pricing-tools">
+        <div><strong>Elige tu moneda</strong><span>Los precios se muestran en la moneda que selecciones y se mantienen durante el pedido.</span></div>
+        <div class="currency-switch currency-switch-light" role="group" aria-label="Elegir moneda para precios">
+          <button type="button" class="currency-btn" data-currency="USD">USD</button>
+          <button type="button" class="currency-btn" data-currency="MXN">MXN</button>
+        </div>
+      </div>
+      <p class="price-note">* Precios de lanzamiento configurados por moneda; no son una conversión automática en tiempo real. El checkout definitivo validará moneda, impuestos y método de pago antes del cargo.</p>
     </div>
   </section>
 
@@ -163,9 +177,9 @@
     <div class="container delivery-card">
       <div class="delivery-logo"><img src="assets/sonalza-logo.png" alt="SONALZA STUDIOS"></div>
       <div class="delivery-copy">
-        <div class="eyebrow">LO QUE ESTAMOS CONSTRUYENDO</div>
-        <h2>Una experiencia que se sienta como SONALZA desde el primer clic.</h2>
-        <p>Esta versión prioriza identidad, claridad y una experiencia móvil sólida. El checkout, la automatización de pedidos y las entregas se conectarán después de aprobar el funnel.</p>
+        <div class="eyebrow">EL ESTÁNDAR SONALZA</div>
+        <h2>Tu historia merece cuidado en cada detalle.</h2>
+        <p>Desde el brief hasta la entrega, buscamos una experiencia clara, privada y profesional. Tú aportas la historia; SONALZA define la dirección creativa para convertirla en música.</p>
       </div>
     </div>
   </section>
@@ -188,5 +202,6 @@
     <div class="footer-meta"><span>@sonalzastudios</span><span>© 2026 SONALZA STUDIOS</span></div>
   </div>
 </footer>
+<script src="app.js"></script>
 </body>
 </html>
