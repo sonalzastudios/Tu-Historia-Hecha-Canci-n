@@ -3,45 +3,60 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#04162f">
   <title>Revisa tu pedido — SONALZA STUDIOS</title>
   <meta name="description" content="Revisa los detalles de tu canción personalizada SONALZA.">
   <link rel="stylesheet" href="styles.css">
 </head>
-<body class="flow" data-page="order">
-  <div class="flow-wrap">
-    <div class="flow-top"><a class="brand" href="index.html">SONALZA <span>STUDIOS</span></a><a href="create.html">← Editar canción</a></div>
-    <div class="question order-title"><div class="smallcaps">Ya casi terminamos</div><h1>Revisa tu canción personalizada.</h1><p class="sub">Agrega únicamente los extras que realmente quieras.</p></div>
+<body class="flow order-page" data-page="order">
+  <header class="flow-header">
+    <div class="flow-header-inner">
+      <a class="brand-lockup" href="index.html"><img src="assets/sonalza-mark.png" alt="" class="brand-mark"><span class="brand-word"><strong>SONALZA</strong><small>STUDIOS</small></span></a>
+      <a href="create.html" class="flow-exit">← Editar mi brief</a>
+    </div>
+  </header>
+
+  <main class="flow-wrap order-wrap">
+    <div class="order-hero">
+      <div class="eyebrow light">TU SESIÓN ESTÁ LISTA</div>
+      <h1>Revisa la dirección de tu canción.</h1>
+      <p>Confirma los datos principales y agrega solamente los extras que realmente te interesen.</p>
+    </div>
 
     <div class="summary-shell">
-      <div class="summary-card">
-        <h2>Tu canción SONALZA</h2>
+      <section class="summary-card brief-card">
+        <div class="card-cap"><span>BRIEF / 01</span><span>SONALZA SESSION</span></div>
+        <h2>Tu historia</h2>
         <div id="briefRows"></div>
-        <div class="promise"><strong>Promesa SONALZA</strong><br>La canción base incluye una revisión. Si nos desviamos de manera importante de la historia que nos compartiste, corregiremos la dirección en lugar de obligarte a aceptar algo que no representa tu idea.</div>
-      </div>
+        <div class="promise"><strong>Incluye 1 revisión</strong><p>Si la dirección se aleja de manera importante de lo que nos compartiste, corregiremos el enfoque dentro del alcance de la revisión incluida.</p></div>
+      </section>
 
-      <div class="summary-card">
-        <h2>Resumen del pedido</h2>
-        <div class="summary-row"><span>Canción personalizada</span><strong>$59</strong></div>
-        <label class="upsell"><input type="checkbox" class="addon" data-price="29"><span><strong>Recuerdo Premium +$29</strong><br><small>Letra diseñada + tarjeta con QR + portada personalizada.</small></span></label>
-        <label class="upsell"><input type="checkbox" class="addon" data-price="19"><span><strong>Entrega prioritaria +$19</strong><br><small>Tu pedido entra a la fila de producción prioritaria.</small></span></label>
-        <label class="upsell"><input type="checkbox" class="addon" data-price="29"><span><strong>Video vertical con letra +$29</strong><br><small>Listo para Reels, TikTok y Shorts.</small></span></label>
-        <label class="upsell"><input type="checkbox" class="addon" data-price="25"><span><strong>Segunda versión en otro estilo +$25</strong><br><small>La misma historia con una segunda dirección musical.</small></span></label>
-        <div class="summary-row"><span class="total">Total</span><strong class="total" id="total">$59</strong></div>
-        <div class="notice"><strong>Checkout en preparación:</strong> todavía no hemos conectado el procesador de pago. La siguiente etapa será integrar un checkout seguro y automatizar el envío de cada pedido.</div>
-        <button class="btn btn-primary full" id="checkoutBtn">Continuar al pago seguro →</button>
-      </div>
+      <section class="summary-card checkout-card">
+        <div class="card-cap"><span>ORDEN / 02</span><span>PERSONALIZA</span></div>
+        <h2>Tu pedido</h2>
+        <div class="summary-row base-row"><span>Canción personalizada</span><strong>$59</strong></div>
+        <label class="upsell"><input type="checkbox" class="addon" data-price="29"><span><strong>Recuerdo Premium <em>+$29</em></strong><small>Letra diseñada + tarjeta con QR + portada personalizada.</small></span></label>
+        <label class="upsell"><input type="checkbox" class="addon" data-price="19"><span><strong>Entrega prioritaria <em>+$19</em></strong><small>Tu pedido entra a la fila de producción prioritaria.</small></span></label>
+        <label class="upsell"><input type="checkbox" class="addon" data-price="29"><span><strong>Video vertical con letra <em>+$29</em></strong><small>Preparado para Reels, TikTok y Shorts.</small></span></label>
+        <label class="upsell"><input type="checkbox" class="addon" data-price="25"><span><strong>Segunda versión <em>+$25</em></strong><small>La misma historia con una segunda dirección musical.</small></span></label>
+        <div class="summary-row total-row"><span>Total</span><strong id="total">$59</strong></div>
+        <div class="notice"><strong>Checkout todavía no activado.</strong> Esta V2 es para aprobar diseño y funnel antes de conectar pagos y automatizaciones.</div>
+        <button class="btn btn-primary full btn-xl" id="checkoutBtn">Continuar al pago seguro →</button>
+      </section>
     </div>
-  </div>
+  </main>
 
   <div id="exitModal" class="modal" aria-hidden="true">
     <div class="modal-card">
-      <div class="modal-head"><h2>Antes de irte — ¿qué te hizo dudar?</h2><button class="close" id="closeModal" aria-label="Cerrar">×</button></div>
-      <button class="reason" data-reason="price"><strong>💸 Precio o costo total</strong></button>
-      <button class="reason" data-reason="payment"><strong>💳 Método de pago</strong></button>
-      <button class="reason" data-reason="product"><strong>🤔 Dudas sobre el producto</strong></button>
-      <button class="reason" data-reason="technical"><strong>⚠️ Problema técnico</strong></button>
-      <button class="reason" data-reason="browsing"><strong>👀 Solo estoy explorando</strong></button>
-      <button class="reason" data-reason="other"><strong>💬 Otro motivo</strong></button>
+      <div class="modal-head"><div><div class="eyebrow">ANTES DE CERRAR</div><h2>¿Qué te hizo dudar?</h2></div><button class="close" id="closeModal" aria-label="Cerrar">×</button></div>
+      <div class="reason-grid">
+        <button class="reason" data-reason="price"><strong>Precio</strong><span>El total es más alto de lo esperado.</span></button>
+        <button class="reason" data-reason="payment"><strong>Forma de pago</strong><span>No veo la opción que prefiero.</span></button>
+        <button class="reason" data-reason="product"><strong>Dudas del producto</strong><span>Necesito entender mejor lo que recibo.</span></button>
+        <button class="reason" data-reason="technical"><strong>Problema técnico</strong><span>Algo no funcionó como esperaba.</span></button>
+        <button class="reason" data-reason="browsing"><strong>Sigo comparando</strong><span>Todavía no estoy listo para ordenar.</span></button>
+        <button class="reason" data-reason="other"><strong>Otro</strong><span>Mi motivo es diferente.</span></button>
+      </div>
     </div>
   </div>
   <script src="app.js"></script>

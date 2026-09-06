@@ -1,31 +1,25 @@
-# SONALZA STUDIOS — Prototipo web en español
+# SONALZA STUDIOS — Website V2
 
-Sitio estático y responsive preparado para el flujo Código -> GitHub -> Vercel.
+Versión en español con identidad visual propia de SONALZA.
 
-## Idioma
-- La interfaz pública está 100% en español.
-- Español será el idioma predeterminado del sitio.
-- La opción para cambiar la interfaz a inglés se agregará en una etapa posterior.
-- El formulario sí permite elegir el idioma de la canción: Español, Inglés o Bilingüe.
+## Archivos principales
+- `index.html` — landing page
+- `create.html` — brief creativo de 8 pasos
+- `order.html` — revisión del pedido y extras
+- `styles.css` — identidad visual y responsive
+- `app.js` — lógica del funnel y almacenamiento local
+- `assets/` — logotipos e imágenes proporcionadas por SONALZA
+- `vercel.json` — configuración para Vercel
 
-## Archivos
-- `index.html` — página principal
-- `create.html` — formulario de 8 pasos
-- `order.html` — resumen del pedido y extras
-- `styles.css` — diseño responsive
-- `app.js` — estado del formulario, validación, total y encuesta de abandono
-- `vercel.json` — configuración básica de Vercel
+## Estado
+Prototipo funcional de frontend. No procesa pagos ni envía pedidos todavía.
 
-## Estado actual
-Front-end MVP. Todavía no están conectados pagos, base de datos, email, analítica ni panel administrativo.
+## Dirección visual
+- Azul marino profundo
+- Naranja SONALZA
+- Blanco
+- Amarillo/ámbar como acento
+- Composición inspirada en estudio musical, no en sitios de regalos
 
-## Próximas integraciones
-1. Publicar en GitHub
-2. Desplegar en Vercel
-3. Revisar versión móvil y desktop
-4. Checkout
-5. Base de datos de órdenes
-6. Emails transaccionales
-7. Analytics y conversiones
-8. Conectar `sonalza.com`
-9. Agregar selector Español / English
+## Publicación
+Subir el contenido de esta carpeta al repositorio de GitHub `sonalza-web`. Vercel puede desplegar directamente desde ese repositorio.

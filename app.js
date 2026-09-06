@@ -1,6 +1,6 @@
 (() => {
-  const STORAGE_KEY = 'sonalzaSongDraftV1';
-  const FEEDBACK_KEY = 'sonalzaExitFeedbackV1';
+  const STORAGE_KEY = 'sonalzaSongDraftV2';
+  const FEEDBACK_KEY = 'sonalzaExitFeedbackV2';
   const page = document.body.dataset.page;
 
   const defaultData = {

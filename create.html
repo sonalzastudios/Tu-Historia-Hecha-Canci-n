@@ -3,34 +3,60 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#04162f">
   <title>Crea tu canción — SONALZA STUDIOS</title>
   <meta name="description" content="Cuéntanos tu historia y crea una canción personalizada con SONALZA STUDIOS.">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body class="flow" data-page="create">
-  <div class="flow-wrap">
-    <div class="flow-top">
-      <a class="brand" href="index.html">SONALZA <span>STUDIOS</span></a>
-      <a href="index.html">← Inicio</a>
+  <header class="flow-header">
+    <div class="flow-header-inner">
+      <a class="brand-lockup" href="index.html" aria-label="SONALZA STUDIOS, inicio">
+        <img src="assets/sonalza-mark.png" alt="" class="brand-mark">
+        <span class="brand-word"><strong>SONALZA</strong><small>STUDIOS</small></span>
+      </a>
+      <a href="index.html" class="flow-exit">Salir del estudio ×</a>
     </div>
+  </header>
+
+  <main class="flow-wrap">
     <div class="progress-meta"><span id="stepLabel">Paso 1 de 8</span><strong id="pctLabel">13% completado</strong></div>
     <div class="progress"><div id="bar"></div></div>
-    <div id="question" class="question"></div>
-    <div class="flow-actions"><button id="backBtn" class="btn btn-outline">← Atrás</button><button id="nextBtn" class="btn btn-primary">Siguiente →</button></div>
-  </div>
+
+    <div class="flow-stage">
+      <aside class="creative-rail">
+        <div class="rail-label">BRIEF CREATIVO</div>
+        <h2>Construyamos la canción desde la historia, no desde una plantilla.</h2>
+        <div class="rail-rule"></div>
+        <p>Los mejores resultados salen de detalles reales: una frase, un lugar, una costumbre, un sacrificio, una memoria.</p>
+        <div class="rail-studio" aria-hidden="true"></div>
+        <div class="rail-signature"><span>SONALZA</span> / SESSION</div>
+      </aside>
+
+      <section class="question-shell">
+        <div id="question" class="question"></div>
+        <div class="flow-actions">
+          <button id="backBtn" class="btn btn-ghost">← Atrás</button>
+          <button id="nextBtn" class="btn btn-primary">Siguiente →</button>
+        </div>
+      </section>
+    </div>
+  </main>
 
   <div id="exitModal" class="modal" aria-hidden="true">
     <div class="modal-card">
-      <div class="modal-head"><h2>Antes de irte — ¿qué te detuvo?</h2><button class="close" id="closeModal" aria-label="Cerrar">×</button></div>
-      <p>Tu respuesta nos ayuda a mejorar SONALZA.</p>
-      <button class="reason" data-reason="price"><strong>💸 Precio o costo total</strong><br><span>El precio se siente más alto de lo que esperaba.</span></button>
-      <button class="reason" data-reason="examples"><strong>🎧 Necesito escuchar más ejemplos</strong><br><span>Quiero tener más confianza en cómo puede sonar.</span></button>
-      <button class="reason" data-reason="story"><strong>🤔 No estoy seguro de que puedan contar bien mi historia</strong><br><span>Necesito entender mejor el proceso.</span></button>
-      <button class="reason" data-reason="genre"><strong>🪗 Necesito otro estilo musical</strong><br><span>No encontré el género que quería.</span></button>
-      <button class="reason" data-reason="payment"><strong>💳 Método de pago</strong><br><span>Necesito otra opción para pagar.</span></button>
-      <button class="reason" data-reason="browsing"><strong>👀 Todavía estoy decidiendo</strong><br><span>Estoy comparando opciones.</span></button>
-      <button class="reason" data-reason="other"><strong>💬 Otro motivo</strong></button>
-      <div class="helper">Durante esta etapa de prueba, la respuesta se guarda únicamente en este navegador.</div>
+      <div class="modal-head"><div><div class="eyebrow">ANTES DE CERRAR</div><h2>¿Qué te hizo detenerte?</h2></div><button class="close" id="closeModal" aria-label="Cerrar">×</button></div>
+      <p>Esta respuesta nos ayuda a mejorar SONALZA y entender qué necesita el cliente antes de ordenar.</p>
+      <div class="reason-grid">
+        <button class="reason" data-reason="price"><strong>Precio</strong><span>El costo se siente más alto de lo esperado.</span></button>
+        <button class="reason" data-reason="examples"><strong>Quiero escuchar más</strong><span>Necesito más ejemplos antes de decidir.</span></button>
+        <button class="reason" data-reason="story"><strong>Dudas sobre mi historia</strong><span>No sé si podrán capturarla como quiero.</span></button>
+        <button class="reason" data-reason="genre"><strong>No encontré mi estilo</strong><span>Busco otro género o dirección musical.</span></button>
+        <button class="reason" data-reason="payment"><strong>Forma de pago</strong><span>Necesito una opción de pago diferente.</span></button>
+        <button class="reason" data-reason="browsing"><strong>Sigo comparando</strong><span>Todavía estoy explorando opciones.</span></button>
+      </div>
+      <button class="reason reason-wide" data-reason="other"><strong>Otro motivo</strong><span>Algo distinto a lo anterior.</span></button>
+      <div class="helper">En esta versión de prueba, la respuesta se guarda únicamente en este navegador.</div>
     </div>
   </div>
   <script src="app.js"></script>
