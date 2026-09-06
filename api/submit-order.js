@@ -17,12 +17,20 @@ function money(amount, currency) {
   return currency === 'MXN' ? `MX$${Number(amount).toLocaleString('es-MX')}` : `US$${Number(amount).toLocaleString('en-US')}`;
 }
 
+function getGeoCountry(req) {
+  const raw = String(req.headers['x-vercel-ip-country'] || req.headers['x-country'] || '').toUpperCase();
+  return raw === 'US' || raw === 'MX' ? raw : null;
+}
+
 module.exports = async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ ok:false, error:'Método no permitido.' });
   try {
     const body = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : (req.body || {});
     const draft = body.draft || {};
-    const region = body.region === 'MX' ? 'MX' : 'US';
+    const selectedRegion = body.region === 'MX' ? 'MX' : 'US';
+    const detectedCountry = getGeoCountry(req);
+    const regionMismatch = Boolean(detectedCountry && detectedCountry !== selectedRegion);
+    const region = selectedRegion;
     const language = body.language === 'es' ? 'es' : 'en';
     const currency = region === 'MX' ? 'MXN' : 'USD';
     const product = draft.product === 'corrido' ? 'corrido' : 'song';
@@ -42,6 +50,9 @@ module.exports = async function handler(req, res) {
       status: 'pending_payment',
       product,
       region,
+      detected_country: detectedCountry,
+      region_override: Boolean(body.regionOverride || regionMismatch),
+      region_verification_required: regionMismatch,
       language,
       currency,
       total,
@@ -79,7 +90,7 @@ module.exports = async function handler(req, res) {
       const adminEmail = process.env.SONALZA_ORDERS_EMAIL || 'sonalzastudios@gmail.com';
       const from = process.env.SONALZA_FROM_EMAIL || 'SONALZA Orders <orders@sonalza.com>';
       const rows = [
-        ['Pedido', orderId], ['Región', region], ['Idioma del sitio', language.toUpperCase()], ['Producto', product === 'corrido' ? 'Corrido de Tu Vida' : 'Canción Personalizada'], ['Total', money(total,currency)],
+        ['Pedido', orderId], ['Región seleccionada', region], ['País detectado', detectedCountry || 'No disponible'], ['Verificación regional', regionMismatch ? 'REQUERIDA AL PAGAR' : 'Sin discrepancia'], ['Idioma del sitio', language.toUpperCase()], ['Producto', product === 'corrido' ? 'Corrido de Tu Vida' : 'Canción Personalizada'], ['Total', money(total,currency)],
         ['Cliente', draft.nombre], ['Para quién', draft.paraQuien], ['Ocasión', draft.ocasion], ['Género', draft.genero], ['Voz', draft.voz], ['Idioma', draft.idioma],
         ['Email', email], ['Teléfono', draft.telefono || '—'], ['Extras', addons.join(', ') || 'Ninguno']
       ];
@@ -101,7 +112,7 @@ module.exports = async function handler(req, res) {
       });
     }
 
-    return res.status(200).json({ ok:true, orderId, total, currency, stored, emailed });
+    return res.status(200).json({ ok:true, orderId, total, currency, region, detectedCountry, verificationRequired:regionMismatch, stored, emailed });
   } catch (err) {
     console.error(err);
     return res.status(500).json({ ok:false, error:'No pudimos registrar el pedido. Intenta de nuevo.' });

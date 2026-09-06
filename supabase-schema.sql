@@ -55,3 +55,12 @@ alter table public.business_leads add column if not exists language text not nul
 
 alter table public.exit_feedback add column if not exists region text;
 alter table public.exit_feedback add column if not exists language text;
+
+-- V13 · regional pricing verification metadata
+alter table public.orders add column if not exists detected_country text;
+alter table public.orders add column if not exists region_override boolean not null default false;
+alter table public.orders add column if not exists region_verification_required boolean not null default false;
+
+alter table public.business_leads add column if not exists detected_country text;
+alter table public.business_leads add column if not exists region_override boolean not null default false;
+alter table public.business_leads add column if not exists region_verification_required boolean not null default false;

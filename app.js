@@ -5,6 +5,8 @@
   const REGION_KEY = 'sonalzaRegionV1';
   const LANGUAGE_KEY = 'sonalzaLanguageV1';
   const PREF_KEY = 'sonalzaLocalePreferenceV1';
+  const DETECTED_REGION_KEY = 'sonalzaDetectedRegionV1';
+  const REGION_OVERRIDE_KEY = 'sonalzaRegionOverrideV1';
   const REGIONS = {
     US: { code:'US', flag:'🇺🇸', labelEs:'Estados Unidos', labelEn:'United States', currency:'USD', defaultLanguage:'en' },
     MX: { code:'MX', flag:'🇲🇽', labelEs:'México', labelEn:'Mexico', currency:'MXN', defaultLanguage:'es' }
@@ -50,6 +52,8 @@
 
 
   let storedRegion = localStorage.getItem(REGION_KEY);
+  let detectedRegion = sessionStorage.getItem(DETECTED_REGION_KEY);
+  detectedRegion = detectedRegion === 'MX' || detectedRegion === 'US' ? detectedRegion : null;
   let currentRegion = storedRegion === 'MX' ? 'MX' : 'US';
   let currentLanguage = localStorage.getItem(LANGUAGE_KEY) === 'es' ? 'es' : (localStorage.getItem(LANGUAGE_KEY) === 'en' ? 'en' : REGIONS[currentRegion].defaultLanguage);
   let currentCurrency = REGIONS[currentRegion].currency;
@@ -134,26 +138,59 @@
     const region = REGIONS[currentRegion];
     const regionLabel = currentLanguage === 'en' ? region.labelEn : region.labelEs;
     const langCode = currentLanguage.toUpperCase();
-    const countryTitle = currentLanguage === 'en' ? 'Country' : 'País';
+    const countryTitle = currentLanguage === 'en' ? 'Purchase region' : 'Región de compra';
     const languageTitle = currentLanguage === 'en' ? 'Language' : 'Idioma';
-    const note = currentLanguage === 'en' ? 'Your country sets your currency and regional price.' : 'Tu país define la moneda y el precio regional.';
-    return `<div class="locale-picker ${compact?'locale-picker-compact':''}">
+    const detectedName = detectedRegion ? (currentLanguage === 'en' ? REGIONS[detectedRegion].labelEn : REGIONS[detectedRegion].labelEs) : null;
+    const mismatch = Boolean(detectedRegion && currentRegion !== detectedRegion);
+    const note = mismatch
+      ? (currentLanguage === 'en' ? 'You selected a region different from the one detected. Billing country will be verified at checkout.' : 'Elegiste una región distinta a la detectada. El país de facturación se verificará al pagar.')
+      : (currentLanguage === 'en' ? 'Your region sets the currency and regional price. You can change the site language freely.' : 'Tu región define la moneda y el precio regional. Puedes cambiar el idioma libremente.');
+    const detectedCopy = detectedRegion
+      ? (currentLanguage === 'en' ? `Detected from your connection: ${detectedName}` : `Detectado por tu conexión: ${detectedName}`)
+      : (currentLanguage === 'en' ? 'We could not confirm your region automatically.' : 'No pudimos confirmar tu región automáticamente.');
+    const detectedBadge = currentLanguage === 'en' ? 'Detected' : 'Detectado';
+    return `<div class="locale-picker ${compact?'locale-picker-compact':''} ${mismatch?'region-mismatch':''}">
       <button type="button" class="locale-trigger" aria-haspopup="dialog" aria-expanded="false">
         <span class="locale-flag">${region.flag}</span><span class="locale-summary">${compact ? region.code : `${region.code} · ${langCode}`}</span><span class="locale-chevron">⌄</span>
       </button>
       <div class="locale-popover" role="dialog" aria-label="${countryTitle} / ${languageTitle}" aria-hidden="true">
         <div class="locale-pop-head"><strong>${currentLanguage === 'en' ? 'Region & language' : 'Región e idioma'}</strong><button type="button" class="locale-close" aria-label="${currentLanguage === 'en'?'Close':'Cerrar'}">×</button></div>
+        <div class="geo-detected ${mismatch?'warn':''}"><span class="geo-dot"></span><div><strong>${detectedCopy}</strong><small>${currentLanguage === 'en' ? 'Regional prices are verified again when payment is enabled.' : 'Los precios regionales se verificarán nuevamente cuando se habilite el pago.'}</small></div></div>
         <div class="locale-group"><span class="locale-group-label">${countryTitle}</span>
-          <button type="button" class="locale-choice ${currentRegion==='US'?'active':''}" data-region="US"><span>🇺🇸</span><div><strong>${currentLanguage==='en'?'United States':'Estados Unidos'}</strong><small>USD</small></div><i>✓</i></button>
-          <button type="button" class="locale-choice ${currentRegion==='MX'?'active':''}" data-region="MX"><span>🇲🇽</span><div><strong>${currentLanguage==='en'?'Mexico':'México'}</strong><small>MXN</small></div><i>✓</i></button>
+          <button type="button" class="locale-choice ${currentRegion==='US'?'active':''}" data-region="US"><span>🇺🇸</span><div><strong>${currentLanguage==='en'?'United States':'Estados Unidos'}</strong><small>USD${detectedRegion==='US' ? ` · ${detectedBadge}` : ''}</small></div><i>✓</i></button>
+          <button type="button" class="locale-choice ${currentRegion==='MX'?'active':''}" data-region="MX"><span>🇲🇽</span><div><strong>${currentLanguage==='en'?'Mexico':'México'}</strong><small>MXN${detectedRegion==='MX' ? ` · ${detectedBadge}` : ''}</small></div><i>✓</i></button>
         </div>
         <div class="locale-group"><span class="locale-group-label">${languageTitle}</span><div class="language-grid">
           <button type="button" class="language-choice ${currentLanguage==='es'?'active':''}" data-language="es"><strong>Español</strong><small>ES</small></button>
           <button type="button" class="language-choice ${currentLanguage==='en'?'active':''}" data-language="en"><strong>English</strong><small>EN</small></button>
         </div></div>
-        <div class="locale-market-note"><span>●</span><p><strong>${regionLabel} · ${currentCurrency}</strong><small>${note}</small></p></div>
+        <div class="locale-market-note ${mismatch?'warning':''}"><span>${mismatch?'!':'●'}</span><p><strong>${regionLabel} · ${currentCurrency}</strong><small>${note}</small></p></div>
       </div>
     </div>`;
+  }
+
+  function showRegionConfirmation(picker, region, onConfirm) {
+    const popover = picker.querySelector('.locale-popover');
+    popover.querySelector('.region-confirm-panel')?.remove();
+    const target = REGIONS[region];
+    const detected = detectedRegion ? REGIONS[detectedRegion] : null;
+    const targetName = currentLanguage === 'en' ? target.labelEn : target.labelEs;
+    const detectedName = detected ? (currentLanguage === 'en' ? detected.labelEn : detected.labelEs) : '';
+    const panel = document.createElement('div');
+    panel.className = 'region-confirm-panel';
+    panel.innerHTML = `<div class="region-confirm-icon">◎</div><div class="region-confirm-copy"><strong>${currentLanguage === 'en' ? `Use ${targetName} pricing?` : `¿Usar precios de ${targetName}?`}</strong><p>${currentLanguage === 'en' ? `We detected ${detectedName}. Choose ${targetName} only if your billing country will be ${targetName}. The billing country will be verified at checkout.` : `Detectamos ${detectedName}. Elige ${targetName} solo si el país de facturación de tu método de pago será ${targetName}. Lo verificaremos al pagar.`}</p></div><div class="region-confirm-actions"><button type="button" class="region-confirm-cancel">${currentLanguage === 'en'?'Cancel':'Cancelar'}</button><button type="button" class="region-confirm-ok">${currentLanguage === 'en'?`Use ${target.code}`:`Usar ${target.code}`}</button></div>`;
+    popover.appendChild(panel);
+    panel.querySelector('.region-confirm-cancel').addEventListener('click', () => panel.remove());
+    panel.querySelector('.region-confirm-ok').addEventListener('click', () => onConfirm());
+  }
+
+  function setRegionPreference(region, isOverride=false) {
+    localStorage.setItem(REGION_KEY, region);
+    localStorage.setItem(LANGUAGE_KEY, REGIONS[region].defaultLanguage);
+    localStorage.setItem(PREF_KEY, '1');
+    if (isOverride) localStorage.setItem(REGION_OVERRIDE_KEY, '1');
+    else localStorage.removeItem(REGION_OVERRIDE_KEY);
+    location.reload();
   }
 
   function bindLocalePicker(picker) {
@@ -169,10 +206,12 @@
     close?.addEventListener('click', () => setOpen(false));
     picker.querySelectorAll('[data-region]').forEach(btn => btn.addEventListener('click', () => {
       const region = btn.dataset.region === 'MX' ? 'MX' : 'US';
-      localStorage.setItem(REGION_KEY, region);
-      localStorage.setItem(LANGUAGE_KEY, REGIONS[region].defaultLanguage);
-      localStorage.setItem(PREF_KEY, '1');
-      location.reload();
+      if (region === currentRegion) return;
+      if (detectedRegion && region !== detectedRegion) {
+        showRegionConfirmation(picker, region, () => setRegionPreference(region, true));
+        return;
+      }
+      setRegionPreference(region, false);
     }));
     picker.querySelectorAll('[data-language]').forEach(btn => btn.addEventListener('click', () => {
       const lang = btn.dataset.language === 'es' ? 'es' : 'en';
@@ -184,7 +223,31 @@
     document.addEventListener('keydown', e => { if (e.key === 'Escape') setOpen(false); });
   }
 
+  async function getDetectedRegion() {
+    if (detectedRegion) return detectedRegion;
+    try {
+      const r = await fetch('/api/geo', {cache:'no-store'});
+      const data = await r.json();
+      if (data && (data.country === 'US' || data.country === 'MX')) {
+        detectedRegion = data.country;
+        sessionStorage.setItem(DETECTED_REGION_KEY, detectedRegion);
+        return detectedRegion;
+      }
+    } catch (_) {}
+    return null;
+  }
+
   async function setupLocalePicker() {
+    await getDetectedRegion();
+    const hasManualPreference = localStorage.getItem(PREF_KEY) === '1';
+    if (!hasManualPreference && !storedRegion && detectedRegion) {
+      currentRegion = detectedRegion;
+      currentLanguage = REGIONS[detectedRegion].defaultLanguage;
+      currentCurrency = REGIONS[detectedRegion].currency;
+      localStorage.setItem(REGION_KEY, detectedRegion);
+      localStorage.setItem(LANGUAGE_KEY, currentLanguage);
+      storedRegion = detectedRegion;
+    }
     const targets = [...document.querySelectorAll('.currency-switch')];
     targets.forEach((target,index) => {
       const holder = document.createElement('div');
@@ -202,18 +265,7 @@
     }
     applyRegionalDisplay();
     translateDOM(document.body);
-    if (!localStorage.getItem(PREF_KEY) && !storedRegion) {
-      try {
-        const r = await fetch('/api/geo', {cache:'no-store'});
-        const data = await r.json();
-        if (data && (data.country === 'US' || data.country === 'MX')) {
-          const detected = data.country;
-          localStorage.setItem(REGION_KEY, detected);
-          localStorage.setItem(LANGUAGE_KEY, REGIONS[detected].defaultLanguage);
-          if (detected !== currentRegion || REGIONS[detected].defaultLanguage !== currentLanguage) location.reload();
-        }
-      } catch (_) {}
-    }
+    window.dispatchEvent(new CustomEvent('sonalza:regionready', {detail:{region:currentRegion, detectedRegion, language:currentLanguage, currency:currentCurrency}}));
   }
 
   const defaultData = {
@@ -498,6 +550,8 @@
       const payload = Object.fromEntries(fd.entries());
       payload.region = currentRegion;
       payload.language = currentLanguage;
+      payload.detectedRegion = detectedRegion;
+      payload.regionOverride = localStorage.getItem(REGION_OVERRIDE_KEY)==='1';
       payload.currency = currentCurrency;
       const original = btn.textContent;
       btn.disabled = true;
@@ -558,6 +612,14 @@
       });
       if (totalEl) totalEl.textContent = formatMoney(total);
       if (currencyLabel) currencyLabel.textContent = `${REGIONS[currentRegion].flag} ${currentRegion} · ${currentCurrency}`;
+      const verificationNote = document.getElementById('regionVerificationNote');
+      const mismatch = Boolean(detectedRegion && detectedRegion !== currentRegion);
+      if (verificationNote) {
+        verificationNote.hidden = !mismatch;
+        verificationNote.innerHTML = mismatch ? (currentLanguage === 'en'
+          ? `<strong>Region verification required.</strong> We detected ${REGIONS[detectedRegion].labelEn}. The ${REGIONS[currentRegion].labelEn} regional price will only apply if the billing country is verified as ${REGIONS[currentRegion].labelEn} when payment is enabled.`
+          : `<strong>Se requiere verificar la región.</strong> Detectamos ${REGIONS[detectedRegion].labelEs}. El precio regional de ${REGIONS[currentRegion].labelEs} solo aplicará si el país de facturación se verifica como ${REGIONS[currentRegion].labelEs} cuando habilitemos el pago.`) : '';
+      }
       if (checkoutBtn) checkoutBtn.textContent = `${currentLanguage === 'en' ? 'Submit order' : 'Enviar pedido'} · ${formatMoney(total)} →`;
     };
 
@@ -576,7 +638,7 @@
         ['utm_source','utm_medium','utm_campaign','utm_content','utm_term'].forEach(k=>{ if(utmParams.get(k)) utm[k]=utmParams.get(k); });
         const response = await fetch('/api/submit-order', {
           method:'POST', headers:{'Content-Type':'application/json'},
-          body:JSON.stringify({draft:data,region:currentRegion,language:currentLanguage,currency:currentCurrency,addons:chosenAddons,page:location.href,referrer:document.referrer,utm})
+          body:JSON.stringify({draft:data,region:currentRegion,language:currentLanguage,currency:currentCurrency,detectedRegion,regionOverride:localStorage.getItem(REGION_OVERRIDE_KEY)==='1',addons:chosenAddons,page:location.href,referrer:document.referrer,utm})
         });
         const result = await response.json().catch(()=>({}));
         if (!response.ok || !result.ok) throw new Error(result.error || 'No pudimos registrar el pedido.');

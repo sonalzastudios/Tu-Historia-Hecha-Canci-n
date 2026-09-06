@@ -65,3 +65,12 @@ Genre cards now use editorial photo artwork derived from the approved SONALZA vi
 - Precios de lanzamiento: US $49 / $249 / $499; MX $599 / $1,999 / $4,999.
 - Precios de referencia: US $79 / $349 / $699; MX $999 / $2,999 / $7,999.
 - El backend recalcula la moneda según el país, evitando que el frontend pueda enviar una moneda distinta.
+
+## V13 — Protección de precios regionales
+
+- Vercel detecta el país aproximado con `x-vercel-ip-country`.
+- US inicia en English + USD; MX inicia en Español + MXN.
+- El idioma puede cambiarse libremente sin afectar moneda/precio.
+- Si el usuario intenta cambiar a una región distinta a la detectada, aparece una confirmación explícita: debe usar esa región solamente si su país de facturación corresponde.
+- El pedido guarda `detected_country`, `region_override` y `region_verification_required` para detectar discrepancias.
+- **Importante:** la IP es una señal aproximada, no una prueba definitiva. Cuando se conecte Stripe/otro checkout, el precio final debe validarse server-side contra el país de facturación del método de pago. Esa validación de billing country es la barrera definitiva contra arbitraje regional.
