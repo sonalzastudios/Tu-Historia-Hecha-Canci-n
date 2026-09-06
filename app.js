@@ -5,13 +5,15 @@
   const CURRENCY_KEY = 'sonalzaCurrencyV3';
   const PRICING = {
     song: { USD: 39, MXN: 659 },
+    corrido: { USD: 199, MXN: 3359 },
     premium: { USD: 29, MXN: 549 },
     rush: { USD: 19, MXN: 349 },
     video: { USD: 29, MXN: 549 },
     second: { USD: 25, MXN: 449 }
   };
   const LIST_PRICING = {
-    song: { USD: 59, MXN: 999 }
+    song: { USD: 59, MXN: 999 },
+    corrido: { USD: 249, MXN: 4199 }
   };
 
   let currentCurrency = localStorage.getItem(CURRENCY_KEY) === 'MXN' ? 'MXN' : 'USD';
@@ -50,6 +52,7 @@
   }
 
   const defaultData = {
+    product: 'song',
     paraQuien: '',
     nombre: '',
     ocasion: '',
@@ -96,24 +99,31 @@
         const previous = JSON.parse(localStorage.getItem(FEEDBACK_KEY) || '[]');
         previous.push(payload);
         localStorage.setItem(FEEDBACK_KEY, JSON.stringify(previous));
+        fetch('/api/feedback', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({...payload, currency:currentCurrency})}).catch(()=>{});
         hide();
       });
     });
   }
 
   if (page === 'home') {
-    const sticky = document.querySelector('.mobile-sticky-cta');
+    const sticky = document.getElementById('mobileCta');
     if (sticky) {
-      const syncSticky = () => {
-        sticky.classList.toggle('is-visible', window.scrollY > 520);
-      };
+      const syncSticky = () => sticky.classList.toggle('visible', window.innerWidth <= 680 && window.scrollY > 520);
       window.addEventListener('scroll', syncSticky, { passive: true });
+      window.addEventListener('resize', syncSticky);
       syncSticky();
     }
   }
 
   if (page === 'create') {
     const data = load();
+    const params = new URLSearchParams(location.search);
+    const productParam = params.get('product');
+    const genreParam = params.get('genre');
+    if (productParam === 'corrido') { data.product = 'corrido'; data.genero = 'Corrido'; }
+    else if (productParam === 'song') data.product = 'song';
+    if (genreParam) data.genero = genreParam.slice(0,80);
+    save(data);
     let step = 0;
     const question = document.getElementById('question');
     const nextBtn = document.getElementById('nextBtn');
@@ -253,6 +263,31 @@
     setupExitIntent();
   }
 
+  if (page === 'business') {
+    const form = document.getElementById('businessForm');
+    const status = document.getElementById('businessStatus');
+    form?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = form.querySelector('button[type=\"submit\"]');
+      const fd = new FormData(form);
+      const payload = Object.fromEntries(fd.entries());
+      payload.currency = currentCurrency;
+      const original = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = 'Enviando…';
+      if (status) { status.textContent=''; status.className='submit-status'; }
+      try {
+        const r = await fetch('/api/submit-lead', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+        const result = await r.json().catch(()=>({}));
+        if (!r.ok || !result.ok) throw new Error(result.error || 'No pudimos enviar la solicitud.');
+        form.innerHTML = `<div class=\"business-success\"><div class=\"eyebrow\">SOLICITUD RECIBIDA</div><h2>Ya llegó a SONALZA.</h2><p>Referencia <strong>${result.leadId}</strong>. Te responderemos usando el correo que nos compartiste.</p><a href=\"index.html\" class=\"btn btn-primary\">Volver al inicio →</a></div>`;
+      } catch(err) {
+        if (status) { status.textContent=err.message; status.className='submit-status error-status'; }
+        btn.disabled=false; btn.textContent=original;
+      }
+    });
+  }
+
   if (page === 'order') {
     const data = load();
     const briefRows = document.getElementById('briefRows');
@@ -279,11 +314,14 @@
     const addons = [...document.querySelectorAll('.addon')];
 
     const updateTotal = () => {
-      const base = PRICING.song[currentCurrency];
+      const productKey = data.product === 'corrido' ? 'corrido' : 'song';
+      const base = PRICING[productKey][currentCurrency];
       let total = base;
+      const productLabel = document.getElementById('orderProductLabel');
+      if (productLabel) productLabel.textContent = productKey === 'corrido' ? 'Corrido de Tu Vida' : 'Canción personalizada';
       if (basePriceEl) basePriceEl.textContent = formatMoney(base);
-      if (baseComparePriceEl) baseComparePriceEl.textContent = formatMoney(LIST_PRICING.song[currentCurrency]);
-      if (baseSavingsEl) baseSavingsEl.textContent = `−${formatMoney(LIST_PRICING.song[currentCurrency] - base)}`;
+      if (baseComparePriceEl) baseComparePriceEl.textContent = formatMoney(LIST_PRICING[productKey][currentCurrency]);
+      if (baseSavingsEl) baseSavingsEl.textContent = `−${formatMoney(LIST_PRICING[productKey][currentCurrency] - base)}`;
       addons.forEach(addon => {
         const key = addon.dataset.key;
         const price = PRICING[key][currentCurrency];
@@ -298,25 +336,34 @@
 
     addons.forEach(a => a.addEventListener('change', updateTotal));
     window.addEventListener('sonalza:currencychange', updateTotal);
-    checkoutBtn?.addEventListener('click', () => {
-      alert(`El checkout seguro será la siguiente integración. La orden está configurada en ${currentCurrency}; esta versión de prueba no realizará ningún cargo.`);
+    checkoutBtn?.addEventListener('click', async () => {
+      const original = checkoutBtn.textContent;
+      const statusEl = document.getElementById('submitStatus');
+      checkoutBtn.disabled = true;
+      checkoutBtn.textContent = 'Registrando tu pedido…';
+      if (statusEl) { statusEl.textContent = ''; statusEl.className = 'submit-status'; }
+      try {
+        const chosenAddons = addons.filter(a=>a.checked).map(a=>a.dataset.key);
+        const utmParams = new URLSearchParams(location.search);
+        const utm = {};
+        ['utm_source','utm_medium','utm_campaign','utm_content','utm_term'].forEach(k=>{ if(utmParams.get(k)) utm[k]=utmParams.get(k); });
+        const response = await fetch('/api/submit-order', {
+          method:'POST', headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({draft:data,currency:currentCurrency,addons:chosenAddons,page:location.href,referrer:document.referrer,utm})
+        });
+        const result = await response.json().catch(()=>({}));
+        if (!response.ok || !result.ok) throw new Error(result.error || 'No pudimos registrar el pedido.');
+        sessionStorage.setItem('sonalzaLastOrder', JSON.stringify(result));
+        location.href = `thanks.html?order=${encodeURIComponent(result.orderId)}`;
+      } catch (err) {
+        if (statusEl) { statusEl.textContent = err.message; statusEl.className = 'submit-status error-status'; }
+        checkoutBtn.disabled = false;
+        checkoutBtn.textContent = original;
+      }
     });
     updateTotal();
     setupExitIntent();
   }
 
   setupCurrencySwitch();
-})();
-
-// V6: quiet mobile conversion bar — appears only after the visitor has engaged.
-(function(){
-  const cta=document.getElementById('mobileCta');
-  if(!cta) return;
-  const update=()=>{
-    const shouldShow=window.innerWidth<=680 && window.scrollY>520;
-    cta.classList.toggle('visible',shouldShow);
-  };
-  window.addEventListener('scroll',update,{passive:true});
-  window.addEventListener('resize',update);
-  update();
 })();

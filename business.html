@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#ffffff">
+  <title>Jingles y música para marcas — SONALZA STUDIOS</title>
+  <meta name="description" content="Solicita una propuesta de jingle, hook o música de marca con SONALZA STUDIOS.">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="flow business-page" data-page="business">
+  <header class="flow-header">
+    <div class="flow-header-inner">
+      <a class="brand-lockup" href="index.html" aria-label="SONALZA STUDIOS, inicio"><img src="assets/sonalza-mark.png" alt="" class="brand-mark"><span class="brand-word"><strong>SONALZA</strong><small>STUDIOS</small></span></a>
+      <a href="index.html#servicios" class="flow-exit">← Volver a servicios</a>
+    </div>
+  </header>
+  <main class="flow-wrap business-wrap">
+    <section class="business-intro">
+      <div class="eyebrow">MÚSICA PARA NEGOCIOS</div>
+      <h1>Haz que tu marca también tenga sonido.</h1>
+      <p>Cuéntanos qué vendes, a quién quieres llegar y dónde se escuchará la pieza. Te responderemos con la dirección recomendada para tu proyecto.</p>
+    </section>
+    <section class="business-shell">
+      <div class="business-panel">
+        <div class="smallcaps">BRIEF COMERCIAL</div>
+        <h2>Jingle, hook o música de marca.</h2>
+        <p>Ideal para anuncios, contenido social, campañas, producto, radio, YouTube y piezas cortas para TikTok o Reels.</p>
+        <ul><li>Dirección creativa según marca</li><li>Opciones vocales e instrumentales</li><li>Versiones cortas según proyecto</li><li>Licencia definida antes de producir</li></ul>
+      </div>
+      <form id="businessForm" class="business-form">
+        <div class="form-grid-2">
+          <label><span>Tu nombre</span><input name="name" required maxlength="120" autocomplete="name"></label>
+          <label><span>Nombre del negocio</span><input name="business" required maxlength="180" autocomplete="organization"></label>
+          <label><span>Correo electrónico</span><input type="email" name="email" required autocomplete="email"></label>
+          <label><span>Teléfono</span><input name="phone" inputmode="tel" autocomplete="tel"></label>
+          <label><span>Tipo de proyecto</span><select name="projectType" required><option value="">Selecciona…</option><option>Jingle completo</option><option>Hook para redes</option><option>Música para anuncio</option><option>Identidad sonora</option><option>Otro</option></select></label>
+          <label><span>Presupuesto aproximado</span><select name="budget"><option value="">Prefiero hablarlo</option><option>US$499–999</option><option>US$1,000–2,500</option><option>US$2,500+</option></select></label>
+        </div>
+        <label><span>Cuéntanos qué necesitas</span><textarea name="message" required minlength="20" placeholder="Qué hace tu negocio, qué quieres comunicar, dónde se usará la música y cualquier referencia útil."></textarea></label>
+        <div id="businessStatus" class="submit-status" aria-live="polite"></div>
+        <button class="btn btn-primary btn-xl full" type="submit">Enviar solicitud →</button>
+      </form>
+    </section>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
