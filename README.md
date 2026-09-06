@@ -1,24 +1,35 @@
-# SONALZA Website V7
+# SONALZA Website V8
 
-V7 corrige alineación visual, elimina botones sin destino real y agrega una arquitectura real para recepción de pedidos.
+V8 refina la experiencia con un enfoque **latino premium, didáctico y mobile-first**. Mantiene la identidad azul marino + naranja de SONALZA, pero evita clichés visuales y hace que el sitio se sienta diseñado a propósito.
+
+## Cambios principales de V8
+- Hero desktop en dos columnas para mostrar el estudio completo y centrado, sin recortes incómodos.
+- Navegación móvil con menú real y destinos funcionales.
+- Nueva sección “Empieza por la emoción” con accesos guiados para amor, familia, Corrido de Tu Vida y negocios.
+- Más identidad latina en copy, géneros y narrativa, sin caer en decoración genérica.
+- Brief de 8 pasos más didáctico: tips dinámicos, ejemplos, explicaciones de por qué se pregunta cada dato y contadores de caracteres.
+- En móvil, controles grandes, tipografía legible, navegación estable y acciones inferiores visibles.
+- Seleccionar una opción ya no hace saltar la página hacia arriba; el usuario conserva su posición.
+- Parámetros `relation`, `occasion`, `genre` y `product` pueden prellenar el brief desde la home.
+- Orden final más clara con “qué pasa después” y confirmación explícita de que el checkout aún no cobra.
+- El CTA final dice “Enviar pedido” mientras el procesador de pago no está conectado; no promete una función inexistente.
 
 ## Qué funciona
 - Home, formulario de 8 pasos, resumen de pedido, USD/MXN y precios promocionales.
-- Géneros clicables que abren el brief con el género preseleccionado.
-- Corrido de Tu Vida abre el brief como producto premium y usa su precio correspondiente.
-- Jingles y Música para Marcas abre un brief comercial separado (`business.html`).
-- CTA móvil corregido.
-- Imagen del estudio centrada con proporción estable en desktop y móvil.
-- El botón final ya no muestra un alert falso: hace POST a `/api/submit-order`.
+- Géneros y rutas rápidas abren el brief con selecciones precargadas.
+- Corrido de Tu Vida usa el flujo premium y su precio correspondiente.
+- Jingles y Música para Marcas abre `business.html`.
+- CTA móvil, selector de moneda y menú móvil funcionan con JavaScript.
+- El botón final hace POST a `/api/submit-order`.
 - El brief comercial hace POST a `/api/submit-lead`.
-- Exit feedback puede guardarse en Supabase mediante `/api/feedback`.
+- Exit feedback puede guardarse mediante `/api/feedback`.
 
 ## Dónde llega la información
-Arquitectura recomendada:
+Arquitectura preparada:
 
-Navegador -> Vercel Serverless API -> Supabase (registro) + Resend (notificación por email)
+`Navegador -> Vercel Serverless API -> Supabase (registro) + Resend (notificación por email)`
 
-El email de recepción por defecto es `sonalzastudios@gmail.com`.
+Email administrativo previsto: `sonalzastudios@gmail.com`.
 
 ## Variables de entorno en Vercel
 Configurar en Project > Settings > Environment Variables:
@@ -29,13 +40,8 @@ Configurar en Project > Settings > Environment Variables:
 - `SUPABASE_URL`
 - `SUPABASE_SERVICE_ROLE_KEY`
 
-Puede funcionar solo con Resend o solo con Supabase, pero para producción se recomienda usar ambos: base de datos + notificación.
-
 ## Supabase
-Ejecutar `supabase-schema.sql` en el SQL Editor del proyecto Supabase. Las tablas tienen RLS habilitado y el navegador nunca recibe la service-role key; la escritura ocurre únicamente desde las funciones serverless de Vercel.
-
-## Resend
-Verificar `sonalza.com` en Resend antes de usar `orders@sonalza.com` como remitente. Durante pruebas puede usarse el remitente de sandbox permitido por Resend.
+Ejecutar `supabase-schema.sql` en el SQL Editor del proyecto Supabase. Las tablas tienen RLS habilitado y la service-role key nunca se expone al navegador.
 
 ## Pago
-V7 registra la orden como `pending_payment`. Todavía no cobra. El siguiente paso es conectar Stripe Checkout u otro procesador y cambiar el estado después de pago confirmado.
+V8 **todavía no cobra**. Registra la orden como `pending_payment`. El siguiente paso de producción es conectar el checkout y confirmar el pago por webhook antes de marcar una orden como pagada.

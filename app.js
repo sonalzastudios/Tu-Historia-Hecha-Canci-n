@@ -113,6 +113,25 @@
       window.addEventListener('resize', syncSticky);
       syncSticky();
     }
+    const menuToggle = document.getElementById('menuToggle');
+    const mobileNav = document.getElementById('mobileNav');
+    if (menuToggle && mobileNav) {
+      const closeMenu = () => {
+        menuToggle.classList.remove('open');
+        mobileNav.classList.remove('open');
+        menuToggle.setAttribute('aria-expanded','false');
+        mobileNav.setAttribute('aria-hidden','true');
+      };
+      menuToggle.addEventListener('click', () => {
+        const open = !mobileNav.classList.contains('open');
+        mobileNav.classList.toggle('open', open);
+        menuToggle.classList.toggle('open', open);
+        menuToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+        mobileNav.setAttribute('aria-hidden', open ? 'false' : 'true');
+      });
+      mobileNav.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
+      window.addEventListener('resize', () => { if (window.innerWidth > 980) closeMenu(); });
+    }
   }
 
   if (page === 'create') {
@@ -120,9 +139,13 @@
     const params = new URLSearchParams(location.search);
     const productParam = params.get('product');
     const genreParam = params.get('genre');
+    const occasionParam = params.get('occasion');
+    const relationParam = params.get('relation');
     if (productParam === 'corrido') { data.product = 'corrido'; data.genero = 'Corrido'; }
     else if (productParam === 'song') data.product = 'song';
     if (genreParam) data.genero = genreParam.slice(0,80);
+    if (occasionParam) data.ocasion = occasionParam.slice(0,80);
+    if (relationParam) data.paraQuien = relationParam.slice(0,80);
     save(data);
     let step = 0;
     const question = document.getElementById('question');
@@ -131,6 +154,8 @@
     const stepLabel = document.getElementById('stepLabel');
     const pctLabel = document.getElementById('pctLabel');
     const bar = document.getElementById('bar');
+    const railTipTitle = document.getElementById('railTipTitle');
+    const railTipText = document.getElementById('railTipText');
 
     const optionButtons = (items, selected, key) => `
       <div class="option-grid">
@@ -141,22 +166,26 @@
       () => `
         <div class="smallcaps">Paso 1</div>
         <h1>¿Para quién es esta canción?</h1>
-        <p class="sub">Elige a la persona que recibirá esta historia.</p>
+        <p class="sub">Elige la relación más cercana. Si no aparece exactamente, selecciona “Otro”.</p>
+        <div class="why-box"><strong>¿Por qué te lo preguntamos?</strong><span>La relación cambia el tono de la letra y la forma de contar la historia.</span></div>
         ${optionButtons(['Esposo','Esposa','Pareja','Novio','Novia','Papá','Mamá','Hijo','Hija','Abuelo/a','Hermano/a','Amigo/a','Para mí','Otro'], data.paraQuien, 'paraQuien')}`,
       () => `
         <div class="smallcaps">Paso 2</div>
         <h1>¿Cómo se llama?</h1>
-        <p class="sub">Escribe su primer nombre o el nombre que quieres escuchar en la canción.</p>
-        <div class="form-box"><label for="nombre">Nombre</label><input id="nombre" maxlength="60" placeholder="Ejemplo: Julián" value="${escapeHtml(data.nombre)}"></div>`,
+        <p class="sub">Escribe el nombre tal como quieres que aparezca o se cante.</p>
+        <div class="why-box"><strong>Ejemplo</strong><span>“José”, “Mamá Lupita”, “Mi viejo”, “César”. Usa la forma que realmente le dices.</span></div>
+        <div class="form-box"><label for="nombre">Nombre</label><input id="nombre" maxlength="60" placeholder="Ejemplo: Julián" value="${escapeHtml(data.nombre)}"><div class="field-meta"><span>Así lo usaremos dentro del brief.</span><span id="nombreCount">${data.nombre.length}/60</span></div></div>`,
       () => `
         <div class="smallcaps">Paso 3</div>
         <h1>¿Cuál es la ocasión?</h1>
-        <p class="sub">Dinos qué momento estamos convirtiendo en canción.</p>
+        <p class="sub">Elige la ocasión que mejor explica por qué estás creando esta canción.</p>
+        <div class="why-box"><strong>No tiene que ser una fecha especial.</strong><span>“Porque sí”, “Te amo” o “Gracias” también pueden producir canciones muy fuertes.</span></div>
         ${optionButtons(['Porque sí','Te amo','Cumpleaños','Aniversario','Te extraño','Gracias','Perdón','Boda','Amistad','En memoria','Logro especial','Propuesta','Jubilación','Graduación','Otra ocasión'], data.ocasion, 'ocasion')}`,
       () => `
         <div class="smallcaps">Paso 4</div>
         <h1>Elige el estilo de la canción</h1>
-        <p class="sub">Selecciona un género, una voz y el idioma de la canción.</p>
+        <p class="sub">Elige la dirección musical. Si no estás seguro, “Sorpréndeme” nos deja proponerla.</p>
+        <div class="why-box"><strong>Piensa en la persona que la recibirá.</strong><span>No elijas solo tu género favorito: elige el que más conectaría con esa historia.</span></div>
         ${optionButtons(['Corrido','Banda','Norteño','Cumbia','Mariachi','Duranguense','Huapango','Sierreño','Pop Latino','Reguetón','Balada','Sorpréndeme'], data.genero, 'genero')}
         <div class="dual-grid">
           <div><div class="helper" style="text-align:center;margin-bottom:10px">Voz</div>${optionButtons(['Masculina','Femenina','Sorpréndeme'], data.voz, 'voz')}</div>
@@ -166,24 +195,27 @@
         <div class="smallcaps">Paso 5</div>
         <h1>¿Qué hace especial a ${escapeHtml(data.nombre) || 'esta persona'}?</h1>
         <p class="sub">Descríbela con tus propias palabras. Una o dos frases claras suelen dar mejores resultados.</p>
-        <div class="form-box"><label for="cualidades">Sus mejores cualidades</label><textarea id="cualidades" placeholder="Ejemplo: Siempre ha cuidado de nuestra familia, tiene un gran sentido del humor y nunca deja que nadie se rinda.">${escapeHtml(data.cualidades)}</textarea><div class="helper">Incluye personalidad, valores, forma de ser y lo que más admiras.</div></div>`,
+        <div class="prompt-chips"><span>Cómo es</span><span>Qué admiras</span><span>Qué hace por ustedes</span></div>
+        <div class="form-box"><label for="cualidades">Sus mejores cualidades</label><textarea id="cualidades" maxlength="700" placeholder="Ejemplo: Siempre ha cuidado de nuestra familia, tiene un gran sentido del humor y nunca deja que nadie se rinda.">${escapeHtml(data.cualidades)}</textarea><div class="field-meta"><span>Escribe natural. No necesitas rimar.</span><span id="cualidadesCount">${data.cualidades.length}/700</span></div></div>`,
       () => `
         <div class="smallcaps">Paso 6</div>
         <h1>Comparte un recuerdo inolvidable</h1>
         <p class="sub">Los detalles específicos hacen que la canción se sienta verdaderamente personal.</p>
-        <div class="form-box"><label for="recuerdo">Momento especial</label><textarea id="recuerdo" placeholder="¿Cómo se conocieron? ¿Qué momento nunca olvidarán? ¿Hay alguna anécdota, viaje, lugar o frase que siempre recuerden?">${escapeHtml(data.recuerdo)}</textarea></div>`,
+        <div class="prompt-chips"><span>Un lugar</span><span>Una anécdota</span><span>Una frase</span><span>Un momento</span></div>
+        <div class="form-box"><label for="recuerdo">Momento especial</label><textarea id="recuerdo" maxlength="900" placeholder="Ejemplo: Nos conocimos trabajando en Anaheim. Siempre dice ‘primero la familia’. El viaje a Chihuahua en 2018 fue cuando…">${escapeHtml(data.recuerdo)}</textarea><div class="field-meta"><span>Entre más específico, menos genérica se sentirá la canción.</span><span id="recuerdoCount">${data.recuerdo.length}/900</span></div></div>`,
       () => `
         <div class="smallcaps">Paso 7</div>
         <h1>¿Qué quieres que sienta al escucharla?</h1>
         <p class="sub">Dinos el mensaje que debe quedar en el corazón de quien la reciba.</p>
         <div class="dual-grid">
-          <div class="form-box"><label for="frase">Frase que te gustaría escuchar <span class="helper">(opcional)</span></label><textarea id="frase" placeholder="Ejemplo: Gracias por cruzar fronteras por nosotros.">${escapeHtml(data.frase)}</textarea></div>
-          <div class="form-box"><label for="emocion">Mensaje principal</label><textarea id="emocion" placeholder="¿Qué quieres que sepa, sienta o recuerde cuando termine la canción?">${escapeHtml(data.emocion)}</textarea></div>
+          <div class="form-box"><label for="frase">Frase que te gustaría escuchar <span class="helper">(opcional)</span></label><textarea id="frase" maxlength="300" placeholder="Ejemplo: Gracias por cruzar fronteras por nosotros.">${escapeHtml(data.frase)}</textarea><div class="field-meta"><span>Puede ser una frase familiar o algo que tú quieres decirle.</span><span id="fraseCount">${data.frase.length}/300</span></div></div>
+          <div class="form-box"><label for="emocion">Mensaje principal</label><textarea id="emocion" maxlength="700" placeholder="Ejemplo: Quiero que entienda que todo su esfuerzo valió la pena y que estamos orgullosos de él.">${escapeHtml(data.emocion)}</textarea><div class="field-meta"><span>Piensa en cómo quieres que se sienta al terminar.</span><span id="emocionCount">${data.emocion.length}/700</span></div></div>
         </div>`,
       () => `
         <div class="smallcaps">Paso final</div>
         <h1>¿A dónde enviamos tu canción?</h1>
-        <p class="sub">Revisa que tus datos estén correctos para que la canción llegue al lugar indicado.</p>
+        <p class="sub">Usaremos estos datos para identificar tu pedido y comunicarnos contigo sobre la entrega.</p>
+        <div class="privacy-note"><span>🔒</span><div><strong>Tu historia es privada.</strong><p>No necesitas publicar nada para crear tu canción.</p></div></div>
         <div class="dual-grid">
           <div class="form-box"><label for="email">Correo electrónico</label><input type="email" id="email" placeholder="tu@correo.com" value="${escapeHtml(data.email)}"></div>
           <div class="form-box"><label for="telefono">Teléfono <span class="helper">(opcional)</span></label><input id="telefono" inputmode="tel" placeholder="(555) 555-5555" value="${escapeHtml(data.telefono)}"><div class="helper">Más adelante podremos usarlo para avisos de entrega por mensaje de texto.</div></div>
@@ -200,7 +232,8 @@
           const key = btn.dataset.key;
           data[key] = btn.dataset.value;
           save(data);
-          render();
+          question.querySelectorAll(`.option[data-key="${key}"]`).forEach(option => option.classList.remove('selected'));
+          btn.classList.add('selected');
         });
       });
     }
@@ -237,9 +270,35 @@
       question.appendChild(div);
     }
 
+    const stepTips = [
+      ['Empieza simple.','La relación nos ayuda a definir cercanía, lenguaje y tono emocional.'],
+      ['Usa el nombre real.','Escribe cómo le dices de verdad. Ese detalle puede hacer que la canción se sienta mucho más personal.'],
+      ['Define el motivo.','La ocasión nos ayuda a decidir qué debe quedar al frente: celebración, amor, gratitud, homenaje o memoria.'],
+      ['El sonido también cuenta la historia.','Un corrido narra distinto a una cumbia. Elige pensando en quién recibirá la canción.'],
+      ['No busques palabras perfectas.','Escribe como hablas. Nosotros nos encargamos de convertir esas ideas en una letra musical.'],
+      ['Los detalles pequeños son oro.','Lugares, apodos, frases y momentos concretos son lo que evita que la canción se sienta genérica.'],
+      ['Piensa en la última sensación.','¿Quieres que sonría, llore, se sienta orgulloso o quiera bailar? Dínoslo tal cual.'],
+      ['Ya casi está.','Tu correo identifica el pedido y será el canal principal para la entrega y cualquier aclaración.']
+    ];
+
+    function bindCounters(){
+      const fields = [['nombre',60],['cualidades',700],['recuerdo',900],['frase',300],['emocion',700]];
+      fields.forEach(([id,max])=>{
+        const el=document.getElementById(id); const count=document.getElementById(id+'Count');
+        if(!el||!count) return;
+        const update=()=>{ count.textContent=`${el.value.length}/${max}`; };
+        el.addEventListener('input',update); update();
+      });
+    }
+
     function render() {
       question.innerHTML = steps[step]();
       bindOptions();
+      bindCounters();
+      if (railTipTitle && railTipText) {
+        railTipTitle.textContent = stepTips[step][0];
+        railTipText.textContent = stepTips[step][1];
+      }
       const pct = Math.round(((step + 1) / steps.length) * 100);
       stepLabel.textContent = step === 7 ? 'Paso final' : `Paso ${step + 1} de ${steps.length}`;
       pctLabel.textContent = `${pct}% completado`;
@@ -331,7 +390,7 @@
       });
       if (totalEl) totalEl.textContent = formatMoney(total);
       if (currencyLabel) currencyLabel.textContent = currentCurrency;
-      if (checkoutBtn) checkoutBtn.textContent = `Continuar al pago seguro · ${formatMoney(total)} →`;
+      if (checkoutBtn) checkoutBtn.textContent = `Enviar pedido · ${formatMoney(total)} →`;
     };
 
     addons.forEach(a => a.addEventListener('change', updateTotal));
