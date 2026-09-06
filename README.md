@@ -74,3 +74,9 @@ Genre cards now use editorial photo artwork derived from the approved SONALZA vi
 - Si el usuario intenta cambiar a una región distinta a la detectada, aparece una confirmación explícita: debe usar esa región solamente si su país de facturación corresponde.
 - El pedido guarda `detected_country`, `region_override` y `region_verification_required` para detectar discrepancias.
 - **Importante:** la IP es una señal aproximada, no una prueba definitiva. Cuando se conecte Stripe/otro checkout, el precio final debe validarse server-side contra el país de facturación del método de pago. Esa validación de billing country es la barrera definitiva contra arbitraje regional.
+
+
+## V15
+- Corrección opcional de dominios de correo comunes con un clic.
+- Formateo automático de teléfono al escribir, por ejemplo `(555) 555-5555`.
+- Pulido adicional de campos de contacto en móvil.

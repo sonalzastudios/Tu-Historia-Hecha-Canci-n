@@ -433,9 +433,9 @@
         <h1>¿A dónde enviamos tu canción?</h1>
         <p class="sub">Usaremos estos datos para identificar tu pedido y comunicarnos contigo sobre la entrega.</p>
         <div class="privacy-note"><span>🔒</span><div><strong>Tu historia es privada.</strong><p>No necesitas publicar nada para crear tu canción.</p></div></div>
-        <div class="dual-grid">
-          <div class="form-box"><label for="email">Correo electrónico</label><input type="email" id="email" placeholder="tu@correo.com" value="${escapeHtml(data.email)}"></div>
-          <div class="form-box"><label for="telefono">Teléfono <span class="helper">(opcional)</span></label><input id="telefono" inputmode="tel" placeholder="(555) 555-5555" value="${escapeHtml(data.telefono)}"><div class="helper">Más adelante podremos usarlo para avisos de entrega por mensaje de texto.</div></div>
+        <div class="dual-grid contact-grid">
+          <div class="form-box compact-field" id="emailField"><label for="email">Correo electrónico</label><input type="email" id="email" inputmode="email" autocomplete="email" placeholder="tu@correo.com" value="${escapeHtml(data.email)}"><div id="emailValidation" class="field-validation" hidden></div></div>
+          <div class="form-box compact-field"><label for="telefono">Teléfono <span class="helper">(opcional)</span></label><input id="telefono" inputmode="tel" autocomplete="tel" placeholder="(555) 555-5555" value="${escapeHtml(data.telefono)}"><div class="helper">Más adelante podremos usarlo para avisos de entrega por mensaje de texto.</div></div>
         </div>`
     ];
 
@@ -464,6 +464,126 @@
       save(data);
     }
 
+    const EMAIL_DOMAIN_FIXES = {
+      'gmil.com':'gmail.com',
+      'gmai.com':'gmail.com',
+      'gmail.co':'gmail.com',
+      'gmal.com':'gmail.com',
+      'gnail.com':'gmail.com',
+      'hotnail.com':'hotmail.com',
+      'hotmai.com':'hotmail.com',
+      'hotmail.co':'hotmail.com',
+      'outlok.com':'outlook.com',
+      'outloo.com':'outlook.com',
+      'icloud.co':'icloud.com',
+      'iclod.com':'icloud.com',
+      'yaho.com':'yahoo.com',
+      'yahoo.co':'yahoo.com'
+    };
+
+    function getEmailSuggestion(email='') {
+      const clean = String(email || '').trim().toLowerCase();
+      if (!clean.includes('@')) return null;
+      const parts = clean.split('@');
+      if (parts.length !== 2) return null;
+      const [local, domain] = parts;
+      if (!local || !domain) return null;
+      const fixedDomain = EMAIL_DOMAIN_FIXES[domain];
+      return fixedDomain ? `${local}@${fixedDomain}` : null;
+    }
+
+    function validateEmailValue(email='') {
+      const clean = String(email || '').trim().toLowerCase();
+      if (!clean) {
+        return { valid:false, code:'empty', message: currentLanguage === 'en' ? 'Enter a valid email address to continue.' : 'Escribe un correo electrónico válido para continuar.' };
+      }
+      const suggestion = getEmailSuggestion(clean);
+      if (suggestion && suggestion !== clean) {
+        return {
+          valid:false,
+          code:'suggestion',
+          suggestion,
+          message: currentLanguage === 'en' ? `Did you mean ${suggestion}?` : `¿Quisiste decir ${suggestion}?`
+        };
+      }
+      const basicPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!basicPattern.test(clean)) {
+        return { valid:false, code:'format', message: currentLanguage === 'en' ? 'Enter a complete email, for example name@gmail.com.' : 'Escribe un correo completo, por ejemplo nombre@gmail.com.' };
+      }
+      return { valid:true, message:'' };
+    }
+
+    function bindEmailValidation() {
+      const emailInput = document.getElementById('email');
+      const emailField = document.getElementById('emailField');
+      const emailValidation = document.getElementById('emailValidation');
+      if (!emailInput || !emailField || !emailValidation) return;
+
+      const renderState = () => {
+        const value = emailInput.value.trim();
+        data.email = value;
+        save(data);
+        if (!value) {
+          emailField.classList.remove('invalid');
+          emailValidation.hidden = true;
+          emailValidation.innerHTML = '';
+          return;
+        }
+        const result = validateEmailValue(value);
+        if (result.valid) {
+          emailField.classList.remove('invalid');
+          emailValidation.hidden = true;
+          emailValidation.innerHTML = '';
+          return;
+        }
+        emailField.classList.add('invalid');
+        if (result.suggestion) {
+          const label = currentLanguage === 'en' ? `Correct to ${result.suggestion}` : `Corregir a ${result.suggestion}`;
+          emailValidation.innerHTML = `${result.message} <button type="button" class="email-suggestion" data-email-suggestion="${result.suggestion}">${label}</button>`;
+        } else {
+          emailValidation.textContent = result.message;
+        }
+        emailValidation.hidden = false;
+      };
+
+      emailInput.addEventListener('input', renderState);
+      emailInput.addEventListener('blur', renderState);
+      emailValidation.addEventListener('click', e => {
+        const button = e.target.closest('[data-email-suggestion]');
+        if (!button) return;
+        emailInput.value = button.dataset.emailSuggestion || '';
+        renderState();
+        emailInput.focus();
+      });
+      renderState();
+    }
+
+    function formatPhoneValue(value='') {
+      const digits = String(value || '').replace(/\D/g,'').slice(0,11);
+      if (!digits) return '';
+      if (digits.length === 11 && digits.startsWith('1')) {
+        const a = digits.slice(1,4), b = digits.slice(4,7), c = digits.slice(7,11);
+        return `+1 (${a}) ${b}-${c}`;
+      }
+      if (digits.length <= 3) return `(${digits}`;
+      if (digits.length <= 6) return `(${digits.slice(0,3)}) ${digits.slice(3)}`;
+      return `(${digits.slice(0,3)}) ${digits.slice(3,6)}-${digits.slice(6,10)}`;
+    }
+
+    function bindPhoneFormatting() {
+      const phoneInput = document.getElementById('telefono');
+      if (!phoneInput) return;
+      const apply = () => {
+        const formatted = formatPhoneValue(phoneInput.value);
+        phoneInput.value = formatted;
+        data.telefono = formatted;
+        save(data);
+      };
+      phoneInput.addEventListener('input', apply);
+      phoneInput.addEventListener('blur', apply);
+      if (phoneInput.value) apply();
+    }
+
     function isValid() {
       collectInputs();
       const required = [
@@ -474,7 +594,7 @@
         () => data.cualidades.length >= 10,
         () => data.recuerdo.length >= 10,
         () => data.emocion.length >= 8,
-        () => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)
+        () => validateEmailValue(data.email).valid
       ];
       return required[step]();
     }
@@ -483,7 +603,14 @@
       question.querySelector('.error')?.remove();
       const div = document.createElement('div');
       div.className = 'error';
-      div.textContent = currentLanguage === 'en' ? (step === 7 ? 'Enter a valid email address to continue.' : 'Complete this information to continue.') : (step === 7 ? 'Escribe un correo electrónico válido para continuar.' : 'Completa esta información para continuar.');
+      if (step === 7) {
+        const result = validateEmailValue(data.email);
+        div.textContent = result.message || (currentLanguage === 'en' ? 'Enter a valid email address to continue.' : 'Escribe un correo electrónico válido para continuar.');
+        bindEmailValidation();
+        document.getElementById('email')?.focus();
+      } else {
+        div.textContent = currentLanguage === 'en' ? 'Complete this information to continue.' : 'Completa esta información para continuar.';
+      }
       question.appendChild(div);
     }
 
@@ -513,6 +640,10 @@
       translateDOM(question);
       bindOptions();
       bindCounters();
+      if (step === steps.length - 1) {
+        bindEmailValidation();
+        bindPhoneFormatting();
+      }
       if (railTipTitle && railTipText) {
         railTipTitle.textContent = translatePhrase(stepTips[step][0]);
         railTipText.textContent = translatePhrase(stepTips[step][1]);
