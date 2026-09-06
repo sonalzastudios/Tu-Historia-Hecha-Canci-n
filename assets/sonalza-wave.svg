@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="260" viewBox="0 0 1600 260" fill="none">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1600" y2="0" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FF8A1F" stop-opacity="0"/>
+      <stop offset="0.18" stop-color="#FF8A1F" stop-opacity="0.28"/>
+      <stop offset="0.52" stop-color="#FFB566" stop-opacity="0.18"/>
+      <stop offset="0.82" stop-color="#FF8A1F" stop-opacity="0.24"/>
+      <stop offset="1" stop-color="#FF8A1F" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <g stroke="url(#g)" stroke-width="1.15" fill="none">
+    <path d="M-80 190 C140 60 300 250 510 150 S880 45 1080 155 S1390 250 1680 105"/>
+    <path d="M-80 198 C140 68 300 258 510 158 S880 53 1080 163 S1390 258 1680 113"/>
+    <path d="M-80 206 C140 76 300 266 510 166 S880 61 1080 171 S1390 266 1680 121"/>
+    <path d="M-80 214 C140 84 300 274 510 174 S880 69 1080 179 S1390 274 1680 129"/>
+    <path d="M-80 182 C140 52 300 242 510 142 S880 37 1080 147 S1390 242 1680 97"/>
+    <path d="M-80 174 C140 44 300 234 510 134 S880 29 1080 139 S1390 234 1680 89"/>
+    <path d="M-80 166 C140 36 300 226 510 126 S880 21 1080 131 S1390 226 1680 81"/>
+    <path d="M-80 158 C140 28 300 218 510 118 S880 13 1080 123 S1390 218 1680 73"/>
+    <path d="M-80 150 C140 20 300 210 510 110 S880 5 1080 115 S1390 210 1680 65"/>
+    <path d="M-80 222 C140 92 300 282 510 182 S880 77 1080 187 S1390 282 1680 137"/>
+    <path d="M-80 230 C140 100 300 290 510 190 S880 85 1080 195 S1390 290 1680 145"/>
+    <path d="M-80 238 C140 108 300 298 510 198 S880 93 1080 203 S1390 298 1680 153"/>
+  </g>
+</svg>

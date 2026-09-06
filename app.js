@@ -48,6 +48,27 @@
     'Registrando tu pedido…':'Registering your order…',
     'No pudimos registrar el pedido.':'We could not register the order.',
     'No pudimos enviar la solicitud.':'We could not send the request.',
+    'Tu historia merece cuidado en cada detalle.':'Your story deserves care in every detail.',
+    'Desde el brief hasta la entrega, buscamos una experiencia clara, privada y profesional. Tú aportas la historia; SONALZA define la dirección creativa para convertirla en música.':'From the brief to delivery, we aim for a clear, private, and professional experience. You bring the story; SONALZA defines the creative direction to turn it into music.',
+    'Historia real':'Real story',
+    'Dirección musical':'Musical direction',
+    'Entrega cuidada':'Careful delivery',
+    'Historias que suenan':'Stories that resonate',
+    'TU HISTORIA YA EXISTE':'YOUR STORY ALREADY EXISTS',
+    'Ahora falta convertirla en música.':'Now turn it into music.',
+    'Regala algo que no se guarda en un cajón: una canción creada alrededor de nombres, recuerdos y momentos reales.':'Give something that does not end up in a drawer: a song created around real names, memories, and moments.',
+    'Más historias.':'More stories.',
+    'Más música.':'More music.',
+    'Un mundo mejor.':'A better world.',
+    'Navegación':'Navigation',
+    'Soporte':'Support',
+    'Legal':'Legal',
+    'Preguntas frecuentes':'Frequently asked questions',
+    'Contáctanos':'Contact us',
+    'Política de privacidad':'Privacy policy',
+    'Términos de servicio':'Terms of service',
+    'Precio regional según país':'Regional pricing by country',
+    'Diseñado para historias con raíz latina.':'Designed for stories with Latin roots.',
     'Custom cover':'Custom cover',
     'Portada personalizada para tu canción. Puedes escribir la idea visual o subir una foto de referencia.':'A custom cover for your song. You can describe the visual idea or upload a reference photo.',
     'Escribe qué te gustaría ver en tu custom cover':'Write what you would like to see on your custom cover',
@@ -340,8 +361,8 @@
       '.hero-copy', '.hero-media', '.trust-strip-grid > div', '.quick-head', '.quick-card',
       '.manifest-kicker', '.manifest-copy', '.manifest-points article', '.latin-copy', '.latin-values article',
       '.genre-heading-main', '.genre-heading-side', '.genre-tile', '.service-card', '.pricing-tools',
-      '.process-intro', '.process-list article', '.delivery-card-pro', '.final-cta-inner', '.footer-panel',
-      '.flow-intro-bar', '.creative-rail', '.question-shell', '.order-hero', '.summary-card',
+      '.process-intro', '.process-list article', '.standard-card', '.story-cta-copy', '.story-quote',
+      '.footer-pro-brand', '.footer-pro-col', '.footer-pro-signature', '.flow-intro-bar', '.creative-rail', '.question-shell', '.order-hero', '.summary-card',
       '.business-intro', '.business-panel', '.business-form', '.thanks-card'
     ];
     const nodes = [...new Set(selectors.flatMap(sel => [...document.querySelectorAll(sel)]))].filter(Boolean);
@@ -363,6 +384,34 @@
       });
     }, { threshold: 0.14, rootMargin: '0px 0px -8% 0px' });
     nodes.forEach(el => io.observe(el));
+  }
+
+  function setupParallax() {
+    const items = [...document.querySelectorAll('[data-parallax]')];
+    if (!items.length || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    let ticking = false;
+    const update = () => {
+      const vh = window.innerHeight || document.documentElement.clientHeight;
+      items.forEach(el => {
+        const rect = el.parentElement?.getBoundingClientRect();
+        if (!rect) return;
+        const center = rect.top + rect.height / 2;
+        const delta = (center - vh / 2) / vh;
+        const strength = Math.max(.02, Math.min(.18, Number(el.dataset.parallax || .08)));
+        const y = Math.max(-16, Math.min(16, -delta * 120 * strength));
+        el.style.setProperty('--parallax-y', `${y.toFixed(1)}px`);
+      });
+      ticking = false;
+    };
+    const request = () => {
+      if (!ticking) {
+        requestAnimationFrame(update);
+        ticking = true;
+      }
+    };
+    window.addEventListener('scroll', request, { passive:true });
+    window.addEventListener('resize', request);
+    request();
   }
 
   if (page === 'home') {
