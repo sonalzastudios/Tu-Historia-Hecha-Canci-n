@@ -4,11 +4,14 @@
   const page = document.body.dataset.page;
   const CURRENCY_KEY = 'sonalzaCurrencyV3';
   const PRICING = {
-    song: { USD: 59, MXN: 1099 },
+    song: { USD: 39, MXN: 659 },
     premium: { USD: 29, MXN: 549 },
     rush: { USD: 19, MXN: 349 },
     video: { USD: 29, MXN: 549 },
     second: { USD: 25, MXN: 449 }
+  };
+  const LIST_PRICING = {
+    song: { USD: 59, MXN: 999 }
   };
 
   let currentCurrency = localStorage.getItem(CURRENCY_KEY) === 'MXN' ? 'MXN' : 'USD';
@@ -25,7 +28,7 @@
       btn.classList.toggle('active', active);
       btn.setAttribute('aria-pressed', active ? 'true' : 'false');
     });
-    document.querySelectorAll('.price-value').forEach(el => {
+    document.querySelectorAll('.price-value, .compare-price, .savings-value').forEach(el => {
       const raw = currentCurrency === 'MXN' ? el.dataset.mxn : el.dataset.usd;
       if (raw) el.textContent = formatMoney(raw);
     });
@@ -258,6 +261,8 @@
 
     const totalEl = document.getElementById('total');
     const basePriceEl = document.getElementById('basePrice');
+    const baseComparePriceEl = document.getElementById('baseComparePrice');
+    const baseSavingsEl = document.getElementById('baseSavings');
     const currencyLabel = document.getElementById('orderCurrencyLabel');
     const checkoutBtn = document.getElementById('checkoutBtn');
     const addons = [...document.querySelectorAll('.addon')];
@@ -266,6 +271,8 @@
       const base = PRICING.song[currentCurrency];
       let total = base;
       if (basePriceEl) basePriceEl.textContent = formatMoney(base);
+      if (baseComparePriceEl) baseComparePriceEl.textContent = formatMoney(LIST_PRICING.song[currentCurrency]);
+      if (baseSavingsEl) baseSavingsEl.textContent = `−${formatMoney(LIST_PRICING.song[currentCurrency] - base)}`;
       addons.forEach(addon => {
         const key = addon.dataset.key;
         const price = PRICING[key][currentCurrency];
