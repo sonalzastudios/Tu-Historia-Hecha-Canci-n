@@ -50,3 +50,7 @@ V8 **todavía no cobra**. Registra la orden como `pending_payment`. El siguiente
 The genre showcase now includes custom lightweight SVG artwork for Corrido, Banda, Norteño, Cumbia, Mariachi and Más estilos. The art is decorative, responsive and integrated into each clickable genre card without reducing text readability.
 
 V10: upgraded genre cards with richer editorial vector artwork and stronger visual differentiation.
+
+
+## V11
+Genre cards now use editorial photo artwork derived from the approved SONALZA visual concept, with live HTML text and responsive masking.
