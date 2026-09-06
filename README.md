@@ -1,17 +1,18 @@
-# SONALZA Website V3
+# SONALZA STUDIOS — Website V5
 
-Sitio estático responsive en español para SONALZA STUDIOS.
+Versión enfocada en móvil, conversión y una identidad latina premium.
 
-## Cambios V3
-- Dirección visual más premium y limpia.
-- Hero reescrito con posicionamiento positivo.
-- Imagen de estudio corregida con `object-position` hacia el micrófono para evitar el texto del banner.
-- Selector persistente de moneda USD / MXN.
-- Precios fijos por moneda en homepage y resumen del pedido.
-- El selector de moneda se mantiene entre páginas con `localStorage`.
+## Cambios principales
+- Mejor legibilidad y navegación en celular.
+- Header móvil compacto con selector USD/MXN.
+- Hero más claro y orientado a conversión.
+- Precio de lanzamiento visible desde el primer bloque.
+- Barra fija de CTA en móvil.
+- Sección propia de identidad latina: raíces, emoción y ritmo.
+- Mejor tamaño de tipografía, campos y botones para iPhone/Android.
+- Formulario de 8 pasos optimizado para pantallas pequeñas.
+- Checkout/resumen más legible en móvil.
+- Mantiene selector USD/MXN y precios de lanzamiento.
 
 ## Publicación
-Subir el contenido de esta carpeta al mismo repositorio `sonalza-web` y permitir que Vercel haga el redeploy.
-
-- V4 pricing: launch discounts with compare-at prices, USD/MXN display, and order summary savings.
-- MXN launch prices are commercially rounded from the 2026-09-05 reference rate (~16.89 MXN/USD).
+Sustituir los archivos del repositorio `sonalza-web` por esta versión. Vercel debe desplegar automáticamente si ya está conectado al repositorio.

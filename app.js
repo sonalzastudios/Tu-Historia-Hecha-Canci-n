@@ -101,6 +101,17 @@
     });
   }
 
+  if (page === 'home') {
+    const sticky = document.querySelector('.mobile-sticky-cta');
+    if (sticky) {
+      const syncSticky = () => {
+        sticky.classList.toggle('is-visible', window.scrollY > 520);
+      };
+      window.addEventListener('scroll', syncSticky, { passive: true });
+      syncSticky();
+    }
+  }
+
   if (page === 'create') {
     const data = load();
     let step = 0;
