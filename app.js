@@ -47,6 +47,31 @@
     'Canción personalizada':'Custom Song',
     'Registrando tu pedido…':'Registering your order…',
     'No pudimos registrar el pedido.':'We could not register the order.',
+    'FAMILIA':'FAMILY',
+    'AMOR':'LOVE',
+    'MIGRACIÓN':'MIGRATION',
+    'CELEBRACIÓN':'CELEBRATION',
+    'LEGADO':'LEGACY',
+    'MEMORIA':'MEMORY',
+    'HECHO CON RAÍCES · DIRIGIDO CON CRITERIO':'ROOTED IN CULTURE · DIRECTED WITH INTENTION',
+    'Que se sienta latino antes de tener que explicarlo.':'Let it feel Latin before it ever needs an explanation.',
+    'Familia, amor, migración, fiesta, sacrificio y legado. SONALZA no usa “lo latino” como decoración: lo trata como contexto, lenguaje, ritmo y memoria.':'Family, love, migration, celebration, sacrifice, and legacy. SONALZA does not use “Latin” as decoration: we treat it as context, language, rhythm, and memory.',
+    'SONALZA / RAÍCES':'SONALZA / ROOTS',
+    'De nuestras historias':'From our stories',
+    'a tu canción.':'to your song.',
+    'Historias que vienen de lejos.':'Stories that began long before us.',
+    'Familia, trabajo, migración, sacrificios y todo lo que merece quedar contado.':'Family, work, migration, sacrifice, and everything worth preserving in a song.',
+    'También se recuerda bailando.':'Some memories are meant to be danced.',
+    'Lo que alguien deja en nosotros.':'What someone leaves behind in us.',
+    '01 · PALABRAS':'01 · WORDS',
+    'Que hable como habla tu historia.':'Let it speak the way your story speaks.',
+    'Nombres, frases y expresiones reales tienen más peso que cualquier cliché.':'Real names, phrases, and expressions carry more weight than any cliché.',
+    '02 · SONIDO':'02 · SOUND',
+    'Que el género tenga identidad propia.':'Let each genre keep its own identity.',
+    'Corrido, banda, norteño, cumbia y mariachi no son la misma cosa.':'Corrido, banda, norteño, cumbia, and mariachi are not the same thing.',
+    '03 · EMOCIÓN':'03 · EMOTION',
+    'Que la persona se reconozca dentro.':'Let the person recognize themselves in it.',
+    'La meta es provocar memoria, orgullo, risa, nostalgia o ganas de bailar.':'The goal is to spark memory, pride, laughter, nostalgia, or the urge to dance.',
     'No pudimos enviar la solicitud.':'We could not send the request.',
     'Tu historia merece cuidado en cada detalle.':'Your story deserves care in every detail.',
     'Desde el brief hasta la entrega, buscamos una experiencia clara, privada y profesional. Tú aportas la historia; SONALZA define la dirección creativa para convertirla en música.':'From the brief to delivery, we aim for a clear, private, and professional experience. You bring the story; SONALZA defines the creative direction to turn it into music.',
@@ -359,7 +384,7 @@
   function setupRevealAnimations() {
     const selectors = [
       '.hero-copy', '.hero-media', '.trust-strip-grid > div', '.quick-head', '.quick-card',
-      '.manifest-kicker', '.manifest-copy', '.manifest-points article', '.latin-copy', '.latin-values article',
+      '.manifest-kicker', '.manifest-copy', '.manifest-points article', '.latin-copy', '.latin-side-note', '.latin-editorial-card', '.latin-values article',
       '.genre-heading-main', '.genre-heading-side', '.genre-tile', '.service-card', '.pricing-tools',
       '.process-intro', '.process-list article', '.standard-card', '.story-cta-copy', '.story-quote',
       '.footer-pro-brand', '.footer-pro-col', '.footer-pro-signature', '.flow-intro-bar', '.creative-rail', '.question-shell', '.order-hero', '.summary-card',
@@ -928,5 +953,6 @@
   }
 
   setupRevealAnimations();
+  setupParallax();
   setupLocalePicker();
 })();
