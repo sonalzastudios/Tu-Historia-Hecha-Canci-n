@@ -165,3 +165,12 @@ Los cupones se validan server-side. El descuento aplica al precio base del produ
 - Terms version bumped to `2026-09-06-v4`.
 - AI wording reframed as supporting technology inside a human-directed workflow.
 - Terms explicitly state that SONALZA is not a fully automated creative process and that a person reviews lyrics and overall story consistency before delivery.
+
+## V28
+- ALTUNO and NARELI voice samples now play inline inside the SONALZA form instead of opening YouTube.
+- ALTUNO sample: 22-second web clip beginning at 0:12 from `LOS AÑOS QUE NO VIERON`.
+- NARELI sample: 22-second web clip beginning at 0:57 from `Qué bueno que te fuiste`.
+- Sample player does not select the artist card. Only the artist card itself changes the selected voice.
+- Starting one voice sample automatically stops the other.
+- Added play/pause state, elapsed time, progress bar, and animated mini waveform.
+- Homepage SONALZA waveform/equalizer animation remains enabled.

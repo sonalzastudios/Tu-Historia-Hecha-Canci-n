@@ -1503,3 +1503,34 @@ body:not(.locale-ready) .product-choice-price strong{opacity:0}
 @media(prefers-reduced-motion:reduce){
   .wave-bars i{animation:none!important}
 }
+
+/* ===== V28 · Inline SONALZA voice samples ===== */
+button.voice-sample{border:0;width:calc(100% - 20px);cursor:pointer;font-family:inherit;text-align:left;position:relative;overflow:hidden}
+.voice-sample-copy{display:flex;align-items:center;justify-content:space-between;gap:8px;min-width:0;flex:1;position:relative;z-index:2}
+.voice-sample-label{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.voice-sample-time{font-size:9px;color:#8793a3;font-weight:750;white-space:nowrap;transition:color .18s ease}
+.voice-mini-wave{height:24px;display:flex;align-items:center;gap:2px;margin-left:auto;position:relative;z-index:2;opacity:.42;transition:opacity .18s ease}
+.voice-mini-wave i{display:block;width:2px;height:12px;border-radius:99px;background:#ff7a00;transform:scaleY(.35);transform-origin:center;transition:transform .18s ease}
+.voice-sample.is-playing{background:#eef4fa;color:#102139}
+.voice-sample.is-playing .voice-sample-play{background:#ff7a00}
+.voice-sample.is-playing .voice-sample-time{color:#6f7d90}
+.voice-sample.is-playing .voice-mini-wave{opacity:1}
+.voice-sample.is-playing .voice-mini-wave i{animation:voiceMiniEqualizer .68s ease-in-out infinite alternate}
+.voice-sample.is-playing .voice-mini-wave i:nth-child(2){animation-duration:.48s;animation-delay:-.21s}
+.voice-sample.is-playing .voice-mini-wave i:nth-child(3){animation-duration:.79s;animation-delay:-.34s}
+.voice-sample.is-playing .voice-mini-wave i:nth-child(4){animation-duration:.55s;animation-delay:-.11s}
+.voice-sample.is-playing .voice-mini-wave i:nth-child(5){animation-duration:.86s;animation-delay:-.43s}
+.voice-sample.is-playing .voice-mini-wave i:nth-child(6){animation-duration:.61s;animation-delay:-.27s}
+.voice-sample.is-playing .voice-mini-wave i:nth-child(7){animation-duration:.74s;animation-delay:-.17s}
+.voice-progress{position:absolute;left:0;right:0;bottom:0;height:2px;background:rgba(7,26,51,.06)}
+.voice-progress-fill{display:block;width:0;height:100%;background:linear-gradient(90deg,#ff7a00,#ffb057);transition:width .08s linear}
+@keyframes voiceMiniEqualizer{0%{transform:scaleY(.28)}45%{transform:scaleY(.72)}100%{transform:scaleY(1.15)}}
+
+@media(max-width:760px){
+  button.voice-sample{width:calc(100% - 18px)}
+  .voice-mini-wave{display:none}
+  .voice-sample-label{font-size:10px}
+}
+@media(prefers-reduced-motion:reduce){
+  .voice-sample.is-playing .voice-mini-wave i{animation:none!important;transform:scaleY(.7)}
+}

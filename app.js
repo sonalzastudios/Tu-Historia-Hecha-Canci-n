@@ -738,6 +738,8 @@
     const selectedProductSummary = document.getElementById('selectedProductSummary');
     const flowDurationMeta = document.getElementById('flowDurationMeta');
     const changeProductBtn = document.getElementById('changeProductBtn');
+    let activeVoiceAudio = null;
+    let activeVoiceButton = null;
 
     const t = (es,en) => currentLanguage === 'en' ? en : es;
     const escapeHtml = (value='') => String(value).replace(/[&<>'"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[ch]));
@@ -753,6 +755,7 @@
     }
 
     function showProductChooser() {
+      stopVoiceSample();
       if (songFlow) songFlow.hidden = true;
       if (productChooser) productChooser.hidden = false;
       syncProductChoiceUI();
@@ -795,13 +798,13 @@
         {
           value:'ALTUNO',
           roleEs:'Voz masculina', roleEn:'Male voice',
-          sample:'https://youtu.be/oV1TDEEhi50?si=G9jcFA0RxSMREMq0&t=12',
+          sample:'assets/audio/altuno-sample.mp3',
           sampleEs:'Escuchar ALTUNO', sampleEn:'Listen to ALTUNO'
         },
         {
           value:'NARELI',
           roleEs:'Voz femenina', roleEn:'Female voice',
-          sample:'https://youtu.be/kaLsmAUMohg?si=2b6fUHyjD8bklytB&t=57',
+          sample:'assets/audio/nareli-sample.mp3',
           sampleEs:'Escuchar NARELI', sampleEn:'Listen to NARELI'
         },
         {
@@ -815,7 +818,13 @@
         const role = currentLanguage === 'en' ? artist.roleEn : artist.roleEs;
         const chooseLabel = currentLanguage === 'en' ? `Choose ${artist.value === 'Sorpréndeme' ? 'Surprise me' : artist.value}` : `Elegir ${artist.value}`;
         const displayName = artist.value === 'Sorpréndeme' && currentLanguage === 'en' ? 'SURPRISE ME' : artist.value.toUpperCase();
-        const sample = artist.sample ? `<a class="voice-sample" href="${artist.sample}" target="_blank" rel="noopener noreferrer" aria-label="${escapeHtml(currentLanguage === 'en' ? artist.sampleEn : artist.sampleEs)}"><span class="voice-sample-play" aria-hidden="true">▶</span><span>${escapeHtml(currentLanguage === 'en' ? artist.sampleEn : artist.sampleEs)}</span></a>` : `<span class="voice-sample voice-sample-muted"><span class="voice-sample-spark" aria-hidden="true">✦</span><span>${escapeHtml(currentLanguage === 'en' ? 'SONALZA chooses' : 'SONALZA elige')}</span></span>`;
+        const sampleLabel = currentLanguage === 'en' ? artist.sampleEn : artist.sampleEs;
+        const sample = artist.sample ? `<button type="button" class="voice-sample" data-voice-sample-src="${artist.sample}" data-voice-sample-name="${escapeHtml(artist.value)}" aria-label="${escapeHtml(sampleLabel)}">
+            <span class="voice-sample-play" aria-hidden="true">▶</span>
+            <span class="voice-sample-copy"><span class="voice-sample-label">${escapeHtml(sampleLabel)}</span><span class="voice-sample-time">0:22</span></span>
+            <span class="voice-mini-wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+            <span class="voice-progress" aria-hidden="true"><span class="voice-progress-fill"></span></span>
+          </button>` : `<span class="voice-sample voice-sample-muted"><span class="voice-sample-spark" aria-hidden="true">✦</span><span>${escapeHtml(currentLanguage === 'en' ? 'SONALZA chooses' : 'SONALZA elige')}</span></span>`;
         return `<div class="voice-artist-card ${isSelected ? 'selected' : ''}" data-voice-card="${escapeHtml(artist.value)}">
           <button type="button" class="voice-select" data-voice-choice="${escapeHtml(artist.value)}" aria-pressed="${isSelected ? 'true' : 'false'}" aria-label="${escapeHtml(chooseLabel)}">
             <span class="voice-card-top"><strong>${escapeHtml(displayName)}</strong><span class="voice-check" aria-hidden="true">✓</span></span>
@@ -990,6 +999,36 @@
 
     function getSteps() { return data.product === 'corrido' ? corridoSteps : songSteps; }
 
+    function stopVoiceSample({reset=true}={}) {
+      if (activeVoiceAudio) {
+        activeVoiceAudio.pause();
+        if (reset) {
+          try { activeVoiceAudio.currentTime = 0; } catch (e) {}
+        }
+      }
+      if (activeVoiceButton) {
+        activeVoiceButton.classList.remove('is-playing');
+        const play = activeVoiceButton.querySelector('.voice-sample-play');
+        const label = activeVoiceButton.querySelector('.voice-sample-label');
+        const time = activeVoiceButton.querySelector('.voice-sample-time');
+        const progress = activeVoiceButton.querySelector('.voice-progress-fill');
+        if (play) play.textContent = '▶';
+        if (label) {
+          const name = activeVoiceButton.dataset.voiceSampleName || '';
+          label.textContent = currentLanguage === 'en' ? `Listen to ${name}` : `Escuchar ${name}`;
+        }
+        if (time) time.textContent = '0:22';
+        if (progress) progress.style.width = '0%';
+      }
+      activeVoiceAudio = null;
+      activeVoiceButton = null;
+    }
+
+    function formatVoiceSampleTime(seconds=0) {
+      const safe = Math.max(0, Math.floor(Number(seconds) || 0));
+      return `${Math.floor(safe / 60)}:${String(safe % 60).padStart(2,'0')}`;
+    }
+
     function bindVoiceArtistSelector() {
       question.querySelectorAll('[data-voice-choice]').forEach(btn => {
         btn.addEventListener('click', () => {
@@ -1004,8 +1043,68 @@
           });
         });
       });
-      // Sample links are separate interactive elements by design; clicking them must never select a voice.
-      question.querySelectorAll('.voice-sample').forEach(link => link.addEventListener('click', e => e.stopPropagation()));
+
+      question.querySelectorAll('[data-voice-sample-src]').forEach(btn => {
+        btn.addEventListener('click', async e => {
+          e.preventDefault();
+          e.stopPropagation();
+          const src = btn.dataset.voiceSampleSrc;
+          if (!src) return;
+
+          if (activeVoiceButton === btn && activeVoiceAudio) {
+            if (activeVoiceAudio.paused) {
+              try { await activeVoiceAudio.play(); } catch (err) { return; }
+              btn.classList.add('is-playing');
+              const play = btn.querySelector('.voice-sample-play');
+              const label = btn.querySelector('.voice-sample-label');
+              if (play) play.textContent = '❚❚';
+              if (label) label.textContent = currentLanguage === 'en' ? 'Playing sample' : 'Reproduciendo muestra';
+            } else {
+              activeVoiceAudio.pause();
+              btn.classList.remove('is-playing');
+              const play = btn.querySelector('.voice-sample-play');
+              const label = btn.querySelector('.voice-sample-label');
+              const name = btn.dataset.voiceSampleName || '';
+              if (play) play.textContent = '▶';
+              if (label) label.textContent = currentLanguage === 'en' ? `Listen to ${name}` : `Escuchar ${name}`;
+            }
+            return;
+          }
+
+          stopVoiceSample();
+          const audio = new Audio(src);
+          audio.preload = 'auto';
+          activeVoiceAudio = audio;
+          activeVoiceButton = btn;
+
+          const playIcon = btn.querySelector('.voice-sample-play');
+          const label = btn.querySelector('.voice-sample-label');
+          const time = btn.querySelector('.voice-sample-time');
+          const progress = btn.querySelector('.voice-progress-fill');
+
+          audio.addEventListener('timeupdate', () => {
+            if (activeVoiceAudio !== audio) return;
+            const duration = Number.isFinite(audio.duration) && audio.duration > 0 ? audio.duration : 22;
+            const pct = Math.min(100, Math.max(0, (audio.currentTime / duration) * 100));
+            if (progress) progress.style.width = `${pct}%`;
+            if (time) time.textContent = `${formatVoiceSampleTime(audio.currentTime)} / ${formatVoiceSampleTime(duration)}`;
+          });
+          audio.addEventListener('ended', () => stopVoiceSample());
+          audio.addEventListener('error', () => {
+            stopVoiceSample();
+            if (label) label.textContent = currentLanguage === 'en' ? 'Sample unavailable' : 'Muestra no disponible';
+          });
+
+          try {
+            await audio.play();
+            btn.classList.add('is-playing');
+            if (playIcon) playIcon.textContent = '❚❚';
+            if (label) label.textContent = currentLanguage === 'en' ? 'Playing sample' : 'Reproduciendo muestra';
+          } catch (err) {
+            stopVoiceSample();
+          }
+        });
+      });
     }
 
     function bindOptions() {
@@ -1182,6 +1281,7 @@
     }
 
     function render() {
+      stopVoiceSample();
       const steps = getSteps();
       if (step > steps.length - 1) step = steps.length - 1;
       question.innerHTML = steps[step]();
