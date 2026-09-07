@@ -589,6 +589,7 @@
     coverCropMustShow: '',
     coverImageName: '',
     coverImagePath: '',
+    coverImageOrderId: '',
     raices: '',
     trayectoria: '',
     personasClave: '',
@@ -629,11 +630,15 @@
       if (!window.confirm(msg)) return;
       clearDraft();
       sessionStorage.removeItem('sonalzaLastOrder');
+      sessionStorage.removeItem('sonalzaPendingOrderSession');
+      sessionStorage.removeItem('sonalzaCheckoutAttemptId');
+      sessionStorage.removeItem('sonalzaCheckoutAttemptContext');
       location.href = 'create.html';
     });
   }
 
   let turnstileConfig = { loaded:false, required:false, siteKey:'' };
+  let publicRuntimeConfig = { stripeCheckoutEnabled:false };
   async function loadTurnstileScript() {
     if (window.turnstile) return true;
     return new Promise(resolve => {
@@ -661,6 +666,8 @@
       const r = await fetch('/api/public-config', { headers:{Accept:'application/json'} });
       const cfg = await r.json();
       turnstileConfig = { loaded:true, required:Boolean(cfg.turnstileRequired), siteKey:String(cfg.turnstileSiteKey || '') };
+      publicRuntimeConfig.stripeCheckoutEnabled = Boolean(cfg.stripeCheckoutEnabled);
+      window.dispatchEvent(new CustomEvent('sonalza:publicconfig', {detail:{...publicRuntimeConfig}}));
       if (!turnstileConfig.siteKey) return;
       const ok = await loadTurnstileScript();
       if (!ok || !window.turnstile) return;
@@ -1619,6 +1626,7 @@
             pendingCoverFile = null;
             data.coverImageName = '';
             data.coverImagePath = '';
+            data.coverImageOrderId = '';
             save(data);
             if (fileName) { fileName.hidden = true; fileName.textContent = ''; }
             if (previewWrap) previewWrap.hidden = true;
@@ -1628,6 +1636,7 @@
           pendingCoverFile = file;
           data.coverImageName = file.name;
           data.coverImagePath = '';
+          data.coverImageOrderId = '';
           save(data);
           if (fileName) { fileName.hidden = false; fileName.textContent = file.name; }
           if (previewWrap && previewImage && file.type && file.type.startsWith('image/')) {
@@ -1715,7 +1724,12 @@
           ? `<strong>Region verification required.</strong> We detected ${REGIONS[detectedRegion].labelEn}. The ${REGIONS[currentRegion].labelEn} regional price will only apply if the billing country is verified as ${REGIONS[currentRegion].labelEn} when payment is enabled.`
           : `<strong>Se requiere verificar la región.</strong> Detectamos ${REGIONS[detectedRegion].labelEs}. El precio regional de ${REGIONS[currentRegion].labelEs} solo aplicará si el país de facturación se verifica como ${REGIONS[currentRegion].labelEs} cuando habilitemos el pago.`) : '';
       }
-      if (checkoutBtn) checkoutBtn.textContent = `${currentLanguage === 'en' ? 'Register order' : 'Registrar pedido'} · ${formatMoney(total)} →`;
+      if (checkoutBtn) {
+        const action = publicRuntimeConfig.stripeCheckoutEnabled
+          ? (currentLanguage === 'en' ? 'Continue to secure payment' : 'Continuar al pago seguro')
+          : (currentLanguage === 'en' ? 'Register order' : 'Registrar pedido');
+        checkoutBtn.textContent = `${action} · ${formatMoney(total)} →`;
+      }
     };
 
     function readFileDataUrl(file) {
@@ -1748,15 +1762,17 @@
       return { dataBase64: compressed.split(',')[1] || '', mimeType:'image/jpeg', fileName:String(file.name || 'cover').replace(/\.[^.]+$/,'') + '.jpg' };
     }
 
-    async function uploadCoverIfNeeded(chosenAddons) {
+    async function uploadCoverIfNeeded(chosenAddons, orderSession) {
       if (!chosenAddons.includes('premium') || !pendingCoverFile) return;
+      if (!orderSession?.orderId || !orderSession?.orderToken) throw new Error(currentLanguage === 'en' ? 'We could not authorize the cover upload.' : 'No pudimos autorizar la carga de la portada.');
       if (pendingCoverFile.size > 15 * 1024 * 1024) throw new Error(currentLanguage === 'en' ? 'The original image is too large. Choose a photo under 15 MB.' : 'La imagen original es demasiado grande. Elige una foto menor de 15 MB.');
       if (!String(pendingCoverFile.type || '').startsWith('image/')) throw new Error(currentLanguage === 'en' ? 'Choose a valid image file.' : 'Selecciona un archivo de imagen válido.');
       const prepared = await prepareImageForUpload(pendingCoverFile);
-      const r = await fetch('/api/upload-cover', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(prepared)});
+      const r = await fetch('/api/upload-cover', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...prepared,orderId:orderSession.orderId,orderToken:orderSession.orderToken})});
       const result = await r.json().catch(()=>({}));
       if (!r.ok || !result.ok) throw new Error(result.error || (currentLanguage === 'en' ? 'We could not save the cover photo.' : 'No pudimos guardar la foto de portada.'));
       data.coverImagePath = result.path || '';
+      data.coverImageOrderId = orderSession.orderId;
       save(data);
     }
 
@@ -1764,6 +1780,7 @@
     addons.forEach(a => a.addEventListener('change', updateTotal));
     window.addEventListener('sonalza:currencychange', updateTotal);
     window.addEventListener('sonalza:regionready', () => { renderOrderBrief(); updateTotal(); });
+    window.addEventListener('sonalza:publicconfig', updateTotal);
     checkoutBtn?.addEventListener('click', async () => {
       const original = checkoutBtn.textContent;
       const statusEl = document.getElementById('submitStatus');
@@ -1777,21 +1794,67 @@
       if (statusEl) { statusEl.textContent = ''; statusEl.className = 'submit-status'; }
       try {
         const chosenAddons = addons.filter(a=>a.checked).map(a=>a.dataset.key);
-        if (chosenAddons.includes('premium') && data.coverImageName && !pendingCoverFile && !data.coverImagePath) {
-          throw new Error(currentLanguage === 'en' ? 'Please select the cover photo again before registering the order.' : 'Vuelve a seleccionar la foto de portada antes de registrar el pedido.');
+        const attemptKey = 'sonalzaCheckoutAttemptId';
+        const attemptContextKey = 'sonalzaCheckoutAttemptContext';
+        const attemptContext = `${data.product || 'song'}|${String(data.email || '').trim().toLowerCase()}|${currentRegion}|${chosenAddons.slice().sort().join(',')}|${appliedCoupon?.code || ''}`;
+        if (sessionStorage.getItem(attemptContextKey) !== attemptContext) {
+          sessionStorage.removeItem(attemptKey);
+          sessionStorage.removeItem('sonalzaPendingOrderSession');
+          data.coverImagePath = '';
+          data.coverImageOrderId = '';
+          save(data);
+          sessionStorage.setItem(attemptContextKey, attemptContext);
         }
-        await uploadCoverIfNeeded(chosenAddons);
+        let clientRequestId = sessionStorage.getItem(attemptKey) || '';
+        if (!clientRequestId) {
+          clientRequestId = (window.crypto && typeof window.crypto.randomUUID === 'function')
+            ? window.crypto.randomUUID()
+            : `web_${Date.now().toString(36)}_${Math.random().toString(36).slice(2,12)}`;
+          sessionStorage.setItem(attemptKey, clientRequestId);
+        }
         const utmParams = new URLSearchParams(location.search);
         const utm = {};
         ['utm_source','utm_medium','utm_campaign','utm_content','utm_term'].forEach(k=>{ if(utmParams.get(k)) utm[k]=utmParams.get(k); });
         const response = await fetch('/api/submit-order', {
           method:'POST', headers:{'Content-Type':'application/json'},
-          body:JSON.stringify({draft:data,region:currentRegion,language:currentLanguage,currency:currentCurrency,detectedRegion,regionOverride:localStorage.getItem(REGION_OVERRIDE_KEY)==='1',addons:chosenAddons,couponCode:appliedCoupon?.code || '',page:location.href,referrer:document.referrer,utm,termsAccepted:true,privacyAccepted:true,materialsAccepted:true,turnstileToken:getTurnstileToken('order')})
+          body:JSON.stringify({draft:data,region:currentRegion,language:currentLanguage,currency:currentCurrency,detectedRegion,regionOverride:localStorage.getItem(REGION_OVERRIDE_KEY)==='1',addons:chosenAddons,couponCode:appliedCoupon?.code || '',page:location.href,referrer:document.referrer,utm,termsAccepted:true,privacyAccepted:true,materialsAccepted:true,turnstileToken:getTurnstileToken('order'),clientRequestId})
         });
         const result = await response.json().catch(()=>({}));
         if (!response.ok || !result.ok) throw new Error(result.error || 'No pudimos registrar el pedido.');
-        sessionStorage.setItem('sonalzaLastOrder', JSON.stringify(result));
+        const orderSession = {orderId:result.orderId,orderToken:result.orderToken,total:result.total,currency:result.currency,region:result.region};
+        sessionStorage.setItem('sonalzaPendingOrderSession', JSON.stringify(orderSession));
+
+        if (chosenAddons.includes('premium') && data.coverImageName && !pendingCoverFile && !(data.coverImagePath && data.coverImageOrderId === result.orderId)) {
+          throw new Error(currentLanguage === 'en' ? 'Please select the cover photo again before continuing.' : 'Vuelve a seleccionar la foto de portada antes de continuar.');
+        }
+        await uploadCoverIfNeeded(chosenAddons, orderSession);
+
+        const finalizeResponse = await fetch('/api/finalize-order', {
+          method:'POST', headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({orderId:result.orderId,orderToken:result.orderToken})
+        });
+        const finalized = await finalizeResponse.json().catch(()=>({}));
+        if (!finalizeResponse.ok || !finalized.ok) throw new Error(finalized.error || (currentLanguage === 'en' ? 'We could not finalize your order.' : 'No pudimos finalizar tu pedido.'));
+        sessionStorage.setItem('sonalzaLastOrder', JSON.stringify({...result,...finalized}));
+
+        const stripeEnabled = Boolean(finalized.stripeCheckoutEnabled || publicRuntimeConfig.stripeCheckoutEnabled);
+        if (stripeEnabled) {
+          checkoutBtn.textContent = currentLanguage === 'en' ? 'Opening secure payment…' : 'Abriendo pago seguro…';
+          const payResponse = await fetch('/api/create-checkout-session', {
+            method:'POST', headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({orderId:result.orderId,orderToken:result.orderToken})
+          });
+          const payment = await payResponse.json().catch(()=>({}));
+          if (!payResponse.ok || !payment.ok || !payment.checkoutUrl) throw new Error(payment.error || (currentLanguage === 'en' ? 'We could not start secure payment.' : 'No pudimos iniciar el pago seguro.'));
+          sessionStorage.setItem('sonalzaLastOrder', JSON.stringify({...result,...finalized,...payment}));
+          location.href = payment.checkoutUrl;
+          return;
+        }
+
         clearDraft();
+        sessionStorage.removeItem(attemptKey);
+        sessionStorage.removeItem(attemptContextKey);
+        sessionStorage.removeItem('sonalzaPendingOrderSession');
         location.href = `thanks.html?order=${encodeURIComponent(result.orderId)}`;
       } catch (err) {
         if (statusEl) { statusEl.textContent = err.message; statusEl.className = 'submit-status error-status'; }

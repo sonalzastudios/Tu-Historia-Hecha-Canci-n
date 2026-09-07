@@ -4,6 +4,7 @@ module.exports = async function handler(req,res) {
   return res.status(200).json({
     ok:true,
     turnstileSiteKey: process.env.TURNSTILE_SITE_KEY || '',
-    turnstileRequired: String(process.env.REQUIRE_TURNSTILE || '').toLowerCase() === 'true'
+    turnstileRequired: String(process.env.REQUIRE_TURNSTILE || '').toLowerCase() === 'true',
+    stripeCheckoutEnabled: String(process.env.ENABLE_STRIPE_CHECKOUT || '').toLowerCase() === 'true' && Boolean(process.env.STRIPE_SECRET_KEY)
   });
 };

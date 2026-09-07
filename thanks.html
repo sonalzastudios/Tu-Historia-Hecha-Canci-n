@@ -7,19 +7,38 @@
     <div class="thanks-card thanks-card-pro">
       <div class="thanks-glow" aria-hidden="true"></div>
       <div class="thanks-mark"><img src="assets/sonalza-mark.png" alt="SONALZA"></div>
-      <div class="eyebrow">FORMULARIO RECIBIDO</div>
-      <h1>Tu historia ya llegó a SONALZA.</h1>
-      <p>Guardamos los datos de tu pedido. Conserva este número como referencia:</p>
+      <div class="eyebrow" id="thanksEyebrow">FORMULARIO RECIBIDO</div>
+      <h1 id="thanksTitle">Tu historia ya llegó a SONALZA.</h1>
+      <p id="thanksIntro">Guardamos los datos de tu pedido. Conserva este número como referencia:</p>
       <div class="order-code" id="thanksOrder">SONALZA</div>
-      <div class="thanks-steps">
+      <div class="thanks-steps" id="thanksSteps">
         <div><span>1</span><p><strong>Revisamos tu formulario</strong><small>Validamos que la historia y dirección estén claras.</small></p></div>
         <div><span>2</span><p><strong>Confirmamos el siguiente paso</strong><small>Cuando activemos el pago seguro, podrás continuar sin volver a llenar tu información.</small></p></div>
         <div><span>3</span><p><strong>Comienza la producción</strong><small>Tu canción entra al proceso creativo SONALZA.</small></p></div>
       </div>
-      <p class="thanks-note">Por privacidad, el borrador del formulario se elimina de este dispositivo después de registrar el pedido. El equipo de SONALZA conserva únicamente la información asociada al número de pedido.</p>
+      <p class="thanks-note" id="thanksNote">Por privacidad, el borrador del formulario se elimina de este dispositivo después de registrar el pedido. El equipo de SONALZA conserva únicamente la información asociada al número de pedido.</p>
       <a href="index.html" class="btn btn-primary">Volver a SONALZA →</a>
     </div>
   </main>
-  <script src="app.js"></script><script>const q=new URLSearchParams(location.search);document.getElementById('thanksOrder').textContent=q.get('order')||'SONALZA';</script>
+  <script src="app.js"></script><script>
+  const q=new URLSearchParams(location.search);
+  const order=q.get('order')||'SONALZA';
+  const returnedFromStripe=Boolean(q.get('session_id'));
+  const lang=(localStorage.getItem('sonalzaLanguage')||document.documentElement.lang||'es').toLowerCase().startsWith('en')?'en':'es';
+  document.getElementById('thanksOrder').textContent=order;
+  if(returnedFromStripe){
+    localStorage.removeItem('sonalzaSongDraftV2');
+    sessionStorage.removeItem('sonalzaCheckoutAttemptId');
+    sessionStorage.removeItem('sonalzaCheckoutAttemptContext');
+    sessionStorage.removeItem('sonalzaPendingOrderSession');
+    document.getElementById('thanksEyebrow').textContent=lang==='en'?'SECURE PAYMENT RETURN':'REGRESO DE PAGO SEGURO';
+    document.getElementById('thanksTitle').textContent=lang==='en'?'Your order is now with SONALZA.':'Tu pedido ya está con SONALZA.';
+    document.getElementById('thanksIntro').textContent=lang==='en'?'We are confirming the payment automatically. Keep this order reference:':'Estamos confirmando el pago automáticamente. Conserva esta referencia de pedido:';
+    document.getElementById('thanksSteps').innerHTML=lang==='en'
+      ?'<div><span>1</span><p><strong>Payment confirmation</strong><small>Stripe notifies SONALZA directly; you do not need to pay again if the payment was approved.</small></p></div><div><span>2</span><p><strong>Creative review</strong><small>We review your story and musical direction before production begins.</small></p></div><div><span>3</span><p><strong>Production begins</strong><small>Your song enters the SONALZA creative process after payment is confirmed.</small></p></div>'
+      :'<div><span>1</span><p><strong>Confirmación de pago</strong><small>Stripe avisa directamente a SONALZA; si el pago fue aprobado no necesitas pagar otra vez.</small></p></div><div><span>2</span><p><strong>Revisión creativa</strong><small>Revisamos tu historia y la dirección musical antes de iniciar producción.</small></p></div><div><span>3</span><p><strong>Comienza la producción</strong><small>Tu canción entra al proceso creativo SONALZA después de confirmar el pago.</small></p></div>';
+    document.getElementById('thanksNote').textContent=lang==='en'?'Your story is already stored with the order. The local draft has been removed from this device.':'Tu historia ya quedó guardada con el pedido. El borrador local se eliminó de este dispositivo.';
+  }
+</script>
 </body>
 </html>

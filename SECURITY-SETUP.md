@@ -1,37 +1,77 @@
-# SONALZA V30 · Security setup in Vercel
-
-The code is ready to use these controls, but they only become durable/mandatory after the corresponding environment variables are configured.
+# SONALZA V31 - Security setup in Vercel
 
 ## Cloudflare Turnstile
-Set in Vercel → Project → Settings → Environment Variables:
 
-- `TURNSTILE_SITE_KEY`
-- `TURNSTILE_SECRET_KEY`
-- `REQUIRE_TURNSTILE=true`
+Set:
+
+```text
+TURNSTILE_SITE_KEY
+TURNSTILE_SECRET_KEY
+REQUIRE_TURNSTILE=true
+```
 
 Recommended rollout:
-1. Add site + secret keys.
-2. Deploy with `REQUIRE_TURNSTILE=false` and verify the widget appears and orders/leads still work.
-3. Switch to `REQUIRE_TURNSTILE=true` only after testing on desktop + iPhone/Android.
 
-## Durable rate limiting (recommended)
-The code has a memory fallback, but serverless instances can reset. For real protection configure an Upstash Redis database and add:
+1. Add keys.
+2. Deploy with `REQUIRE_TURNSTILE=false` and verify the widget on desktop/mobile.
+3. Change to `REQUIRE_TURNSTILE=true` after successful tests.
 
-- `UPSTASH_REDIS_REST_URL`
-- `UPSTASH_REDIS_REST_TOKEN`
+## Durable rate limiting
 
-Current limits:
-- submit order: 6 / 10 min / IP
-- submit business lead: 5 / 10 min / IP
-- cover upload: 6 / 10 min / IP
-- coupon validation: 20 / min / IP
-- exit feedback: 15 / min / IP
+The code has an in-memory fallback, but durable production limiting should use Upstash:
+
+```text
+UPSTASH_REDIS_REST_URL
+UPSTASH_REDIS_REST_TOKEN
+```
+
+## Order-scoped upload authorization
+
+V31 no longer permits an anonymous cover upload merely because the endpoint URL is known.
+
+`submit-order` creates a short-lived signed token tied to one SONALZA order. `upload-cover` verifies that token, checks that the order actually includes the cover add-on, checks payment state, verifies image magic bytes, and stores the file under the order ID.
+
+Recommended:
+
+```text
+ORDER_TOKEN_SECRET=<32+ random bytes>
+```
 
 ## Acceptance evidence
-Set:
-- `EVIDENCE_HASH_SALT` = a long random secret (32+ random bytes recommended)
 
-The server will then store a one-way hash of the client IP rather than the raw IP, plus user-agent and Accept-Language, alongside the server-generated acceptance timestamp/version.
+Recommended:
 
-## Supabase migration
-Run the V30 additions at the bottom of `supabase-schema.sql` before using the V30 APIs against an existing database.
+```text
+EVIDENCE_HASH_SALT=<different 32+ byte random secret>
+```
+
+The server can store a one-way IP hash instead of the raw IP along with server-generated legal version/timestamp evidence.
+
+## Upload limits
+
+The browser resizes the image before upload. The Vercel endpoint limits the processed image to 2.5 MB so the base64 JSON request remains below Vercel's function payload ceiling.
+
+Accepted real file signatures:
+
+- JPEG
+- PNG
+- WebP
+
+The declared MIME type alone is not trusted.
+
+## Stripe
+
+Stripe remains off unless both are true:
+
+```text
+ENABLE_STRIPE_CHECKOUT=true
+STRIPE_SECRET_KEY=<configured>
+```
+
+Webhook processing additionally requires:
+
+```text
+STRIPE_WEBHOOK_SECRET
+```
+
+The payment webhook must pass signature verification before any order is marked paid.
