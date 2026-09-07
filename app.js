@@ -707,6 +707,8 @@
 
   if (page === 'create') {
     const data = load();
+    if (data.voz === 'Masculina') data.voz = 'ALTUNO';
+    if (data.voz === 'Femenina') data.voz = 'NARELI';
     const params = new URLSearchParams(location.search);
     const productParam = params.get('product');
     const genreParam = params.get('genre');
@@ -787,6 +789,43 @@
       }).join('')}</div>`;
     }
 
+
+    function voiceArtistSelector(selected='') {
+      const artists = [
+        {
+          value:'ALTUNO',
+          roleEs:'Voz masculina', roleEn:'Male voice',
+          sample:'https://youtu.be/oV1TDEEhi50?si=G9jcFA0RxSMREMq0&t=12',
+          sampleEs:'Escuchar ALTUNO', sampleEn:'Listen to ALTUNO'
+        },
+        {
+          value:'NARELI',
+          roleEs:'Voz femenina', roleEn:'Female voice',
+          sample:'https://youtu.be/kaLsmAUMohg?si=2b6fUHyjD8bklytB&t=57',
+          sampleEs:'Escuchar NARELI', sampleEn:'Listen to NARELI'
+        },
+        {
+          value:'Sorpréndeme',
+          roleEs:'SONALZA elige la voz que mejor combine con tu historia.',
+          roleEn:'SONALZA chooses the voice that best fits your story.'
+        }
+      ];
+      return `<div class="voice-artist-grid">${artists.map(artist => {
+        const isSelected = selected === artist.value;
+        const role = currentLanguage === 'en' ? artist.roleEn : artist.roleEs;
+        const chooseLabel = currentLanguage === 'en' ? `Choose ${artist.value === 'Sorpréndeme' ? 'Surprise me' : artist.value}` : `Elegir ${artist.value}`;
+        const displayName = artist.value === 'Sorpréndeme' && currentLanguage === 'en' ? 'SURPRISE ME' : artist.value.toUpperCase();
+        const sample = artist.sample ? `<a class="voice-sample" href="${artist.sample}" target="_blank" rel="noopener noreferrer" aria-label="${escapeHtml(currentLanguage === 'en' ? artist.sampleEn : artist.sampleEs)}"><span class="voice-sample-play" aria-hidden="true">▶</span><span>${escapeHtml(currentLanguage === 'en' ? artist.sampleEn : artist.sampleEs)}</span></a>` : `<span class="voice-sample voice-sample-muted"><span class="voice-sample-spark" aria-hidden="true">✦</span><span>${escapeHtml(currentLanguage === 'en' ? 'SONALZA chooses' : 'SONALZA elige')}</span></span>`;
+        return `<div class="voice-artist-card ${isSelected ? 'selected' : ''}" data-voice-card="${escapeHtml(artist.value)}">
+          <button type="button" class="voice-select" data-voice-choice="${escapeHtml(artist.value)}" aria-pressed="${isSelected ? 'true' : 'false'}" aria-label="${escapeHtml(chooseLabel)}">
+            <span class="voice-card-top"><strong>${escapeHtml(displayName)}</strong><span class="voice-check" aria-hidden="true">✓</span></span>
+            <span class="voice-role">${escapeHtml(role)}</span>
+          </button>
+          ${sample}
+        </div>`;
+      }).join('')}</div>`;
+    }
+
     const relationOptions = ['Esposo','Esposa','Pareja','Novio','Novia','Papá','Mamá','Hijo','Hija','Abuelo/a','Hermano/a','Amigo/a','Para mí','Otro'];
     const songOccasions = ['Porque sí','Te amo','Cumpleaños','Aniversario','Te extraño','Gracias','Perdón','Boda','Amistad','En memoria','Logro especial','Propuesta','Jubilación','Graduación','Otra ocasión'];
     const lifeOccasions = [
@@ -824,7 +863,11 @@
         <p class="sub">${t('Piensa en la persona que la recibirá. El género cambia por completo la emoción.','Think about the person receiving it. The genre completely changes the emotion.')}</p>
         ${optionButtons(['Corrido','Banda','Norteño','Cumbia','Mariachi','Duranguense','Huapango','Sierreño','Pop Latino','Reguetón','Balada','Sorpréndeme'], data.genero, 'genero')}
         <div class="dual-grid music-settings">
-          <div class="music-setting voice-setting"><div class="helper setting-label">${t('Voz','Voice')}</div>${optionButtons(['Masculina','Femenina','Sorpréndeme'], data.voz, 'voz')}</div>
+          <div class="music-setting voice-setting">
+            <div class="voice-section-head"><div><div class="helper setting-label">${t('Voz de tu canción','Voice for your song')}</div><strong>${t('¿Quién quieres que interprete tu canción?','Who would you like to perform your song?')}</strong></div><span>${t('Escucha una muestra antes de elegir.','Listen to a sample before choosing.')}</span></div>
+            ${voiceArtistSelector(data.voz)}
+            <p class="voice-disclaimer">${t('La interpretación final puede variar según el género, tono y producción de tu canción.','The final performance may vary depending on the genre, tone, and production of your song.')}</p>
+          </div>
           <div class="music-setting language-setting"><div class="helper setting-label">${t('Idioma de la canción','Song language')}</div>${optionButtons(['Español','Inglés','Bilingüe'], data.idioma, 'idioma')}</div>
         </div>`,
       () => `
@@ -916,7 +959,11 @@
           {value:'Sorpréndeme',labelEs:'Sorpréndeme',labelEn:'Surprise me'}
         ], data.genero, 'genero')}
         <div class="dual-grid music-settings">
-          <div class="music-setting voice-setting"><div class="helper setting-label">${t('Voz','Voice')}</div>${optionButtons(['Masculina','Femenina','Sorpréndeme'], data.voz, 'voz')}</div>
+          <div class="music-setting voice-setting">
+            <div class="voice-section-head"><div><div class="helper setting-label">${t('Voz de tu canción','Voice for your song')}</div><strong>${t('¿Quién quieres que interprete tu canción?','Who would you like to perform your song?')}</strong></div><span>${t('Escucha una muestra antes de elegir.','Listen to a sample before choosing.')}</span></div>
+            ${voiceArtistSelector(data.voz)}
+            <p class="voice-disclaimer">${t('La interpretación final puede variar según el género, tono y producción de tu canción.','The final performance may vary depending on the genre, tone, and production of your song.')}</p>
+          </div>
           <div class="music-setting language-setting"><div class="helper setting-label">${t('Idioma de la canción','Song language')}</div>${optionButtons(['Español','Inglés','Bilingüe'], data.idioma, 'idioma')}</div>
         </div>
         <div class="duration-selector">
@@ -942,6 +989,24 @@
     }
 
     function getSteps() { return data.product === 'corrido' ? corridoSteps : songSteps; }
+
+    function bindVoiceArtistSelector() {
+      question.querySelectorAll('[data-voice-choice]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const value = btn.dataset.voiceChoice || '';
+          data.voz = value;
+          save(data);
+          question.querySelectorAll('[data-voice-card]').forEach(card => {
+            const active = card.dataset.voiceCard === value;
+            card.classList.toggle('selected', active);
+            const select = card.querySelector('[data-voice-choice]');
+            if (select) select.setAttribute('aria-pressed', active ? 'true' : 'false');
+          });
+        });
+      });
+      // Sample links are separate interactive elements by design; clicking them must never select a voice.
+      question.querySelectorAll('.voice-sample').forEach(link => link.addEventListener('click', e => e.stopPropagation()));
+    }
 
     function bindOptions() {
       question.querySelectorAll('.option').forEach(btn => {
@@ -1120,7 +1185,7 @@
       const steps = getSteps();
       if (step > steps.length - 1) step = steps.length - 1;
       question.innerHTML = steps[step]();
-      bindOptions(); bindCounters();
+      bindOptions(); bindVoiceArtistSelector(); bindCounters();
       if (step === steps.length - 1) { bindEmailValidation(); bindPhoneFormatting(); }
       const tips = data.product === 'corrido' ? corridoTips : songTips;
       if (railTipTitle && railTipText && tips[step]) { railTipTitle.textContent = tips[step][0]; railTipText.textContent = tips[step][1]; }

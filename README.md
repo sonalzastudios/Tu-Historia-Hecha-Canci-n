@@ -152,3 +152,9 @@ Los cupones se validan server-side. El descuento aplica al precio base del produ
 - Added privacy notice at collection on personal and business forms.
 - Expanded Terms for Content ID/DSP monetization, source files/stems, refusal/suspension, inactivity, and supported territories.
 - Expanded Privacy for payment data, no sale/cross-context behavioral advertising, transactional vs. marketing communications, international transfers, retention criteria, ARCO/rights procedures, and unsupported territories.
+
+## V26
+- Replaced generic Masculina/Femenina voice choices with SONALZA artist choices: ALTUNO, NARELI, and Sorpréndeme.
+- Added separate YouTube sample buttons for ALTUNO (0:12) and NARELI (0:57). Sample buttons open in a new tab and do not select the artist.
+- Added migration from legacy Masculina/Femenina saved choices to ALTUNO/NARELI.
+- Animated the orange lower-right audio waveform/equalizer in the homepage studio card, including a compact mobile version and reduced-motion accessibility support.

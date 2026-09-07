@@ -1447,3 +1447,59 @@ body:not(.locale-ready) .product-choice-price strong{opacity:0}
   .music-setting .option{font-size:13px;min-height:50px}
   .notice-at-collection{grid-template-columns:1fr;gap:5px}
 }
+
+/* ===== V26 · SONALZA artist voice selector + animated audio waveform ===== */
+.voice-section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:12px}
+.voice-section-head>div{min-width:0}
+.voice-section-head .setting-label{margin:0 0 4px!important;text-transform:uppercase;letter-spacing:.12em;font-size:9px;color:#8c96a6}
+.voice-section-head strong{display:block;font-size:17px;line-height:1.25;color:#102139;letter-spacing:-.015em}
+.voice-section-head>span{max-width:210px;text-align:right;font-size:10px;line-height:1.45;color:#8a95a4}
+.voice-artist-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.voice-artist-card{min-width:0;border:1px solid #e1e5ea;border-radius:17px;background:#fff;overflow:hidden;box-shadow:0 3px 12px rgba(7,26,51,.025);transition:border-color .18s ease,box-shadow .18s ease,transform .18s ease,background .18s ease}
+.voice-artist-card:hover{transform:translateY(-1px);border-color:#d2d9e2;box-shadow:0 10px 24px rgba(7,26,51,.06)}
+.voice-artist-card.selected{border-color:#ff982f;background:#fff8f0;box-shadow:0 0 0 3px rgba(255,122,0,.09),0 10px 24px rgba(255,122,0,.07)}
+.voice-select{display:block;width:100%;border:0;background:transparent;text-align:left;color:inherit;padding:14px 14px 10px;cursor:pointer;min-height:86px}
+.voice-card-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.voice-card-top strong{font-size:15px;letter-spacing:.06em;color:#172941}
+.voice-check{display:grid;place-items:center;width:21px;height:21px;border-radius:50%;background:#eef1f5;color:transparent;font-size:10px;font-weight:900;flex:0 0 auto;transition:.18s ease}
+.voice-artist-card.selected .voice-check{background:#ff7a00;color:#fff}
+.voice-role{display:block;margin-top:7px;font-size:11px;line-height:1.45;color:#738095;font-weight:650}
+.voice-sample{display:flex;align-items:center;gap:7px;margin:0 10px 10px;padding:9px 10px;border-radius:11px;background:#f4f7fa;color:#24364f;font-size:10px;font-weight:820;text-decoration:none;transition:background .18s ease,color .18s ease,transform .18s ease}
+.voice-sample:hover{background:#eaf0f6;color:#102139;transform:translateY(-1px)}
+.voice-sample-play{display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:#071a33;color:#fff;font-size:9px;flex:0 0 auto;padding-left:1px}
+.voice-sample-muted{color:#7d8898;background:#f7f8fa;cursor:default}
+.voice-sample-muted:hover{transform:none;background:#f7f8fa;color:#7d8898}
+.voice-sample-spark{display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:#fff1e2;color:#e26d00;font-size:12px;flex:0 0 auto}
+.voice-disclaimer{font-size:10px;line-height:1.55;color:#7d8999;margin:9px 1px 0}
+
+/* The orange bars at the lower right are an audio waveform/equalizer. Animate them independently. */
+.wave-bars{transform-origin:center;filter:drop-shadow(0 0 7px rgba(255,122,0,.16))}
+.wave-bars i{transform-origin:center;animation:sonalzaEqualizer 1.05s ease-in-out infinite alternate;will-change:transform,opacity}
+.wave-bars i:nth-child(2n){animation-duration:.82s}
+.wave-bars i:nth-child(3n){animation-duration:1.22s}
+.wave-bars i:nth-child(4n){animation-duration:.96s}
+.wave-bars i:nth-child(1){animation-delay:-.18s}.wave-bars i:nth-child(2){animation-delay:-.62s}.wave-bars i:nth-child(3){animation-delay:-.31s}.wave-bars i:nth-child(4){animation-delay:-.78s}.wave-bars i:nth-child(5){animation-delay:-.42s}.wave-bars i:nth-child(6){animation-delay:-.13s}.wave-bars i:nth-child(7){animation-delay:-.69s}.wave-bars i:nth-child(8){animation-delay:-.37s}.wave-bars i:nth-child(9){animation-delay:-.88s}.wave-bars i:nth-child(10){animation-delay:-.22s}.wave-bars i:nth-child(11){animation-delay:-.56s}.wave-bars i:nth-child(12){animation-delay:-.08s}
+@keyframes sonalzaEqualizer{
+  0%{transform:scaleY(.36);opacity:.62}
+  45%{transform:scaleY(.78);opacity:.88}
+  100%{transform:scaleY(1.18);opacity:1}
+}
+
+@media(max-width:760px){
+  .voice-section-head{align-items:flex-start;flex-direction:column;gap:5px}
+  .voice-section-head>span{text-align:left;max-width:none}
+  .voice-artist-grid{grid-template-columns:1fr 1fr}
+  .voice-artist-card:last-child{grid-column:1/-1}
+}
+@media(max-width:480px){
+  .voice-artist-grid{grid-template-columns:1fr}
+  .voice-artist-card:last-child{grid-column:auto}
+  .voice-select{min-height:76px;padding:12px 13px 8px}
+  .voice-sample{margin:0 9px 9px}
+  .wave-bars{display:flex!important;right:14px!important;bottom:13px!important;height:34px!important;gap:3px!important;z-index:4}
+  .wave-bars i{width:2px!important}
+  .media-card{padding-right:72px!important}
+}
+@media(prefers-reduced-motion:reduce){
+  .wave-bars i{animation:none!important}
+}
