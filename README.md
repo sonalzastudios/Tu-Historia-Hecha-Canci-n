@@ -84,3 +84,11 @@ Genre cards now use editorial photo artwork derived from the approved SONALZA vi
 
 ## V16
 - Added Custom Cover addon inputs on checkout: visual prompt, optional reference image picker, and square-crop guidance notes.
+
+
+## V21
+- Removed the oversized Latin editorial section.
+- Added a required product-choice screen before the song questionnaire: Custom Song vs. A Life Corrido.
+- Spanish UI now uses 'formulario' instead of 'brief'; English keeps 'brief'.
+- Mobile hides the desktop support rail so the questionnaire is immediately visible and distraction-free.
+- Renamed 'Corrido de Tu Vida' to 'Corrido de una Vida' to make clear it can be about the buyer or someone else.

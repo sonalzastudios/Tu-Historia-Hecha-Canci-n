@@ -1163,3 +1163,65 @@ body{background:linear-gradient(180deg,#fff 0%,#fbfbfc 62%,#f5f6f8 100%)}
   .identity-ribbon-track{animation:none}
   .latin-editorial-card img{transform:scale(1.04)}
 }
+
+
+/* ===== V21 · clearer product choice + mobile-first form ===== */
+[hidden]{display:none!important}
+.product-chooser{padding:34px 0 76px;max-width:1040px;margin:0 auto}
+.product-choice-head{text-align:center;max-width:760px;margin:0 auto 30px}
+.product-choice-head h1{font-size:clamp(42px,5vw,64px);line-height:.98;margin:9px 0 15px;color:var(--navy)}
+.product-choice-head p{font-size:17px;line-height:1.6;margin:0 auto;max-width:640px}
+.product-choice-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.product-choice-card{position:relative;text-align:left;border:1px solid #dde3ea;border-radius:28px;background:#fff;padding:28px;color:var(--ink);box-shadow:0 14px 44px rgba(7,26,51,.06);transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease;overflow:hidden}
+.product-choice-card:hover{transform:translateY(-3px);box-shadow:0 24px 62px rgba(7,26,51,.11);border-color:#ccd4de}
+.product-choice-card.selected{border-color:#ff8a16;box-shadow:0 0 0 3px rgba(255,122,0,.10),0 22px 60px rgba(7,26,51,.10)}
+.product-choice-featured{background:linear-gradient(150deg,#071a33 0%,#0b2c55 100%);border-color:#16385d;color:#fff}
+.product-choice-featured p,.product-choice-featured li{color:#c7d0dd}
+.product-choice-top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:24px}
+.product-choice-tag{font-size:10px;font-weight:900;letter-spacing:.15em;color:#a35d10}
+.product-choice-featured .product-choice-tag{color:#ffc174}
+.product-choice-check{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;border:1px solid #dce2e8;color:transparent;font-weight:900}
+.product-choice-card.selected .product-choice-check{background:#ff7a00;border-color:#ff7a00;color:#fff}
+.product-choice-card h2{font-size:31px;line-height:1.04;margin:0 0 12px}
+.product-choice-card>p{font-size:14px;line-height:1.7;min-height:96px;margin-bottom:20px}
+.product-choice-card>p strong{color:inherit}
+.product-choice-price{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;padding:16px 0;border-top:1px solid #e8ebef;border-bottom:1px solid #e8ebef;margin-bottom:18px}
+.product-choice-featured .product-choice-price{border-color:rgba(255,255,255,.13)}
+.product-choice-price span{font-size:11px;color:#7d8998;font-weight:700}
+.product-choice-featured .product-choice-price span{color:#aeb9c8}
+.product-choice-price strong{font-size:31px;letter-spacing:-.04em;color:var(--navy)}
+.product-choice-featured .product-choice-price strong{color:#fff}
+.product-choice-card ul{margin:0 0 24px;padding:0;list-style:none;display:grid;gap:9px}
+.product-choice-card li{position:relative;padding-left:22px;font-size:13px;color:#596779}
+.product-choice-card li:before{content:'✓';position:absolute;left:0;color:#ff7a00;font-weight:900}
+.product-choice-cta{display:inline-flex;align-items:center;font-size:13px;font-weight:850;color:#b3600c}
+.product-choice-featured .product-choice-cta{color:#ffc174}
+.product-choice-note{text-align:center;max-width:800px;margin:20px auto 0;font-size:12px;color:#7d8897}
+.song-flow{display:block}
+.flow-intro-actions{display:flex;align-items:center;gap:10px}
+.change-product-btn{border:0;background:transparent;color:#a45c0c;font-size:11px;font-weight:850;padding:6px 8px;border-radius:999px}
+.change-product-btn:hover{background:#fff4e8}
+
+@media(max-width:680px){
+  .product-chooser{padding:18px 0 52px}
+  .product-choice-head{text-align:left;margin-bottom:22px}
+  .product-choice-head h1{font-size:39px}
+  .product-choice-head p{font-size:15px}
+  .product-choice-grid{grid-template-columns:1fr;gap:12px}
+  .product-choice-card{padding:22px;border-radius:23px}
+  .product-choice-card h2{font-size:27px}
+  .product-choice-card>p{min-height:0;font-size:13px}
+  .product-choice-price strong{font-size:28px}
+  .product-choice-note{text-align:left}
+  /* The form is the hero on mobile: remove the desktop support rail entirely. */
+  .flow-stage{display:block!important}
+  .creative-rail{display:none!important}
+  .question-shell{width:100%;margin:0;padding:20px;border-radius:22px}
+  .flow-intro-bar{padding:12px 14px;gap:10px;align-items:flex-start}
+  .flow-intro-bar>div:first-child{display:flex;flex-direction:column;gap:3px}
+  .flow-intro-actions{flex-direction:column;align-items:flex-end;gap:2px}
+  .change-product-btn{font-size:10px;padding:4px 0}
+  .question-topline{margin-bottom:18px;padding-bottom:12px}
+  .question h1,.question h2{font-size:31px;line-height:1.02}
+  .why-box{margin-top:0}
+}

@@ -38,7 +38,7 @@ module.exports = async function handler(req, res) {
     const addons = Array.isArray(body.addons) ? body.addons.filter(x => allowedAddons.includes(x)) : [];
     const email = clean(draft.email, 180);
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return res.status(400).json({ ok:false, error:'Correo electrónico inválido.' });
-    if (!clean(draft.nombre, 80) || !clean(draft.paraQuien, 80)) return res.status(400).json({ ok:false, error:'Faltan datos esenciales del brief.' });
+    if (!clean(draft.nombre, 80) || !clean(draft.paraQuien, 80)) return res.status(400).json({ ok:false, error:'Faltan datos esenciales del formulario.' });
 
     let total = PRICING[product][currency];
     addons.forEach(key => total += PRICING[key][currency]);
@@ -91,7 +91,7 @@ module.exports = async function handler(req, res) {
       const adminEmail = process.env.SONALZA_ORDERS_EMAIL || 'sonalzastudios@gmail.com';
       const from = process.env.SONALZA_FROM_EMAIL || 'SONALZA Orders <orders@sonalza.com>';
       const rows = [
-        ['Pedido', orderId], ['Región seleccionada', region], ['País detectado', detectedCountry || 'No disponible'], ['Verificación regional', regionMismatch ? 'REQUERIDA AL PAGAR' : 'Sin discrepancia'], ['Idioma del sitio', language.toUpperCase()], ['Producto', product === 'corrido' ? 'Corrido de Tu Vida' : 'Canción Personalizada'], ['Total', money(total,currency)],
+        ['Pedido', orderId], ['Región seleccionada', region], ['País detectado', detectedCountry || 'No disponible'], ['Verificación regional', regionMismatch ? 'REQUERIDA AL PAGAR' : 'Sin discrepancia'], ['Idioma del sitio', language.toUpperCase()], ['Producto', product === 'corrido' ? 'Corrido de una Vida' : 'Canción Personalizada'], ['Total', money(total,currency)],
         ['Cliente', draft.nombre], ['Para quién', draft.paraQuien], ['Ocasión', draft.ocasion], ['Género', draft.genero], ['Voz', draft.voz], ['Idioma', draft.idioma],
         ['Email', email], ['Teléfono', draft.telefono || '—'], ['Extras', addons.join(', ') || 'Ninguno'],
         ['Custom cover idea', draft.coverPrompt || '—'], ['Must remain visible after square crop', draft.coverCropMustShow || '—'], ['Reference photo', draft.coverImageName || '—']

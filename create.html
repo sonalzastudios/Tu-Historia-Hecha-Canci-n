@@ -26,20 +26,48 @@
   </header>
 
   <main class="flow-wrap">
+    <section id="productChooser" class="product-chooser" aria-labelledby="productChooserTitle">
+      <div class="product-choice-head">
+        <div class="eyebrow">ANTES DE EMPEZAR</div>
+        <h1 id="productChooserTitle">¿Qué quieres crear?</h1>
+        <p>Primero elige el tipo de canción. Después te hacemos una pregunta a la vez.</p>
+      </div>
+      <div class="product-choice-grid">
+        <button type="button" class="product-choice-card" data-product-choice="song">
+          <div class="product-choice-top"><span class="product-choice-tag">OPCIÓN ESENCIAL</span><span class="product-choice-check">✓</span></div>
+          <h2>Canción Personalizada</h2>
+          <p>Para una persona, ocasión o momento específico. Puedes elegir corrido, banda, cumbia, mariachi y más; el enfoque es una historia concreta, no contar una vida completa.</p>
+          <div class="product-choice-price"><span>Precio de lanzamiento</span><strong class="price-value" data-usd="49" data-mxn="599">US$49</strong></div>
+          <ul><li>Historia personal y detalles reales</li><li>Eliges género, voz e idioma</li><li>1 revisión incluida</li></ul>
+          <span class="product-choice-cta">Elegir esta opción →</span>
+        </button>
+        <button type="button" class="product-choice-card product-choice-featured" data-product-choice="corrido">
+          <div class="product-choice-top"><span class="product-choice-tag">HISTORIA DE VIDA</span><span class="product-choice-check">✓</span></div>
+          <h2>Corrido de una Vida</h2>
+          <p>Para contar una trayectoria completa con más profundidad: raíces, familia, trabajo, migración, sacrificios, logros o legado. <strong>Puede ser tu historia o la de alguien más.</strong></p>
+          <div class="product-choice-price"><span>Precio de lanzamiento</span><strong class="price-value" data-usd="249" data-mxn="1999">US$249</strong></div>
+          <ul><li>Historia más amplia y narrativa</li><li>Corrido como dirección principal</li><li>Proceso premium y 1 revisión incluida</li></ul>
+          <span class="product-choice-cta">Elegir esta opción →</span>
+        </button>
+      </div>
+      <p class="product-choice-note">No importa quién sea el protagonista: tú, tu papá, tu mamá, tu pareja, un amigo o cualquier persona cuya historia quieras convertir en música.</p>
+    </section>
+
+    <div id="songFlow" class="song-flow" hidden>
     <div class="flow-intro-bar">
-      <div><span class="flow-intro-kicker">SONALZA SESSION</span><strong>Construyamos una canción que suene a tu historia.</strong></div>
-      <span class="flow-intro-meta">Privado · 3–5 min</span>
+      <div><span class="flow-intro-kicker">SONALZA SESSION</span><strong id="selectedProductSummary">Tu canción</strong></div>
+      <div class="flow-intro-actions"><span class="flow-intro-meta">Privado · 3–5 min</span><button type="button" id="changeProductBtn" class="change-product-btn">Cambiar opción</button></div>
     </div>
     <div class="progress-meta"><span id="stepLabel">Paso 1 de 8</span><strong id="pctLabel">13% completado</strong></div>
     <div class="progress"><div id="bar"></div></div>
 
     <div class="flow-stage">
       <aside class="creative-rail">
-        <div class="rail-label">TU BRIEF SONALZA</div>
+        <div class="rail-label">TU FORMULARIO SONALZA</div>
         <h2>Fácil de llenar. Profundo donde importa.</h2>
         <p class="rail-intro">No necesitas escribir bonito ni saber de música. Te vamos guiando una pregunta a la vez.</p>
-        <div class="rail-checks" aria-label="Qué necesitas para completar el brief">
-          <div><span>✓</span><p><strong>3–5 minutos</strong><small>para completar el brief</small></p></div>
+        <div class="rail-checks" aria-label="Qué necesitas para completar el formulario">
+          <div><span>✓</span><p><strong>3–5 minutos</strong><small>para completar el formulario</small></p></div>
           <div><span>✓</span><p><strong>Detalles reales</strong><small>nombres, recuerdos y frases</small></p></div>
           <div><span>✓</span><p><strong>Sin lenguaje técnico</strong><small>nosotros traducimos la historia a música</small></p></div>
         </div>
@@ -60,6 +88,7 @@
           <button id="nextBtn" class="btn btn-primary">Siguiente →</button>
         </div>
       </section>
+    </div>
     </div>
   </main>
 
