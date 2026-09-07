@@ -203,6 +203,7 @@
     'Porque su historia merece contarse':'Because their story deserves to be told',
     'Corrido clásico':'Classic corrido',
     'Corrido moderno':'Modern corrido',
+    'Corrido tumbado':'Corrido tumbado',
     'Norteño-corrido':'Norteño-corrido',
     'Sierreño-corrido':'Sierreño-corrido',
     'Volver':'Back',
@@ -764,7 +765,7 @@
 
     function startSelectedProduct(key, {scroll=true}={}) {
       data.product = key === 'corrido' ? 'corrido' : 'song';
-      const corridoGenres = ['Corrido clásico','Corrido moderno','Norteño-corrido','Sierreño-corrido','Sorpréndeme'];
+      const corridoGenres = ['Corrido clásico','Corrido moderno','Corrido tumbado','Norteño-corrido','Sierreño-corrido','Sorpréndeme'];
       const songGenres = ['Corrido','Banda','Norteño','Cumbia','Mariachi','Duranguense','Huapango','Sierreño','Pop Latino','Reguetón','Balada','Sorpréndeme'];
       if (data.product === 'corrido' && !corridoGenres.includes(data.genero)) data.genero = 'Corrido clásico';
       if (data.product === 'song' && !songGenres.includes(data.genero)) data.genero = 'Corrido';
@@ -799,13 +800,17 @@
           value:'ALTUNO',
           roleEs:'Voz masculina', roleEn:'Male voice',
           sample:'assets/audio/altuno-sample.mp3',
-          sampleEs:'Escuchar ALTUNO', sampleEn:'Listen to ALTUNO'
+          sampleEs:'Escuchar ALTUNO', sampleEn:'Listen to ALTUNO',
+          fullSong:'https://youtu.be/oV1TDEEhi50',
+          fullSongEs:'Escuchar canción completa en YouTube', fullSongEn:'Listen to the full song on YouTube'
         },
         {
           value:'NARELI',
           roleEs:'Voz femenina', roleEn:'Female voice',
           sample:'assets/audio/nareli-sample.mp3',
-          sampleEs:'Escuchar NARELI', sampleEn:'Listen to NARELI'
+          sampleEs:'Escuchar NARELI', sampleEn:'Listen to NARELI',
+          fullSong:'https://youtu.be/kaLsmAUMohg',
+          fullSongEs:'Escuchar canción completa en YouTube', fullSongEn:'Listen to the full song on YouTube'
         },
         {
           value:'Sorpréndeme',
@@ -819,12 +824,13 @@
         const chooseLabel = currentLanguage === 'en' ? `Choose ${artist.value === 'Sorpréndeme' ? 'Surprise me' : artist.value}` : `Elegir ${artist.value}`;
         const displayName = artist.value === 'Sorpréndeme' && currentLanguage === 'en' ? 'SURPRISE ME' : artist.value.toUpperCase();
         const sampleLabel = currentLanguage === 'en' ? artist.sampleEn : artist.sampleEs;
-        const sample = artist.sample ? `<button type="button" class="voice-sample" data-voice-sample-src="${artist.sample}" data-voice-sample-name="${escapeHtml(artist.value)}" aria-label="${escapeHtml(sampleLabel)}">
+        const fullSongLabel = currentLanguage === 'en' ? artist.fullSongEn : artist.fullSongEs;
+        const sample = artist.sample ? `<div class="voice-audio-block"><button type="button" class="voice-sample" data-voice-sample-src="${artist.sample}" data-voice-sample-name="${escapeHtml(artist.value)}" aria-label="${escapeHtml(sampleLabel)}">
             <span class="voice-sample-play" aria-hidden="true">▶</span>
             <span class="voice-sample-copy"><span class="voice-sample-label">${escapeHtml(sampleLabel)}</span><span class="voice-sample-time">0:22</span></span>
             <span class="voice-mini-wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
             <span class="voice-progress" aria-hidden="true"><span class="voice-progress-fill"></span></span>
-          </button>` : `<span class="voice-sample voice-sample-muted"><span class="voice-sample-spark" aria-hidden="true">✦</span><span>${escapeHtml(currentLanguage === 'en' ? 'SONALZA chooses' : 'SONALZA elige')}</span></span>`;
+          </button>${artist.fullSong ? `<a class="voice-full-song" href="${artist.fullSong}" target="_blank" rel="noopener noreferrer" aria-label="${escapeHtml(fullSongLabel)}"><span aria-hidden="true">↗</span>${escapeHtml(fullSongLabel)}</a>` : ''}</div>` : `<span class="voice-sample voice-sample-muted"><span class="voice-sample-spark" aria-hidden="true">✦</span><span>${escapeHtml(currentLanguage === 'en' ? 'SONALZA chooses' : 'SONALZA elige')}</span></span>`;
         return `<div class="voice-artist-card ${isSelected ? 'selected' : ''}" data-voice-card="${escapeHtml(artist.value)}">
           <button type="button" class="voice-select" data-voice-choice="${escapeHtml(artist.value)}" aria-pressed="${isSelected ? 'true' : 'false'}" aria-label="${escapeHtml(chooseLabel)}">
             <span class="voice-card-top"><strong>${escapeHtml(displayName)}</strong><span class="voice-check" aria-hidden="true">✓</span></span>
@@ -963,6 +969,7 @@
         ${optionButtons([
           {value:'Corrido clásico',labelEs:'Corrido clásico',labelEn:'Classic corrido'},
           {value:'Corrido moderno',labelEs:'Corrido moderno',labelEn:'Modern corrido'},
+          {value:'Corrido tumbado',labelEs:'Corrido tumbado',labelEn:'Corrido tumbado'},
           {value:'Norteño-corrido',labelEs:'Norteño-corrido',labelEn:'Norteño-corrido'},
           {value:'Sierreño-corrido',labelEs:'Sierreño-corrido',labelEn:'Sierreño-corrido'},
           {value:'Sorpréndeme',labelEs:'Sorpréndeme',labelEn:'Surprise me'}

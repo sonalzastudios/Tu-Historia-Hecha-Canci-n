@@ -1534,3 +1534,33 @@ button.voice-sample{border:0;width:calc(100% - 20px);cursor:pointer;font-family:
 @media(prefers-reduced-motion:reduce){
   .voice-sample.is-playing .voice-mini-wave i{animation:none!important;transform:scaleY(.7)}
 }
+
+
+/* ===== V29 · Full-song links + corrido tumbado ===== */
+.voice-audio-block{margin:0 10px 10px}
+.voice-audio-block .voice-sample{margin:0;width:100%}
+.voice-full-song{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  margin-top:7px;
+  min-height:31px;
+  padding:6px 9px;
+  border-radius:9px;
+  border:1px solid #e7ebf0;
+  background:#fff;
+  color:#68778b;
+  font-size:9px;
+  font-weight:780;
+  line-height:1.3;
+  text-align:center;
+  text-decoration:none;
+  transition:background .18s ease,border-color .18s ease,color .18s ease,transform .18s ease;
+}
+.voice-full-song:hover{background:#fff8f0;border-color:#ffd0a6;color:#9a5200;transform:translateY(-1px)}
+.voice-full-song span{font-size:11px;color:#ff7a00;font-weight:900}
+@media(max-width:760px){
+  .voice-audio-block{margin:0 9px 9px}
+  .voice-full-song{font-size:9px;padding-inline:7px}
+}

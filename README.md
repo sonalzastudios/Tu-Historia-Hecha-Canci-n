@@ -174,3 +174,8 @@ Los cupones se validan server-side. El descuento aplica al precio base del produ
 - Starting one voice sample automatically stops the other.
 - Added play/pause state, elapsed time, progress bar, and animated mini waveform.
 - Homepage SONALZA waveform/equalizer animation remains enabled.
+
+
+## V29
+- Added Corrido tumbado as a Corrido de una Vida direction.
+- Added full-song YouTube links under ALTUNO and NARELI inline voice samples.
