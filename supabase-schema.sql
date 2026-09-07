@@ -86,3 +86,9 @@ alter table public.business_leads add column if not exists privacy_version text;
 -- V24 · coupon evidence
 alter table public.orders add column if not exists coupon_code text;
 alter table public.orders add column if not exists coupon_discount numeric not null default 0;
+
+-- V30 · server-generated acceptance evidence and payment linkage
+alter table public.orders add column if not exists acceptance_evidence jsonb not null default '{}'::jsonb;
+alter table public.orders add column if not exists stripe_session_id text;
+alter table public.orders add column if not exists stripe_payment_intent_id text;
+alter table public.business_leads add column if not exists acceptance_evidence jsonb not null default '{}'::jsonb;

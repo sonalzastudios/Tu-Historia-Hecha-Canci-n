@@ -40,3 +40,13 @@ This checklist is operational guidance, not a substitute for legal advice.
 - Have Mexico consumer/privacy compliance reviewed before paid Mexico orders.
 - Re-run mobile/desktop tests in Spanish and English.
 - Test a US order and a Mexico order end-to-end.
+
+## V30 production hardening
+- [ ] Configure `TURNSTILE_SITE_KEY` and `TURNSTILE_SECRET_KEY` in Vercel.
+- [ ] Set `REQUIRE_TURNSTILE=true` only after both keys are verified in production.
+- [ ] For durable rate limiting, configure `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN`; without these, the included fallback limiter is only per serverless instance.
+- [ ] Set `EVIDENCE_HASH_SALT` to a long random secret for privacy-preserving IP evidence hashes.
+- [ ] Run the V30 `supabase-schema.sql` ALTER statements before accepting orders.
+- [ ] Publish the real legal operator name, commercial address, and support phone before enabling Mexico LIVE.
+- [ ] Decide and publish a truthful delivery SLA before taking payment (do not invent one).
+- [ ] Keep a `PRODUCTION-COMPLIANCE.md` record for every commercially delivered song.

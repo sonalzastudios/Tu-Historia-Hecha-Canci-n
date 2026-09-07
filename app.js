@@ -1,5 +1,6 @@
 (() => {
   const STORAGE_KEY = 'sonalzaSongDraftV2';
+  const DRAFT_TTL_MS = 30 * 24 * 60 * 60 * 1000;
   const FEEDBACK_KEY = 'sonalzaExitFeedbackV2';
   const page = document.body.dataset.page;
   const REGION_KEY = 'sonalzaRegionV1';
@@ -339,7 +340,23 @@
     'Ver política completa →':'View full policy →',
     'Confirmo que leí y acepto los Términos y condiciones, incluyendo las reglas de revisiones, cancelaciones, licencias, propiedad intelectual y entrega.':'I confirm that I read and accept the Terms & Conditions, including the revision, cancellation, licensing, intellectual-property, and delivery rules.',
     'He leído y acepto la Política de privacidad y autorizo el tratamiento de mis datos para crear, administrar y entregar este pedido.':'I have read and accept the Privacy Policy and authorize processing of my data to create, administer, and deliver this order.',
-    'Confirmo que tengo derecho o autorización para enviar la historia, nombres, fotos y demás materiales. Si incluyo voluntariamente datos personales sensibles sobre mí, otorgo consentimiento expreso para tratarlos únicamente en relación con este pedido; no enviaré datos sensibles de terceros sin autorización o base legal suficiente.':'I confirm that I have the rights or authorization to submit the story, names, photos, and other materials. If I voluntarily include sensitive personal information about myself, I expressly consent to processing it only in connection with this order; I will not submit sensitive third-party information without sufficient authorization or lawful basis.'
+    'Confirmo que tengo derecho o autorización para enviar la historia, nombres, fotos y demás materiales. Si incluyo voluntariamente datos personales sensibles sobre mí, otorgo consentimiento expreso para tratarlos únicamente en relación con este pedido; no enviaré datos sensibles de terceros sin autorización o base legal suficiente.':'I confirm that I have the rights or authorization to submit the story, names, photos, and other materials. If I voluntarily include sensitive personal information about myself, I expressly consent to processing it only in connection with this order; I will not submit sensitive third-party information without sufficient authorization or lawful basis.',
+    'Borrar mis datos':'Delete my saved data',
+    'VOCES SONALZA':'SONALZA VOICES',
+    'Escucha antes de elegir.':'Listen before choosing.',
+    'Una muestra rápida de ALTUNO y NARELI. No selecciona ninguna voz.':'A quick sample of ALTUNO and NARELI. Listening does not select a voice.',
+    'Voz masculina':'Male voice',
+    'Voz femenina':'Female voice',
+    'Acepto los':'I accept the',
+    'Términos y condiciones':'Terms & Conditions',
+    'He leído la':'I have read the',
+    'Política de privacidad':'Privacy Policy',
+    'Confirmo que tengo autorización para compartir la historia, nombres, fotos y materiales enviados.':'I confirm that I have authorization to share the story, names, photos, and submitted materials.',
+    'Ver detalles legales importantes':'View important legal details',
+    'La revisión incluida es una sola ronda consolidada. Si compartes voluntariamente datos sensibles sobre ti, autorizas su tratamiento únicamente para este pedido. No envíes datos sensibles de terceros sin autorización o base legal suficiente.':'The included revision is one consolidated round. If you voluntarily share sensitive information about yourself, you authorize its processing only for this order. Do not submit sensitive information about third parties without sufficient authorization or lawful basis.',
+    'Guardamos evidencia de estas aceptaciones con la versión legal vigente del pedido.':'We retain evidence of these acceptances with the legal version in effect for the order.',
+    'Verificación de seguridad':'Security verification',
+    'Tu avance se guarda hasta 30 días en este dispositivo':'Your progress is saved on this device for up to 30 days'
   });
 
   function translatePhrase(value) {
@@ -581,11 +598,94 @@
     duracion: ''
   };
 
+  const clearDraft = () => localStorage.removeItem(STORAGE_KEY);
   const load = () => {
-    try { return { ...defaultData, ...(JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}) }; }
-    catch { return { ...defaultData }; }
+    try {
+      const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+      const savedAt = Number(parsed._savedAt || 0);
+      if (savedAt && Date.now() - savedAt > DRAFT_TTL_MS) {
+        clearDraft();
+        return { ...defaultData };
+      }
+      const { _savedAt, ...cleanDraft } = parsed;
+      if (!savedAt && Object.keys(cleanDraft).length) {
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...cleanDraft, _savedAt: Date.now() })); } catch (_) {}
+      }
+      return { ...defaultData, ...cleanDraft };
+    } catch {
+      clearDraft();
+      return { ...defaultData };
+    }
   };
-  const save = data => localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  const save = data => localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...data, _savedAt: Date.now() }));
+
+  function bindClearDraftButton() {
+    const btn = document.getElementById('clearDraftBtn');
+    if (!btn) return;
+    btn.addEventListener('click', () => {
+      const msg = currentLanguage === 'en'
+        ? 'Delete the story draft saved on this device? This cannot be undone.'
+        : '¿Borrar el borrador de tu historia guardado en este dispositivo? Esta acción no se puede deshacer.';
+      if (!window.confirm(msg)) return;
+      clearDraft();
+      sessionStorage.removeItem('sonalzaLastOrder');
+      location.href = 'create.html';
+    });
+  }
+
+  let turnstileConfig = { loaded:false, required:false, siteKey:'' };
+  async function loadTurnstileScript() {
+    if (window.turnstile) return true;
+    return new Promise(resolve => {
+      const existing = document.querySelector('script[data-sonalza-turnstile]');
+      if (existing) {
+        const timer = setInterval(() => { if (window.turnstile) { clearInterval(timer); resolve(true); } }, 100);
+        setTimeout(() => { clearInterval(timer); resolve(Boolean(window.turnstile)); }, 8000);
+        return;
+      }
+      const script = document.createElement('script');
+      script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+      script.async = true;
+      script.defer = true;
+      script.dataset.sonalzaTurnstile = '1';
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+      document.head.appendChild(script);
+    });
+  }
+
+  async function setupSecurityWidgets() {
+    const slots = [...document.querySelectorAll('[data-turnstile]')];
+    if (!slots.length) return;
+    try {
+      const r = await fetch('/api/public-config', { headers:{Accept:'application/json'} });
+      const cfg = await r.json();
+      turnstileConfig = { loaded:true, required:Boolean(cfg.turnstileRequired), siteKey:String(cfg.turnstileSiteKey || '') };
+      if (!turnstileConfig.siteKey) return;
+      const ok = await loadTurnstileScript();
+      if (!ok || !window.turnstile) return;
+      slots.forEach(slot => {
+        slot.hidden = false;
+        const widget = slot.querySelector('.turnstile-widget');
+        if (!widget || widget.dataset.rendered === '1') return;
+        const action = slot.dataset.turnstile || 'form';
+        const widgetId = window.turnstile.render(widget, {
+          sitekey: turnstileConfig.siteKey,
+          action,
+          theme:'light',
+          appearance:'interaction-only',
+          callback: token => { slot.dataset.token = token || ''; },
+          'expired-callback': () => { slot.dataset.token = ''; }
+        });
+        widget.dataset.rendered = '1';
+        slot.dataset.widgetId = String(widgetId);
+      });
+    } catch (_) {}
+  }
+
+  function getTurnstileToken(scope) {
+    return document.querySelector(`[data-turnstile="${scope}"]`)?.dataset.token || '';
+  }
 
   function setupExitIntent() {
     const modal = document.getElementById('exitModal');
@@ -757,6 +857,8 @@
 
     function showProductChooser() {
       stopVoiceSample();
+      document.documentElement.classList.remove('product-preselected');
+      try { history.replaceState({}, '', 'create.html'); } catch (_) {}
       if (songFlow) songFlow.hidden = true;
       if (productChooser) productChooser.hidden = false;
       syncProductChoiceUI();
@@ -764,6 +866,8 @@
     }
 
     function startSelectedProduct(key, {scroll=true}={}) {
+      if (chooserVoiceAudio) { chooserVoiceAudio.pause(); chooserVoiceAudio = null; }
+      if (chooserVoiceButton) { chooserVoiceButton.classList.remove('is-playing'); const icon = chooserVoiceButton.querySelector('span'); if (icon) icon.textContent = '▶'; chooserVoiceButton = null; }
       data.product = key === 'corrido' ? 'corrido' : 'song';
       const corridoGenres = ['Corrido clásico','Corrido moderno','Corrido tumbado','Norteño-corrido','Sierreño-corrido','Sorpréndeme'];
       const songGenres = ['Corrido','Banda','Norteño','Cumbia','Mariachi','Duranguense','Huapango','Sierreño','Pop Latino','Reguetón','Balada','Sorpréndeme'];
@@ -782,6 +886,26 @@
 
     productChoiceButtons.forEach(btn => btn.addEventListener('click', () => startSelectedProduct(btn.dataset.productChoice)));
     changeProductBtn?.addEventListener('click', showProductChooser);
+    let chooserVoiceAudio = null;
+    let chooserVoiceButton = null;
+    document.querySelectorAll('[data-chooser-voice-src]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const src = btn.dataset.chooserVoiceSrc;
+        if (chooserVoiceButton === btn && chooserVoiceAudio && !chooserVoiceAudio.paused) {
+          chooserVoiceAudio.pause();
+          btn.classList.remove('is-playing');
+          btn.querySelector('span').textContent = '▶';
+          return;
+        }
+        if (chooserVoiceAudio) chooserVoiceAudio.pause();
+        if (chooserVoiceButton) { chooserVoiceButton.classList.remove('is-playing'); chooserVoiceButton.querySelector('span').textContent='▶'; }
+        chooserVoiceAudio = new Audio(src);
+        chooserVoiceButton = btn;
+        chooserVoiceAudio.volume = .88;
+        chooserVoiceAudio.addEventListener('ended', () => { btn.classList.remove('is-playing'); btn.querySelector('span').textContent='▶'; chooserVoiceAudio=null; chooserVoiceButton=null; });
+        chooserVoiceAudio.play().then(() => { btn.classList.add('is-playing'); btn.querySelector('span').textContent='❚❚'; }).catch(()=>{});
+      });
+    });
     window.addEventListener('sonalza:regionready', () => { syncProductChoiceUI(); if (songFlow && !songFlow.hidden) render(); });
 
     function optionButtons(items, selected, key, columns='') {
@@ -1384,6 +1508,7 @@
       payload.detectedRegion = detectedRegion;
       payload.regionOverride = localStorage.getItem(REGION_OVERRIDE_KEY)==='1';
       payload.currency = currentCurrency;
+      payload.turnstileToken = getTurnstileToken('lead');
       const original = btn.textContent;
       btn.disabled = true;
       btn.textContent = currentLanguage === 'en' ? 'Sending…' : 'Enviando…';
@@ -1661,11 +1786,12 @@
         ['utm_source','utm_medium','utm_campaign','utm_content','utm_term'].forEach(k=>{ if(utmParams.get(k)) utm[k]=utmParams.get(k); });
         const response = await fetch('/api/submit-order', {
           method:'POST', headers:{'Content-Type':'application/json'},
-          body:JSON.stringify({draft:data,region:currentRegion,language:currentLanguage,currency:currentCurrency,detectedRegion,regionOverride:localStorage.getItem(REGION_OVERRIDE_KEY)==='1',addons:chosenAddons,couponCode:appliedCoupon?.code || '',page:location.href,referrer:document.referrer,utm,termsAccepted:true,privacyAccepted:true,materialsAccepted:true,termsVersion:TERMS_VERSION,privacyVersion:PRIVACY_VERSION,acceptedAt:new Date().toISOString()})
+          body:JSON.stringify({draft:data,region:currentRegion,language:currentLanguage,currency:currentCurrency,detectedRegion,regionOverride:localStorage.getItem(REGION_OVERRIDE_KEY)==='1',addons:chosenAddons,couponCode:appliedCoupon?.code || '',page:location.href,referrer:document.referrer,utm,termsAccepted:true,privacyAccepted:true,materialsAccepted:true,turnstileToken:getTurnstileToken('order')})
         });
         const result = await response.json().catch(()=>({}));
         if (!response.ok || !result.ok) throw new Error(result.error || 'No pudimos registrar el pedido.');
         sessionStorage.setItem('sonalzaLastOrder', JSON.stringify(result));
+        clearDraft();
         location.href = `thanks.html?order=${encodeURIComponent(result.orderId)}`;
       } catch (err) {
         if (statusEl) { statusEl.textContent = err.message; statusEl.className = 'submit-status error-status'; }
@@ -1680,5 +1806,7 @@
 
   setupRevealAnimations();
   setupParallax();
+  bindClearDraftButton();
   setupLocalePicker();
+  setupSecurityWidgets();
 })();

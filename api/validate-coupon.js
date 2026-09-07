@@ -1,3 +1,4 @@
+const { checkBodySize, enforceRateLimit } = require('./_security');
 const { validateCoupon } = require('./_coupons');
 
 const PRICING = {
@@ -7,6 +8,8 @@ const PRICING = {
 
 module.exports = async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ok:false,error:'Método no permitido.'});
+  if (!checkBodySize(req, 16 * 1024)) return res.status(413).json({ok:false,error:'Solicitud demasiado grande.'});
+  if (!(await enforceRateLimit(req,res,'validate-coupon',20,60))) return;
   try {
     const body = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : (req.body || {});
     const product = body.product === 'corrido' ? 'corrido' : 'song';

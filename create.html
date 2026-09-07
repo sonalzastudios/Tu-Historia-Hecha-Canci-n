@@ -21,7 +21,7 @@
           <button type="button" class="currency-btn" data-currency="USD">USD</button>
           <button type="button" class="currency-btn" data-currency="MXN">MXN</button>
         </div>
-        <a href="index.html" class="flow-exit">Salir del estudio ×</a>
+        <button type="button" id="clearDraftBtn" class="flow-clear-data">Borrar mis datos</button><a href="index.html" class="flow-exit">Salir del estudio ×</a>
       </div>
     </div>
   </header>
@@ -60,6 +60,13 @@
         <summary>¿Qué significa “1 revisión incluida”?</summary>
         <p>Después de recibir la primera versión tienes <strong>una sola ronda de cambios</strong>. Envíanos todos los ajustes juntos y de forma específica. Una segunda ronda de cambios puede cotizarse aparte. Corregir un error objetivo de SONALZA no consume esa revisión.</p>
       </details>
+      <div class="chooser-voices" aria-label="Conoce las voces SONALZA">
+        <div><span class="chooser-voices-kicker">VOCES SONALZA</span><strong>Escucha antes de elegir.</strong><small>Una muestra rápida de ALTUNO y NARELI. No selecciona ninguna voz.</small></div>
+        <div class="chooser-voice-actions">
+          <button type="button" class="chooser-voice-btn" data-chooser-voice-src="assets/audio/altuno-sample.mp3" data-chooser-voice-name="ALTUNO"><span>▶</span><b>ALTUNO</b><small>Voz masculina</small></button>
+          <button type="button" class="chooser-voice-btn" data-chooser-voice-src="assets/audio/nareli-sample.mp3" data-chooser-voice-name="NARELI"><span>▶</span><b>NARELI</b><small>Voz femenina</small></button>
+        </div>
+      </div>
     </section>
 
     <div id="songFlow" class="song-flow" hidden>
@@ -90,7 +97,7 @@
       </aside>
 
       <section class="question-shell">
-        <div class="question-topline"><span>Una pregunta a la vez</span><span>Tu avance se guarda en este dispositivo</span></div>
+        <div class="question-topline"><span>Una pregunta a la vez</span><span>Tu avance se guarda hasta 30 días en este dispositivo</span></div>
         <div id="question" class="question"></div>
         <div class="flow-actions">
           <button id="backBtn" class="btn btn-ghost">← Atrás</button>

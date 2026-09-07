@@ -179,3 +179,16 @@ Los cupones se validan server-side. El descuento aplica al precio base del produ
 ## V29
 - Added Corrido tumbado as a Corrido de una Vida direction.
 - Added full-song YouTube links under ALTUNO and NARELI inline voice samples.
+
+## V30 · Production Hardening
+- Fixed mobile `Cambiar opción` blank-screen bug by removing the preselected-product CSS state before showing the chooser.
+- Mobile sticky launch CTA now opens the product chooser instead of forcing the $49 Custom Song flow.
+- Drafts expire after 30 days and are deleted after a successfully registered order; users can also clear saved draft data manually.
+- Improved WCAG text/button contrast.
+- Added a compact, truthful “SONALZA Voices” preview on the product chooser using ALTUNO/NARELI samples.
+- Legal acceptance versions/timestamps are now imposed by the server, not trusted from the browser.
+- Added optional Cloudflare Turnstile support and optional Upstash-backed durable rate limiting, with a serverless-memory fallback.
+- Added rate limits/body-size checks to order, lead, feedback, upload, and coupon endpoints.
+- Upload validation now checks actual image file signatures (JPEG/PNG/WebP), not only the declared MIME type.
+- Added server-generated acceptance evidence and future Stripe linkage columns to the Supabase schema.
+- Added production/commercial-rights record template for each delivered song.

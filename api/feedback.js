@@ -1,5 +1,8 @@
+const { checkBodySize, enforceRateLimit } = require('./_security');
 module.exports = async function handler(req,res){
   if(req.method!=='POST') return res.status(405).json({ok:false});
+  if(!checkBodySize(req,16*1024)) return res.status(413).json({ok:false});
+  if(!(await enforceRateLimit(req,res,'feedback',15,60))) return;
   try{
     const b=typeof req.body==='string'?JSON.parse(req.body||'{}'):(req.body||{});
     if(process.env.SUPABASE_URL&&process.env.SUPABASE_SERVICE_ROLE_KEY){

@@ -1,4 +1,5 @@
 const { validateCoupon, normalizeCode } = require('./_coupons');
+const { TERMS_VERSION, PRIVACY_VERSION, checkBodySize, enforceRateLimit, verifyTurnstile, evidence } = require('./_security');
 const PRICING = {
   song: { USD: 49, MXN: 599 },
   corrido: { USD: 249, MXN: 1999 },
@@ -25,13 +26,17 @@ function getGeoCountry(req) {
 
 module.exports = async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ ok:false, error:'Método no permitido.' });
+  if (!checkBodySize(req, 300 * 1024)) return res.status(413).json({ok:false,error:'La solicitud es demasiado grande.'});
+  if (!(await enforceRateLimit(req, res, 'submit-order', 6, 600))) return;
   try {
     const body = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : (req.body || {});
+    const turnstile = await verifyTurnstile(req, body.turnstileToken, 'order');
+    if (!turnstile.ok) return res.status(400).json({ok:false,error:turnstile.error || 'No pudimos validar la verificación de seguridad.'});
     const draft = body.draft || {};
     if (body.termsAccepted !== true || body.privacyAccepted !== true || body.materialsAccepted !== true) return res.status(400).json({ok:false,error:'Debes aceptar los términos, la privacidad y confirmar tus derechos sobre los materiales antes de continuar.'});
-    const termsVersion = clean(body.termsVersion,80) || '2026-09-06-v4';
-    const privacyVersion = clean(body.privacyVersion,80) || '2026-09-06-v4';
-    const acceptedAt = clean(body.acceptedAt,80) || new Date().toISOString();
+    const termsVersion = TERMS_VERSION;
+    const privacyVersion = PRIVACY_VERSION;
+    const acceptedAt = new Date().toISOString();
     const selectedRegion = body.region === 'MX' ? 'MX' : 'US';
     const detectedCountry = getGeoCountry(req);
     const regionMismatch = Boolean(detectedCountry && detectedCountry !== selectedRegion);
@@ -90,6 +95,9 @@ module.exports = async function handler(req, res) {
       terms_version: termsVersion,
       privacy_version: privacyVersion,
       accepted_at: acceptedAt,
+      acceptance_evidence: evidence(req, {turnstile:turnstile.skipped ? 'not_required' : 'verified', turnstile_hostname:turnstile.hostname || null, selected_region:region, detected_country:detectedCountry}),
+      stripe_session_id: null,
+      stripe_payment_intent_id: null,
       brief: {
         paraQuien: clean(draft.paraQuien, 100), nombre: clean(draft.nombre, 100), ocasion: clean(draft.ocasion, 120),
         genero: clean(draft.genero, 120), voz: clean(draft.voz, 80), idioma: clean(draft.idioma, 80),

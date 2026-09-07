@@ -85,11 +85,13 @@
         <div class="notice"><strong>Modo de prueba</strong> No se realizará ningún cargo en esta etapa. Cuando activemos el pago seguro, verás el total final antes de confirmar.</div>
         <div class="next-steps-mini"><div><span>1</span><p><strong>Recibimos tu formulario</strong><small>Tu historia queda asociada a un número de pedido.</small></p></div><div><span>2</span><p><strong>Confirmamos y producimos</strong><small>Revisamos la dirección antes de preparar la canción.</small></p></div><div><span>3</span><p><strong>Entrega digital</strong><small>Recibes tu canción y puedes usar la revisión incluida.</small></p></div></div>
         <div class="legal-consents" id="legalConsents">
-          <label class="legal-consent-row"><input type="checkbox" id="termsAccept"><span>Confirmo que leí y acepto los <a href="terms.html" target="_blank" rel="noopener">Términos y condiciones</a>, incluyendo las reglas de revisiones, cancelaciones, licencias, propiedad intelectual y entrega.</span></label>
-          <label class="legal-consent-row"><input type="checkbox" id="privacyAccept"><span>He leído y acepto la <a href="privacy.html" target="_blank" rel="noopener">Política de privacidad</a> y autorizo el tratamiento de mis datos para crear, administrar y entregar este pedido.</span></label>
-          <label class="legal-consent-row"><input type="checkbox" id="materialsAccept"><span>Confirmo que tengo derecho o autorización para enviar la historia, nombres, fotos y demás materiales. Si incluyo voluntariamente datos personales sensibles sobre mí, otorgo consentimiento expreso para tratarlos únicamente en relación con este pedido; no enviaré datos sensibles de terceros sin autorización o base legal suficiente.</span></label>
-          <small>Estas aceptaciones se guardan con la versión legal aplicable al pedido.</small>
+          <label class="legal-consent-row"><input type="checkbox" id="termsAccept"><span>Acepto los <a href="terms.html" target="_blank" rel="noopener">Términos y condiciones</a>.</span></label>
+          <label class="legal-consent-row"><input type="checkbox" id="privacyAccept"><span>He leído la <a href="privacy.html" target="_blank" rel="noopener">Política de privacidad</a>.</span></label>
+          <label class="legal-consent-row"><input type="checkbox" id="materialsAccept"><span>Confirmo que tengo autorización para compartir la historia, nombres, fotos y materiales enviados.</span></label>
+          <details class="legal-consent-details"><summary>Ver detalles legales importantes</summary><p>La revisión incluida es una sola ronda consolidada. Si compartes voluntariamente datos sensibles sobre ti, autorizas su tratamiento únicamente para este pedido. No envíes datos sensibles de terceros sin autorización o base legal suficiente.</p></details>
+          <small>Guardamos evidencia de estas aceptaciones con la versión legal vigente del pedido.</small>
         </div>
+        <div class="turnstile-slot" data-turnstile="order" hidden><div class="turnstile-label">Verificación de seguridad</div><div class="turnstile-widget"></div></div>
         <div id="submitStatus" class="submit-status" aria-live="polite"></div>
         <button class="btn btn-primary full btn-xl" id="checkoutBtn">Registrar pedido →</button>
       </section>
