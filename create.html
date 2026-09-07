@@ -31,37 +31,41 @@
       <div class="product-choice-head">
         <div class="eyebrow">ELIGE TU EXPERIENCIA</div>
         <h1 id="productChooserTitle">¿Qué quieres crear?</h1>
-        <p>Elige primero el nivel de profundidad. Después te guiamos una pregunta a la vez.</p>
+        <p>Elige la experiencia que mejor encaje con lo que quieres contar. Después te guiamos una pregunta a la vez.</p>
       </div>
       <div class="product-choice-grid">
         <button type="button" class="product-choice-card" data-product-choice="song">
           <div class="product-choice-top"><span class="product-choice-tag">CANCIÓN PERSONALIZADA</span><span class="product-choice-check">✓</span></div>
-          <h2>Una historia, un momento.</h2>
-          <p>Para una persona, ocasión o mensaje específico. Puedes elegir corrido, banda, cumbia, mariachi y más.</p>
+          <h2>Una canción para decir algo que importa.</h2>
+          <p>Una canción breve y personalizada para agradecer, celebrar, recordar, dedicar o sorprender a alguien. Puede ser corrido, banda, cumbia, mariachi y más.</p>
           <div class="product-choice-price"><span>Precio de lanzamiento</span><strong class="price-value" data-usd="49" data-mxn="599">US$49</strong></div>
-          <div class="product-choice-highlights"><span>Cualquier género</span><span>3–5 min</span><span>1 revisión</span></div>
+          <div class="product-choice-highlights"><span>2–3 min de canción</span><span>Cualquier género</span><span>1 revisión</span></div>
           <span class="product-choice-cta">Elegir Canción Personalizada →</span>
         </button>
         <button type="button" class="product-choice-card product-choice-featured" data-product-choice="corrido">
           <div class="product-choice-top"><span class="product-choice-tag">CORRIDO DE UNA VIDA</span><span class="product-choice-check">✓</span></div>
-          <h2>Una vida merece más espacio.</h2>
-          <p>Una narrativa biográfica más profunda sobre raíces, familia, trabajo, migración, retos, logros y legado. <strong>Puede ser tu historia o la de alguien más.</strong></p>
+          <h2>Una historia completa merece más profundidad.</h2>
+          <p>Una producción premium para contar una trayectoria completa con más contexto, detalle y profundidad. <strong>Puede ser tu historia o la de alguien más.</strong></p>
           <div class="product-choice-price"><span>Precio de lanzamiento</span><strong class="price-value" data-usd="249" data-mxn="1999">US$249</strong></div>
-          <div class="product-choice-highlights"><span>Historia ampliada</span><span>8–12 min</span><span>1 revisión</span></div>
+          <div class="product-choice-highlights"><span>3–6 min de canción</span><span>Historia ampliada</span><span>1 revisión</span></div>
           <span class="product-choice-cta">Elegir Corrido de una Vida →</span>
         </button>
       </div>
       <details class="product-difference">
         <summary>¿Cuál es la diferencia?</summary>
-        <div><strong>Canción Personalizada</strong> se enfoca en un momento, mensaje u ocasión. <strong>Corrido de una Vida</strong> desarrolla una trayectoria completa y por eso hace preguntas adicionales sobre raíces, familia, retos, logros y legado.</div>
+        <div><strong>Canción Personalizada</strong> es una dedicatoria de 2–3 minutos centrada en un mensaje, recuerdo u ocasión. Si eliges “Corrido” como género, será una canción corta con estilo corrido, <strong>no una biografía completa</strong>. <strong>Corrido de una Vida</strong> es una producción de 3–6 minutos con formulario ampliado, más contexto, mayor profundidad lírica y una narrativa de trayectoria.</div>
       </details>
-      <p class="product-choice-note">El protagonista puede ser tú o cualquier otra persona. El precio cambia por la profundidad del proceso, no simplemente por elegir el género corrido.</p>
+      <p class="product-choice-note">El protagonista puede ser tú o cualquier otra persona. El precio cambia por la profundidad, duración y alcance del proceso, no simplemente por elegir el género corrido.</p>
+      <details class="revision-explainer product-revision-help">
+        <summary>¿Qué significa “1 revisión incluida”?</summary>
+        <p>Después de recibir la primera versión tienes <strong>una sola ronda de cambios</strong>. Envíanos todos los ajustes juntos y de forma específica. Una segunda ronda de cambios puede cotizarse aparte. Corregir un error objetivo de SONALZA no consume esa revisión.</p>
+      </details>
     </section>
 
     <div id="songFlow" class="song-flow" hidden>
     <div class="flow-intro-bar">
       <div><span class="flow-intro-kicker">SONALZA SESSION</span><strong id="selectedProductSummary">Tu canción</strong></div>
-      <div class="flow-intro-actions"><span class="flow-intro-meta" id="flowDurationMeta">Privado · 3–5 min</span><button type="button" id="changeProductBtn" class="change-product-btn">Cambiar opción</button></div>
+      <div class="flow-intro-actions"><span class="flow-intro-meta" id="flowDurationMeta">Privado · formulario 3–5 min</span><button type="button" id="changeProductBtn" class="change-product-btn">Cambiar opción</button></div>
     </div>
     <div class="progress-meta"><span id="stepLabel">Paso 1 de 8</span><strong id="pctLabel">13% completado</strong></div>
     <div class="progress"><div id="bar"></div></div>
@@ -72,7 +76,7 @@
         <h2>Fácil de llenar. Profundo donde importa.</h2>
         <p class="rail-intro">No necesitas escribir bonito ni saber de música. Te vamos guiando una pregunta a la vez.</p>
         <div class="rail-checks" aria-label="Qué necesitas para completar el formulario">
-          <div><span>✓</span><p><strong>3–5 minutos</strong><small>para completar el formulario</small></p></div>
+          <div><span>✓</span><p><strong id="railFormTime">3–5 minutos</strong><small>para completar el formulario</small></p></div>
           <div><span>✓</span><p><strong>Detalles reales</strong><small>nombres, recuerdos y frases</small></p></div>
           <div><span>✓</span><p><strong>Sin lenguaje técnico</strong><small>nosotros traducimos la historia a música</small></p></div>
         </div>

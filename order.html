@@ -36,7 +36,7 @@
         <div class="card-cap"><span>FORMULARIO / 01</span><span>SONALZA SESSION</span></div>
         <h2>Tu historia</h2>
         <div id="briefRows"></div><div id="storyDetails"></div>
-        <div class="promise"><strong>Incluye 1 revisión</strong><p>Si la dirección se aleja de manera importante de lo que nos compartiste, corregiremos el enfoque dentro del alcance de la revisión incluida.</p></div>
+        <details class="promise revision-promise"><summary><strong>Incluye 1 revisión · ¿qué significa?</strong></summary><p>Después de recibir la primera versión puedes enviar <strong>una sola lista consolidada de cambios</strong>. Incluye en esa misma revisión todo lo que quieras ajustar y sé lo más específico posible. Una segunda ronda o cambios nuevos posteriores pueden tener costo adicional. Los errores objetivos de SONALZA no consumen tu revisión.</p></details>
       </section>
 
       <section class="summary-card checkout-card premium-surface">
@@ -71,7 +71,15 @@
         <label class="upsell"><input type="checkbox" class="addon" data-key="rush"><span><strong>Entrega prioritaria <em class="addon-price">+US$19</em></strong><small>Tu pedido entra a la fila de producción prioritaria.</small></span></label>
         <label class="upsell"><input type="checkbox" class="addon" data-key="video"><span><strong>Video vertical con letra <em class="addon-price">+US$29</em></strong><small>Preparado para Reels, TikTok y Shorts.</small></span></label>
         <label class="upsell"><input type="checkbox" class="addon" data-key="second"><span><strong>Segunda versión <em class="addon-price">+US$25</em></strong><small>La misma historia con una segunda dirección musical.</small></span></label>
-        <div class="summary-row total-row"><span>Total</span><strong id="total">US$39</strong></div>
+        <div class="coupon-box">
+          <button type="button" class="coupon-toggle" id="couponToggle">¿Tienes un cupón de descuento? <span>+</span></button>
+          <div class="coupon-panel" id="couponPanel" hidden>
+            <div class="coupon-row"><input id="couponCode" maxlength="40" autocomplete="off" placeholder="Escribe tu código"><button type="button" id="applyCouponBtn">Aplicar</button></div>
+            <div id="couponStatus" class="coupon-status" aria-live="polite"></div>
+          </div>
+        </div>
+        <div id="couponDiscountRow" class="summary-row coupon-discount-row" hidden><span>Descuento por cupón</span><strong id="couponDiscount">−US$0</strong></div>
+        <div class="summary-row total-row"><span>Total</span><strong id="total">US$49</strong></div>
         <div class="currency-order-note"><span>Moneda del pedido</span><strong id="orderCurrencyLabel">USD</strong></div>
         <div id="regionVerificationNote" class="region-verification-note" hidden></div>
         <div class="notice"><strong>Modo de prueba</strong> No se realizará ningún cargo en esta etapa. Cuando activemos el pago seguro, verás el total final antes de confirmar.</div>

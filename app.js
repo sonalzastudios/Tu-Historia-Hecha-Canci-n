@@ -257,6 +257,68 @@
   });
 
 
+  Object.assign(TEXT_EN, {
+    'MÚSICA PERSONALIZADA · CREADA ALREDEDOR DE TU HISTORIA':'CUSTOM MUSIC · BUILT AROUND YOUR STORY',
+    'Tu historia merece su propia canción.':'Your story deserves its own song.',
+    'Hazla inolvidable.':'Make it unforgettable.',
+    'Elige el estilo musical de tu historia.':'Choose the musical style for your story.',
+    'Una canción sobre tu negocio, un hook para TikTok o Reels, un jingle para una campaña o música para reproducir en tu restaurante, tienda o evento.':'A song about your business, a TikTok or Reels hook, a campaign jingle, or music to play in your restaurant, store, or event.',
+    'Una dedicatoria musical para una persona, ocasión o mensaje específico. Ideal para agradecer, celebrar, recordar, enamorar o sorprender.':'A musical dedication for a specific person, occasion, or message. Ideal for thanking, celebrating, remembering, expressing love, or surprising someone.',
+    '2–3 minutos aprox.':'Approx. 2–3 minutes',
+    'Una historia, mensaje u ocasión central':'One central story, message, or occasion',
+    '1 ronda de revisión incluida':'1 revision round included',
+    'Una producción narrativa premium para contar una trayectoria completa — tuya o de alguien más — con más profundidad, contexto y espacio para la historia.':'A premium narrative production for telling a complete life journey—yours or someone else’s—with more depth, context, and room for the story.',
+    '3–6 minutos aprox.':'Approx. 3–6 minutes',
+    'Formulario biográfico ampliado':'Expanded biographical brief',
+    'Mayor profundidad lírica + proceso premium':'Deeper lyric development + premium process',
+    'Música creada para vender, recordar o ambientar tu negocio: canciones de marca, hooks para redes, jingles para campañas y música para espacios físicos.':'Music created to sell, be remembered, or shape your business atmosphere: brand songs, social hooks, campaign jingles, and music for physical spaces.',
+    'Canción que cuente la historia de tu negocio':'A song that tells your business story',
+    'Hooks para TikTok, Reels o anuncios':'Hooks for TikTok, Reels, or ads',
+    'Música para restaurante, tienda o evento':'Music for a restaurant, store, or event',
+    'Licencia definida según el uso':'License defined by intended use',
+    '¿Qué significa “1 revisión incluida”?':'What does “1 revision included” mean?',
+    'Es una sola ronda consolidada de cambios después de recibir la primera versión. Debes enviarnos en esa misma revisión todos los ajustes que quieras solicitar. Cambios adicionales posteriores pueden tener costo extra. Los errores objetivos de SONALZA, como escribir mal un nombre que nos proporcionaste correctamente, no consumen tu revisión.':'It is one consolidated round of changes after you receive the first version. You should send all requested adjustments together in that revision. Additional later changes may cost extra. Objective SONALZA errors, such as misspelling a name you provided correctly, do not use your revision.',
+    'Elige la experiencia que mejor encaje con lo que quieres contar. Después te guiamos una pregunta a la vez.':'Choose the experience that best fits what you want to tell. Then we guide you one question at a time.',
+    'Una canción para decir algo que importa.':'A song for saying something that matters.',
+    'Una canción breve y personalizada para agradecer, celebrar, recordar, dedicar o sorprender a alguien. Puede ser corrido, banda, cumbia, mariachi y más.':'A short personalized song to thank, celebrate, remember, dedicate, or surprise someone. It can be corrido, banda, cumbia, mariachi, and more.',
+    '2–3 min de canción':'2–3 min song',
+    'Una historia completa merece más profundidad.':'A complete life story deserves more depth.',
+    'Una producción premium para contar una trayectoria completa con más contexto, detalle y profundidad.':'A premium production for telling a complete life journey with more context, detail, and depth.',
+    '3–6 min de canción':'3–6 min song',
+    'El protagonista puede ser tú o cualquier otra persona. El precio cambia por la profundidad, duración y alcance del proceso, no simplemente por elegir el género corrido.':'The main person can be you or anyone else. The price changes because of the depth, length, and scope of the process—not simply because you choose corrido as the genre.',
+    'Privado · formulario 8–12 min':'Private · 8–12 min form',
+    'Privado · formulario 3–5 min':'Private · 3–5 min form',
+    'Duración aproximada':'Approximate length',
+    'Elige entre 3 y 6 minutos. No cambia el precio. La duración final puede variar ligeramente según el ritmo y la estructura.':'Choose between 3 and 6 minutes. The price does not change. Final runtime may vary slightly based on tempo and structure.',
+    'Una canción para tu negocio, un hook para redes o música para tu espacio.':'A song for your business, a social hook, or music for your space.',
+    'Podemos crear desde una canción que cuente la historia de tu negocio hasta un hook para TikTok, un jingle de campaña o música para reproducir en tu restaurante, tienda, evento o contenido de marca.':'We can create anything from a song that tells your business story to a TikTok hook, a campaign jingle, or music for your restaurant, store, event, or branded content.',
+    'Canción sobre tu negocio o su historia':'A song about your business or its story',
+    'Hook para TikTok, Reels, Shorts o anuncios':'Hook for TikTok, Reels, Shorts, or ads',
+    'Jingle para producto, campaña o promoción':'Jingle for a product, campaign, or promotion',
+    'Música para restaurante, tienda, evento o experiencia de marca':'Music for a restaurant, store, event, or brand experience',
+    '¿Tienes un cupón de descuento?':'Do you have a discount coupon?',
+    'Escribe tu código':'Enter your code',
+    'Aplicar':'Apply',
+    'Descuento por cupón':'Coupon discount',
+    'Incluye 1 revisión · ¿qué significa?':'Includes 1 revision · what does it mean?',
+    'Recibe tu canción de forma privada y sencilla.':'Receive your song privately and easily.',
+    'Una dedicatoria de 2–3 minutos centrada en un mensaje, recuerdo u ocasión. Si eliges “Corrido” como género, será una canción corta con estilo corrido,':'A 2–3 minute dedication centered on a message, memory, or occasion. If you choose “Corrido” as the genre, it will be a shorter corrido-style song,',
+    'no una biografía completa':'not a full biography',
+    'es una producción de 3–6 minutos con formulario ampliado, más contexto, mayor profundidad lírica y una narrativa de trayectoria.':'is a 3–6 minute production with an expanded brief, more context, deeper lyric development, and a life-journey narrative.',
+    'Después de recibir la primera versión tienes':'After receiving the first version, you have',
+    'una sola ronda de cambios':'one round of changes',
+    'Envíanos todos los ajustes juntos y de forma específica. Una segunda ronda de cambios puede cotizarse aparte. Corregir un error objetivo de SONALZA no consume esa revisión.':'Send all requested adjustments together and be specific. A second round of changes may be quoted separately. Correcting an objective SONALZA error does not use that revision.',
+    'Una sola ronda consolidada de cambios':'One consolidated round of changes',
+    'El precio final, impuestos aplicables y método de pago se mostrarán claramente antes de cualquier cargo.':'The final price, applicable taxes, and payment method will be shown clearly before any charge.',
+    'La Canción Personalizada es una dedicatoria de aproximadamente 2–3 minutos centrada en un mensaje, recuerdo u ocasión. Puede usar cualquier género, incluso corrido, pero no está diseñada como biografía completa. Corrido de una Vida es una producción de aproximadamente 3–6 minutos con formulario ampliado, más contexto, dirección regional mexicana y mayor profundidad narrativa.':'The Custom Song is an approximately 2–3 minute dedication centered on a message, memory, or occasion. It can use any genre, including corrido, but it is not designed as a full biography. A Life Corrido is an approximately 3–6 minute production with an expanded brief, more context, Regional Mexican direction, and deeper narrative development.',
+    'Sí. “1 revisión incluida” significa una sola ronda consolidada de cambios después de la primera versión. Debes enviar todos tus ajustes juntos y de forma específica dentro del plazo indicado. Cambios adicionales posteriores pueden tener costo extra. Los errores objetivos de SONALZA se corrigen razonablemente sin consumir esa revisión.':'Yes. “1 revision included” means one consolidated round of changes after the first version. You should send all requested adjustments together and be specific within the stated revision period. Additional later changes may cost extra. Objective SONALZA errors are reasonably corrected without using that revision.',
+    'Una producción premium para contar una trayectoria completa con más contexto, detalle y profundidad.':'A premium production for telling a complete life journey with more context, detail, and depth.',
+    'Puede ser tu historia o la de alguien más.':'It can be your story or someone else’s.',
+    'es una dedicatoria de 2–3 minutos centrada en un mensaje, recuerdo u ocasión. Si eliges “Corrido” como género, será una canción corta con estilo corrido,':'is a 2–3 minute dedication centered on a message, memory, or occasion. If you choose “Corrido” as the genre, it will be a shorter corrido-style song,',
+    'es una producción de 3–6 minutos con formulario ampliado, más contexto, mayor profundidad lírica y una narrativa de trayectoria.':'is a 3–6 minute production with an expanded brief, more context, deeper lyric development, and a life-journey narrative.'
+  });
+
+
   let storedRegion = localStorage.getItem(REGION_KEY);
   let detectedRegion = sessionStorage.getItem(DETECTED_REGION_KEY);
   detectedRegion = detectedRegion === 'MX' || detectedRegion === 'US' ? detectedRegion : null;
@@ -504,7 +566,8 @@
     personasClave: '',
     retos: '',
     logros: '',
-    legado: ''
+    legado: '',
+    duracion: ''
   };
 
   const load = () => {
@@ -672,7 +735,9 @@
     function syncProductChoiceUI() {
       productChoiceButtons.forEach(btn => btn.classList.toggle('selected', btn.dataset.productChoice === data.product));
       if (selectedProductSummary) selectedProductSummary.textContent = `${productName(data.product)} · ${productPrice(data.product)}`;
-      if (flowDurationMeta) flowDurationMeta.textContent = data.product === 'corrido' ? t('Privado · 8–12 min','Private · 8–12 min') : t('Privado · 3–5 min','Private · 3–5 min');
+      if (flowDurationMeta) flowDurationMeta.textContent = data.product === 'corrido' ? t('Privado · formulario 8–12 min','Private · 8–12 min form') : t('Privado · formulario 3–5 min','Private · 3–5 min form');
+      const railFormTime = document.getElementById('railFormTime');
+      if (railFormTime) railFormTime.textContent = data.product === 'corrido' ? t('8–12 minutos','8–12 minutes') : t('3–5 minutos','3–5 minutes');
     }
 
     function showProductChooser() {
@@ -688,6 +753,8 @@
       const songGenres = ['Corrido','Banda','Norteño','Cumbia','Mariachi','Duranguense','Huapango','Sierreño','Pop Latino','Reguetón','Balada','Sorpréndeme'];
       if (data.product === 'corrido' && !corridoGenres.includes(data.genero)) data.genero = 'Corrido clásico';
       if (data.product === 'song' && !songGenres.includes(data.genero)) data.genero = 'Corrido';
+      if (data.product === 'song') data.duracion = '2–3 min';
+      if (data.product === 'corrido' && !['3 min','4 min','5 min','6 min'].includes(data.duracion)) data.duracion = '';
       save(data);
       syncProductChoiceUI();
       if (productChooser) productChooser.hidden = true;
@@ -841,6 +908,11 @@
         <div class="dual-grid music-settings">
           <div><div class="helper setting-label">${t('Voz','Voice')}</div>${optionButtons(['Masculina','Femenina','Sorpréndeme'], data.voz, 'voz')}</div>
           <div><div class="helper setting-label">${t('Idioma de la canción','Song language')}</div>${optionButtons(['Español','Inglés','Bilingüe'], data.idioma, 'idioma')}</div>
+        </div>
+        <div class="duration-selector">
+          <div class="helper setting-label">${t('Duración aproximada','Approximate length')}</div>
+          <p class="duration-note">${t('Elige entre 3 y 6 minutos. No cambia el precio. La duración final puede variar ligeramente según el ritmo y la estructura.','Choose between 3 and 6 minutes. The price does not change. Final runtime may vary slightly based on tempo and structure.')}</p>
+          ${optionButtons(['3 min','4 min','5 min','6 min'], data.duracion, 'duracion', '4')}
         </div>`,
       contactStep
     ];
@@ -970,7 +1042,7 @@
         () => data.retos.length >= 10 || data.logros.length >= 10,
         () => data.cualidades.length >= 10,
         () => data.legado.length >= 10 && data.emocion.length >= 8,
-        () => !!data.genero && !!data.voz && !!data.idioma,
+        () => !!data.genero && !!data.voz && !!data.idioma && !!data.duracion,
         () => validateEmailValue(data.email).valid
       ];
       return [
@@ -1157,6 +1229,7 @@
         [currentLanguage === 'en' ? 'Style' : 'Estilo', currentLanguage === 'en' ? translatePhrase(data.genero || 'Sin especificar') : (data.genero || 'Sin especificar')],
         [currentLanguage === 'en' ? 'Voice' : 'Voz', currentLanguage === 'en' ? translatePhrase(data.voz || 'Sin especificar') : (data.voz || 'Sin especificar')],
         [currentLanguage === 'en' ? 'Language' : 'Idioma', currentLanguage === 'en' ? translatePhrase(data.idioma || 'Español') : (data.idioma || 'Español')],
+        [currentLanguage === 'en' ? 'Length' : 'Duración', data.product === 'corrido' ? (data.duracion || (currentLanguage === 'en' ? 'Not specified' : 'Sin especificar')) : (currentLanguage === 'en' ? 'Approx. 2–3 min' : '2–3 min aprox.')],
         [currentLanguage === 'en' ? 'Email' : 'Correo', data.email || (currentLanguage === 'en' ? 'Not specified' : 'Sin especificar')]
       ];
       briefRows.innerHTML = rows.map(([label, value]) => `<div class="brief-row"><span>${label}</span><strong>${escapeHtml(value)}</strong></div>`).join('');
@@ -1188,9 +1261,17 @@
     const currencyLabel = document.getElementById('orderCurrencyLabel');
     const checkoutBtn = document.getElementById('checkoutBtn');
     const addons = [...document.querySelectorAll('.addon')];
+    const couponToggle = document.getElementById('couponToggle');
+    const couponPanel = document.getElementById('couponPanel');
+    const couponCode = document.getElementById('couponCode');
+    const applyCouponBtn = document.getElementById('applyCouponBtn');
+    const couponStatus = document.getElementById('couponStatus');
+    const couponDiscountRow = document.getElementById('couponDiscountRow');
+    const couponDiscountEl = document.getElementById('couponDiscount');
+    let appliedCoupon = null;
     const termsAccept = document.getElementById('termsAccept');
     const materialsAccept = document.getElementById('materialsAccept');
-    const TERMS_VERSION = '2026-09-06-v1';
+    const TERMS_VERSION = '2026-09-06-v2';
     const PRIVACY_VERSION = '2026-09-06-v1';
     let pendingCoverFile = null;
 
@@ -1255,6 +1336,41 @@
       sync();
     }
 
+    couponToggle?.addEventListener('click', () => {
+      const open = couponPanel && couponPanel.hidden;
+      if (couponPanel) couponPanel.hidden = !open;
+      const icon = couponToggle.querySelector('span');
+      if (icon) icon.textContent = open ? '−' : '+';
+      if (open) couponCode?.focus();
+    });
+
+    async function validateCoupon() {
+      const code = String(couponCode?.value || '').trim().toUpperCase();
+      if (!code) {
+        appliedCoupon = null;
+        if (couponStatus) { couponStatus.textContent = currentLanguage === 'en' ? 'Enter a coupon code.' : 'Escribe un código de cupón.'; couponStatus.className='coupon-status error'; }
+        updateTotal();
+        return;
+      }
+      if (applyCouponBtn) applyCouponBtn.disabled = true;
+      if (couponStatus) { couponStatus.textContent = currentLanguage === 'en' ? 'Checking coupon…' : 'Validando cupón…'; couponStatus.className='coupon-status'; }
+      try {
+        const productKey = data.product === 'corrido' ? 'corrido' : 'song';
+        const r = await fetch('/api/validate-coupon', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code,product:productKey,region:currentRegion,language:currentLanguage})});
+        const result = await r.json().catch(()=>({}));
+        if (!r.ok || !result.ok) throw new Error(result.error || (currentLanguage === 'en' ? 'This coupon is not valid.' : 'Este cupón no es válido.'));
+        appliedCoupon = {code:result.code,discount:Number(result.discount || 0),label:result.label || result.code};
+        if (couponStatus) { couponStatus.textContent = `${currentLanguage === 'en' ? 'Coupon applied' : 'Cupón aplicado'}: ${appliedCoupon.label}`; couponStatus.className='coupon-status success'; }
+        updateTotal();
+      } catch(err) {
+        appliedCoupon = null;
+        if (couponStatus) { couponStatus.textContent = err.message; couponStatus.className='coupon-status error'; }
+        updateTotal();
+      } finally { if (applyCouponBtn) applyCouponBtn.disabled = false; }
+    }
+    applyCouponBtn?.addEventListener('click', validateCoupon);
+    couponCode?.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); validateCoupon(); } });
+
     const updateTotal = () => {
       const productKey = data.product === 'corrido' ? 'corrido' : 'song';
       const base = PRICING[productKey][currentCurrency];
@@ -1271,6 +1387,14 @@
         if (label) label.textContent = `+${formatMoney(price)}`;
         if (addon.checked) total += price;
       });
+      if (appliedCoupon && appliedCoupon.discount > 0) {
+        const discount = Math.min(total, appliedCoupon.discount);
+        total -= discount;
+        if (couponDiscountEl) couponDiscountEl.textContent = `−${formatMoney(discount)}`;
+        if (couponDiscountRow) couponDiscountRow.hidden = false;
+      } else {
+        if (couponDiscountRow) couponDiscountRow.hidden = true;
+      }
       if (totalEl) totalEl.textContent = formatMoney(total);
       if (currencyLabel) currencyLabel.textContent = `${REGIONS[currentRegion].flag} ${currentRegion} · ${currentCurrency}`;
       const verificationNote = document.getElementById('regionVerificationNote');
@@ -1352,7 +1476,7 @@
         ['utm_source','utm_medium','utm_campaign','utm_content','utm_term'].forEach(k=>{ if(utmParams.get(k)) utm[k]=utmParams.get(k); });
         const response = await fetch('/api/submit-order', {
           method:'POST', headers:{'Content-Type':'application/json'},
-          body:JSON.stringify({draft:data,region:currentRegion,language:currentLanguage,currency:currentCurrency,detectedRegion,regionOverride:localStorage.getItem(REGION_OVERRIDE_KEY)==='1',addons:chosenAddons,page:location.href,referrer:document.referrer,utm,termsAccepted:true,materialsAccepted:true,termsVersion:TERMS_VERSION,privacyVersion:PRIVACY_VERSION,acceptedAt:new Date().toISOString()})
+          body:JSON.stringify({draft:data,region:currentRegion,language:currentLanguage,currency:currentCurrency,detectedRegion,regionOverride:localStorage.getItem(REGION_OVERRIDE_KEY)==='1',addons:chosenAddons,couponCode:appliedCoupon?.code || '',page:location.href,referrer:document.referrer,utm,termsAccepted:true,materialsAccepted:true,termsVersion:TERMS_VERSION,privacyVersion:PRIVACY_VERSION,acceptedAt:new Date().toISOString()})
         });
         const result = await response.json().catch(()=>({}));
         if (!response.ok || !result.ok) throw new Error(result.error || 'No pudimos registrar el pedido.');

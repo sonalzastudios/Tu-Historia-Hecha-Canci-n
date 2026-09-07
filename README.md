@@ -106,3 +106,40 @@ Recommended payment integration next:
 - Added privacy consent to Business inquiries.
 - Added Supabase columns for accepted legal versions and timestamps.
 - IMPORTANT before Mexico live payments: publish a physical business address and customer-support telephone number.
+
+## V24 · Claridad de productos, revisión y cupones
+
+- Hero en español: "Música personalizada creada alrededor de tu historia" y "Tu historia merece su propia canción".
+- Canción Personalizada: alcance corto de ~2–3 min, centrado en un mensaje/ocasión; puede usar corrido como género sin convertirse en biografía completa.
+- Corrido de una Vida: alcance premium de ~3–6 min, formulario biográfico ampliado y selección de duración 3/4/5/6 min.
+- "1 revisión" = una sola ronda consolidada de cambios; revisiones adicionales pueden cotizarse aparte. Errores objetivos de SONALZA no consumen la ronda.
+- Se retiró la explicación pública de "tu país define el precio" para no incentivar comparación de regiones.
+- Business incluye ejemplos concretos: canción sobre negocio, hooks para TikTok/Reels, jingle de campaña y música para restaurante/tienda/evento.
+- Checkout preparado para cupones de descuento.
+
+### Configurar cupones en Vercel
+
+Agrega una variable de entorno `SONALZA_COUPONS_JSON` con JSON válido. Ejemplo:
+
+```json
+{
+  "BIENVENIDO10": {
+    "active": true,
+    "type": "percent",
+    "value": 10,
+    "products": ["song", "corrido"],
+    "regions": ["US", "MX"],
+    "label": "10% de descuento"
+  },
+  "SONALZA100": {
+    "active": true,
+    "type": "fixed",
+    "value": {"USD": 10, "MXN": 100},
+    "products": ["song"],
+    "regions": ["US", "MX"],
+    "label": "Descuento especial"
+  }
+}
+```
+
+Los cupones se validan server-side. El descuento aplica al precio base del producto, no a extras, salvo que se cambie la lógica del servidor.

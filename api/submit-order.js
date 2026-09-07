@@ -1,3 +1,4 @@
+const { validateCoupon, normalizeCode } = require('./_coupons');
 const PRICING = {
   song: { USD: 49, MXN: 599 },
   corrido: { USD: 249, MXN: 1999 },
@@ -28,7 +29,7 @@ module.exports = async function handler(req, res) {
     const body = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : (req.body || {});
     const draft = body.draft || {};
     if (body.termsAccepted !== true || body.materialsAccepted !== true) return res.status(400).json({ok:false,error:'Debes aceptar los términos, la privacidad y confirmar tus derechos sobre los materiales antes de continuar.'});
-    const termsVersion = clean(body.termsVersion,80) || '2026-09-06-v1';
+    const termsVersion = clean(body.termsVersion,80) || '2026-09-06-v2';
     const privacyVersion = clean(body.privacyVersion,80) || '2026-09-06-v1';
     const acceptedAt = clean(body.acceptedAt,80) || new Date().toISOString();
     const selectedRegion = body.region === 'MX' ? 'MX' : 'US';
@@ -47,13 +48,23 @@ module.exports = async function handler(req, res) {
       const requiredLife = [draft.ocasion,draft.raices,draft.trayectoria,draft.personasClave,draft.cualidades,draft.legado,draft.emocion,draft.genero,draft.voz,draft.idioma];
       if (requiredLife.some(v => clean(v,2000).length < 2)) return res.status(400).json({ok:false,error:'Faltan datos de la historia de vida. Revisa el formulario antes de continuar.'});
       if (clean(draft.raices).length < 20 || clean(draft.trayectoria).length < 20 || clean(draft.legado).length < 10) return res.status(400).json({ok:false,error:'Necesitamos un poco más de detalle para preparar el Corrido de una Vida.'});
+      if (!['3 min','4 min','5 min','6 min'].includes(clean(draft.duracion,20))) return res.status(400).json({ok:false,error:'Selecciona una duración aproximada entre 3 y 6 minutos.'});
     } else {
       const requiredSong = [draft.ocasion,draft.genero,draft.voz,draft.idioma,draft.cualidades,draft.recuerdo,draft.emocion];
       if (requiredSong.some(v => clean(v,1500).length < 2)) return res.status(400).json({ok:false,error:'Faltan datos de la canción. Revisa el formulario antes de continuar.'});
     }
 
-    let total = PRICING[product][currency];
+    const baseAmount = PRICING[product][currency];
+    let total = baseAmount;
     addons.forEach(key => total += PRICING[key][currency]);
+    const requestedCouponCode = normalizeCode(body.couponCode || '');
+    let coupon = null;
+    if (requestedCouponCode) {
+      const validated = validateCoupon({code:requestedCouponCode, product, region, currency, baseAmount});
+      if (!validated.ok) return res.status(400).json({ok:false,error:validated.error || 'El cupón ya no es válido.'});
+      coupon = validated;
+      total = Math.max(0, total - validated.discount);
+    }
     const orderId = `SZ-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).slice(2,6).toUpperCase()}`;
     const createdAt = new Date().toISOString();
     const record = {
@@ -69,6 +80,8 @@ module.exports = async function handler(req, res) {
       currency,
       total,
       addons,
+      coupon_code: coupon?.code || null,
+      coupon_discount: coupon?.discount || 0,
       customer_email: email,
       customer_phone: clean(draft.telefono, 60),
       terms_accepted: true,
@@ -80,7 +93,7 @@ module.exports = async function handler(req, res) {
         paraQuien: clean(draft.paraQuien, 100), nombre: clean(draft.nombre, 100), ocasion: clean(draft.ocasion, 120),
         genero: clean(draft.genero, 120), voz: clean(draft.voz, 80), idioma: clean(draft.idioma, 80),
         cualidades: clean(draft.cualidades), recuerdo: clean(draft.recuerdo), frase: clean(draft.frase), emocion: clean(draft.emocion),
-        raices: clean(draft.raices), trayectoria: clean(draft.trayectoria), personasClave: clean(draft.personasClave), retos: clean(draft.retos), logros: clean(draft.logros), legado: clean(draft.legado),
+        raices: clean(draft.raices), trayectoria: clean(draft.trayectoria), personasClave: clean(draft.personasClave), retos: clean(draft.retos), logros: clean(draft.logros), legado: clean(draft.legado), duracion: product === 'corrido' ? clean(draft.duracion,20) : '2–3 min',
         customCoverPrompt: clean(draft.coverPrompt, 1500), customCoverMustShow: clean(draft.coverCropMustShow, 800), customCoverImageName: clean(draft.coverImageName, 180), customCoverImagePath: clean(draft.coverImagePath, 500)
       },
       source: {
@@ -109,7 +122,7 @@ module.exports = async function handler(req, res) {
       const adminEmail = process.env.SONALZA_ORDERS_EMAIL || 'sonalzastudios@gmail.com';
       const from = process.env.SONALZA_FROM_EMAIL || 'SONALZA Orders <orders@sonalza.com>';
       const rows = [
-        ['Pedido', orderId], ['Región seleccionada', region], ['País detectado', detectedCountry || 'No disponible'], ['Verificación regional', regionMismatch ? 'REQUERIDA AL PAGAR' : 'Sin discrepancia'], ['Idioma del sitio', language.toUpperCase()], ['Producto', product === 'corrido' ? 'Corrido de una Vida' : 'Canción Personalizada'], ['Total', money(total,currency)],
+        ['Pedido', orderId], ['Región seleccionada', region], ['País detectado', detectedCountry || 'No disponible'], ['Verificación regional', regionMismatch ? 'REQUERIDA AL PAGAR' : 'Sin discrepancia'], ['Idioma del sitio', language.toUpperCase()], ['Producto', product === 'corrido' ? 'Corrido de una Vida' : 'Canción Personalizada'], ['Duración', product === 'corrido' ? draft.duracion : '2–3 min aprox.'], ['Cupón', coupon ? `${coupon.code} (−${money(coupon.discount,currency)})` : '—'], ['Total', money(total,currency)],
         ['Cliente', draft.nombre], ['Para quién', draft.paraQuien], ['Ocasión', draft.ocasion], ['Género', draft.genero], ['Voz', draft.voz], ['Idioma', draft.idioma],
         ['Email', email], ['Teléfono', draft.telefono || '—'], ['Extras', addons.join(', ') || 'Ninguno'], ['Términos', `${termsVersion} · aceptados`], ['Privacidad', `${privacyVersion} · aceptada`], ['Consentimiento materiales', 'Sí'],
         ['Portada - idea', draft.coverPrompt || '—'], ['Portada - visible tras recorte', draft.coverCropMustShow || '—'], ['Portada - archivo', draft.coverImageName || '—'], ['Portada - ruta privada', draft.coverImagePath || '—']
@@ -134,7 +147,7 @@ module.exports = async function handler(req, res) {
       });
     }
 
-    return res.status(200).json({ ok:true, orderId, total, currency, region, detectedCountry, verificationRequired:regionMismatch, stored, emailed });
+    return res.status(200).json({ ok:true, orderId, total, currency, region, detectedCountry, verificationRequired:regionMismatch, coupon:coupon ? {code:coupon.code,discount:coupon.discount} : null, stored, emailed });
   } catch (err) {
     console.error(err);
     return res.status(500).json({ ok:false, error:'No pudimos registrar el pedido. Intenta de nuevo.' });

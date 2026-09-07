@@ -81,3 +81,7 @@ alter table public.orders add column if not exists accepted_at timestamptz;
 
 alter table public.business_leads add column if not exists privacy_consent boolean not null default false;
 alter table public.business_leads add column if not exists privacy_version text;
+
+-- V24 · coupon evidence
+alter table public.orders add column if not exists coupon_code text;
+alter table public.orders add column if not exists coupon_discount numeric not null default 0;
