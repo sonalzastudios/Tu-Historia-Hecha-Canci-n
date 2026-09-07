@@ -1,3 +1,11 @@
+# SONALZA Website V32
+
+## Mobile CTA hotfix
+- Restores the launch CTA as a true fixed bottom dock on phones.
+- Removes the translate animation that could cause iOS/Safari compositing drift during scroll.
+- Uses safe-area spacing for iPhones with the home indicator.
+- Keeps the CTA linked to `create.html`, so the customer first sees the service chooser.
+
 # SONALZA Website V31
 
 V31 is the first production-order architecture release. The visual design remains essentially V30; the work is concentrated behind the order button.
