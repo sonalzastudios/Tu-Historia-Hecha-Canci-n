@@ -74,6 +74,7 @@ on conflict (id) do nothing;
 
 -- V23 · clickwrap and legal-version evidence
 alter table public.orders add column if not exists terms_accepted boolean not null default false;
+alter table public.orders add column if not exists privacy_accepted boolean not null default false;
 alter table public.orders add column if not exists materials_accepted boolean not null default false;
 alter table public.orders add column if not exists terms_version text;
 alter table public.orders add column if not exists privacy_version text;

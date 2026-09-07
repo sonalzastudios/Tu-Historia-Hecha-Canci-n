@@ -28,9 +28,9 @@ module.exports = async function handler(req, res) {
   try {
     const body = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : (req.body || {});
     const draft = body.draft || {};
-    if (body.termsAccepted !== true || body.materialsAccepted !== true) return res.status(400).json({ok:false,error:'Debes aceptar los términos, la privacidad y confirmar tus derechos sobre los materiales antes de continuar.'});
-    const termsVersion = clean(body.termsVersion,80) || '2026-09-06-v2';
-    const privacyVersion = clean(body.privacyVersion,80) || '2026-09-06-v1';
+    if (body.termsAccepted !== true || body.privacyAccepted !== true || body.materialsAccepted !== true) return res.status(400).json({ok:false,error:'Debes aceptar los términos, la privacidad y confirmar tus derechos sobre los materiales antes de continuar.'});
+    const termsVersion = clean(body.termsVersion,80) || '2026-09-06-v3';
+    const privacyVersion = clean(body.privacyVersion,80) || '2026-09-06-v3';
     const acceptedAt = clean(body.acceptedAt,80) || new Date().toISOString();
     const selectedRegion = body.region === 'MX' ? 'MX' : 'US';
     const detectedCountry = getGeoCountry(req);
@@ -85,6 +85,7 @@ module.exports = async function handler(req, res) {
       customer_email: email,
       customer_phone: clean(draft.telefono, 60),
       terms_accepted: true,
+      privacy_accepted: true,
       materials_accepted: true,
       terms_version: termsVersion,
       privacy_version: privacyVersion,
@@ -124,7 +125,7 @@ module.exports = async function handler(req, res) {
       const rows = [
         ['Pedido', orderId], ['Región seleccionada', region], ['País detectado', detectedCountry || 'No disponible'], ['Verificación regional', regionMismatch ? 'REQUERIDA AL PAGAR' : 'Sin discrepancia'], ['Idioma del sitio', language.toUpperCase()], ['Producto', product === 'corrido' ? 'Corrido de una Vida' : 'Canción Personalizada'], ['Duración', product === 'corrido' ? draft.duracion : '2–3 min aprox.'], ['Cupón', coupon ? `${coupon.code} (−${money(coupon.discount,currency)})` : '—'], ['Total', money(total,currency)],
         ['Cliente', draft.nombre], ['Para quién', draft.paraQuien], ['Ocasión', draft.ocasion], ['Género', draft.genero], ['Voz', draft.voz], ['Idioma', draft.idioma],
-        ['Email', email], ['Teléfono', draft.telefono || '—'], ['Extras', addons.join(', ') || 'Ninguno'], ['Términos', `${termsVersion} · aceptados`], ['Privacidad', `${privacyVersion} · aceptada`], ['Consentimiento materiales', 'Sí'],
+        ['Email', email], ['Teléfono', draft.telefono || '—'], ['Extras', addons.join(', ') || 'Ninguno'], ['Términos', `${termsVersion} · aceptados`], ['Privacidad', `${privacyVersion} · aceptada`], ['Consentimiento privacidad', 'Sí'], ['Consentimiento materiales', 'Sí'],
         ['Portada - idea', draft.coverPrompt || '—'], ['Portada - visible tras recorte', draft.coverCropMustShow || '—'], ['Portada - archivo', draft.coverImageName || '—'], ['Portada - ruta privada', draft.coverImagePath || '—']
       ];
       const customCoverHtml = addons.includes('premium') ? `<h2>Portada personalizada</h2><p><b>Idea visual:</b><br>${esc(draft.coverPrompt || '—')}</p><p><b>Qué debe verse tras el recorte cuadrado:</b><br>${esc(draft.coverCropMustShow || '—')}</p><p><b>Foto de referencia:</b><br>${esc(draft.coverImageName || '—')}</p><p><b>Ruta privada:</b><br>${esc(draft.coverImagePath || '—')}</p>` : '';

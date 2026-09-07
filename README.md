@@ -143,3 +143,12 @@ Agrega una variable de entorno `SONALZA_COUPONS_JSON` con JSON válido. Ejemplo:
 ```
 
 Los cupones se validan server-side. El descuento aplica al precio base del producto, no a extras, salvo que se cambie la lógica del servidor.
+
+
+## V25
+- Voice and song-language controls use full-width rows so labels no longer overflow.
+- Terms & Privacy version: `2026-09-06-v3`.
+- Added separate clickwrap consent for Terms, Privacy, and customer-supplied materials/sensitive data.
+- Added privacy notice at collection on personal and business forms.
+- Expanded Terms for Content ID/DSP monetization, source files/stems, refusal/suspension, inactivity, and supported territories.
+- Expanded Privacy for payment data, no sale/cross-context behavioral advertising, transactional vs. marketing communications, international transfers, retention criteria, ARCO/rights procedures, and unsupported territories.

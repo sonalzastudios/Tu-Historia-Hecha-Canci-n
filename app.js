@@ -331,6 +331,16 @@
     return currency === 'MXN' ? `MX$${value}` : `US$${value}`;
   };
 
+
+  Object.assign(TEXT_EN, {
+    'Aviso de privacidad simplificado':'Privacy notice at collection',
+    'Usaremos estos datos para evaluar tu proyecto, responderte, preparar una propuesta y prevenir fraude. No vendemos tu información personal.':'We use these details to evaluate your project, respond to you, prepare a proposal, and prevent fraud. We do not sell your personal information.',
+    'Ver política completa →':'View full policy →',
+    'Confirmo que leí y acepto los Términos y condiciones, incluyendo las reglas de revisiones, cancelaciones, licencias, propiedad intelectual y entrega.':'I confirm that I read and accept the Terms & Conditions, including the revision, cancellation, licensing, intellectual-property, and delivery rules.',
+    'He leído y acepto la Política de privacidad y autorizo el tratamiento de mis datos para crear, administrar y entregar este pedido.':'I have read and accept the Privacy Policy and authorize processing of my data to create, administer, and deliver this order.',
+    'Confirmo que tengo derecho o autorización para enviar la historia, nombres, fotos y demás materiales. Si incluyo voluntariamente datos personales sensibles sobre mí, otorgo consentimiento expreso para tratarlos únicamente en relación con este pedido; no enviaré datos sensibles de terceros sin autorización o base legal suficiente.':'I confirm that I have the rights or authorization to submit the story, names, photos, and other materials. If I voluntarily include sensitive personal information about myself, I expressly consent to processing it only in connection with this order; I will not submit sensitive third-party information without sufficient authorization or lawful basis.'
+  });
+
   function translatePhrase(value) {
     if (currentLanguage !== 'en') return value;
     return TEXT_EN[value] || value;
@@ -814,8 +824,8 @@
         <p class="sub">${t('Piensa en la persona que la recibirá. El género cambia por completo la emoción.','Think about the person receiving it. The genre completely changes the emotion.')}</p>
         ${optionButtons(['Corrido','Banda','Norteño','Cumbia','Mariachi','Duranguense','Huapango','Sierreño','Pop Latino','Reguetón','Balada','Sorpréndeme'], data.genero, 'genero')}
         <div class="dual-grid music-settings">
-          <div><div class="helper setting-label">${t('Voz','Voice')}</div>${optionButtons(['Masculina','Femenina','Sorpréndeme'], data.voz, 'voz')}</div>
-          <div><div class="helper setting-label">${t('Idioma de la canción','Song language')}</div>${optionButtons(['Español','Inglés','Bilingüe'], data.idioma, 'idioma')}</div>
+          <div class="music-setting voice-setting"><div class="helper setting-label">${t('Voz','Voice')}</div>${optionButtons(['Masculina','Femenina','Sorpréndeme'], data.voz, 'voz')}</div>
+          <div class="music-setting language-setting"><div class="helper setting-label">${t('Idioma de la canción','Song language')}</div>${optionButtons(['Español','Inglés','Bilingüe'], data.idioma, 'idioma')}</div>
         </div>`,
       () => `
         <div class="smallcaps">${t('Paso 5','Step 5')}</div>
@@ -906,8 +916,8 @@
           {value:'Sorpréndeme',labelEs:'Sorpréndeme',labelEn:'Surprise me'}
         ], data.genero, 'genero')}
         <div class="dual-grid music-settings">
-          <div><div class="helper setting-label">${t('Voz','Voice')}</div>${optionButtons(['Masculina','Femenina','Sorpréndeme'], data.voz, 'voz')}</div>
-          <div><div class="helper setting-label">${t('Idioma de la canción','Song language')}</div>${optionButtons(['Español','Inglés','Bilingüe'], data.idioma, 'idioma')}</div>
+          <div class="music-setting voice-setting"><div class="helper setting-label">${t('Voz','Voice')}</div>${optionButtons(['Masculina','Femenina','Sorpréndeme'], data.voz, 'voz')}</div>
+          <div class="music-setting language-setting"><div class="helper setting-label">${t('Idioma de la canción','Song language')}</div>${optionButtons(['Español','Inglés','Bilingüe'], data.idioma, 'idioma')}</div>
         </div>
         <div class="duration-selector">
           <div class="helper setting-label">${t('Duración aproximada','Approximate length')}</div>
@@ -924,6 +934,7 @@
         <h1>${t('¿A dónde enviamos tu canción?','Where should we send your song?')}</h1>
         <p class="sub">${t('Usaremos estos datos para identificar tu pedido y comunicarnos contigo sobre la entrega.','We use these details to identify your order and contact you about delivery.')}</p>
         <div class="privacy-note"><span>🔒</span><div><strong>${t('Tu historia es privada.','Your story is private.')}</strong><p>${t('No necesitas publicar nada para crear tu canción.','You do not need to publish anything to create your song.')}</p></div></div>
+        <div class="notice-at-collection"><strong>${t('Aviso de privacidad simplificado','Privacy notice at collection')}</strong><span>${t('Usaremos tus datos de contacto, historia y archivos únicamente para preparar, administrar y entregar tu pedido, prevenir fraude y cumplir obligaciones legales. No vendemos tu información personal.','We use your contact details, story, and files only to create, administer, and deliver your order, prevent fraud, and comply with legal obligations. We do not sell your personal information.')}</span><a href="privacy.html" target="_blank" rel="noopener">${t('Ver política completa','View full policy')} →</a></div>
         <div class="dual-grid contact-grid">
           <div class="form-box compact-field" id="emailField"><label for="email">${t('Correo electrónico','Email address')}</label><input type="email" id="email" inputmode="email" autocomplete="email" placeholder="${t('tu@correo.com','you@email.com')}" value="${escapeHtml(data.email)}"><div id="emailValidation" class="field-validation" hidden></div></div>
           <div class="form-box compact-field"><label for="telefono">${t('Teléfono','Phone')} <span class="helper">(${t('opcional','optional')})</span></label><input id="telefono" inputmode="tel" autocomplete="tel" placeholder="${phonePlaceholder}" value="${escapeHtml(data.telefono)}"><div class="helper">${t('Solo lo usaríamos para avisos importantes de entrega.','We would only use it for important delivery updates.')}</div></div>
@@ -1270,17 +1281,19 @@
     const couponDiscountEl = document.getElementById('couponDiscount');
     let appliedCoupon = null;
     const termsAccept = document.getElementById('termsAccept');
+    const privacyAccept = document.getElementById('privacyAccept');
     const materialsAccept = document.getElementById('materialsAccept');
-    const TERMS_VERSION = '2026-09-06-v2';
-    const PRIVACY_VERSION = '2026-09-06-v1';
+    const TERMS_VERSION = '2026-09-06-v3';
+    const PRIVACY_VERSION = '2026-09-06-v3';
     let pendingCoverFile = null;
 
     function syncLegalConsentState() {
-      const accepted = Boolean(termsAccept?.checked && materialsAccept?.checked);
+      const accepted = Boolean(termsAccept?.checked && privacyAccept?.checked && materialsAccept?.checked);
       if (checkoutBtn) checkoutBtn.classList.toggle('legal-pending', !accepted);
       return accepted;
     }
     termsAccept?.addEventListener('change', syncLegalConsentState);
+    privacyAccept?.addEventListener('change', syncLegalConsentState);
     materialsAccept?.addEventListener('change', syncLegalConsentState);
 
     function bindCoverAddonInputs() {
@@ -1476,7 +1489,7 @@
         ['utm_source','utm_medium','utm_campaign','utm_content','utm_term'].forEach(k=>{ if(utmParams.get(k)) utm[k]=utmParams.get(k); });
         const response = await fetch('/api/submit-order', {
           method:'POST', headers:{'Content-Type':'application/json'},
-          body:JSON.stringify({draft:data,region:currentRegion,language:currentLanguage,currency:currentCurrency,detectedRegion,regionOverride:localStorage.getItem(REGION_OVERRIDE_KEY)==='1',addons:chosenAddons,couponCode:appliedCoupon?.code || '',page:location.href,referrer:document.referrer,utm,termsAccepted:true,materialsAccepted:true,termsVersion:TERMS_VERSION,privacyVersion:PRIVACY_VERSION,acceptedAt:new Date().toISOString()})
+          body:JSON.stringify({draft:data,region:currentRegion,language:currentLanguage,currency:currentCurrency,detectedRegion,regionOverride:localStorage.getItem(REGION_OVERRIDE_KEY)==='1',addons:chosenAddons,couponCode:appliedCoupon?.code || '',page:location.href,referrer:document.referrer,utm,termsAccepted:true,privacyAccepted:true,materialsAccepted:true,termsVersion:TERMS_VERSION,privacyVersion:PRIVACY_VERSION,acceptedAt:new Date().toISOString()})
         });
         const result = await response.json().catch(()=>({}));
         if (!response.ok || !result.ok) throw new Error(result.error || 'No pudimos registrar el pedido.');
