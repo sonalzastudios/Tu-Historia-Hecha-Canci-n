@@ -1348,8 +1348,8 @@
     const termsAccept = document.getElementById('termsAccept');
     const privacyAccept = document.getElementById('privacyAccept');
     const materialsAccept = document.getElementById('materialsAccept');
-    const TERMS_VERSION = '2026-09-06-v3';
-    const PRIVACY_VERSION = '2026-09-06-v3';
+    const TERMS_VERSION = '2026-09-06-v4';
+    const PRIVACY_VERSION = '2026-09-06-v4';
     let pendingCoverFile = null;
 
     function syncLegalConsentState() {

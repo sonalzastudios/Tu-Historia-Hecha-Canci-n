@@ -29,8 +29,8 @@ module.exports = async function handler(req, res) {
     const body = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : (req.body || {});
     const draft = body.draft || {};
     if (body.termsAccepted !== true || body.privacyAccepted !== true || body.materialsAccepted !== true) return res.status(400).json({ok:false,error:'Debes aceptar los términos, la privacidad y confirmar tus derechos sobre los materiales antes de continuar.'});
-    const termsVersion = clean(body.termsVersion,80) || '2026-09-06-v3';
-    const privacyVersion = clean(body.privacyVersion,80) || '2026-09-06-v3';
+    const termsVersion = clean(body.termsVersion,80) || '2026-09-06-v4';
+    const privacyVersion = clean(body.privacyVersion,80) || '2026-09-06-v4';
     const acceptedAt = clean(body.acceptedAt,80) || new Date().toISOString();
     const selectedRegion = body.region === 'MX' ? 'MX' : 'US';
     const detectedCountry = getGeoCountry(req);

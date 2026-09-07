@@ -147,7 +147,7 @@ Los cupones se validan server-side. El descuento aplica al precio base del produ
 
 ## V25
 - Voice and song-language controls use full-width rows so labels no longer overflow.
-- Terms & Privacy version: `2026-09-06-v3`.
+- Terms & Privacy version: `2026-09-06-v4`.
 - Added separate clickwrap consent for Terms, Privacy, and customer-supplied materials/sensitive data.
 - Added privacy notice at collection on personal and business forms.
 - Expanded Terms for Content ID/DSP monetization, source files/stems, refusal/suspension, inactivity, and supported territories.
@@ -158,3 +158,10 @@ Los cupones se validan server-side. El descuento aplica al precio base del produ
 - Added separate YouTube sample buttons for ALTUNO (0:12) and NARELI (0:57). Sample buttons open in a new tab and do not select the artist.
 - Added migration from legacy Masculina/Femenina saved choices to ALTUNO/NARELI.
 - Animated the orange lower-right audio waveform/equalizer in the homepage studio card, including a compact mobile version and reduced-motion accessibility support.
+
+
+## V27
+- Legal status cards now show “Documento vigente / Last updated” instead of “Fecha efectiva”.
+- Terms version bumped to `2026-09-06-v4`.
+- AI wording reframed as supporting technology inside a human-directed workflow.
+- Terms explicitly state that SONALZA is not a fully automated creative process and that a person reviews lyrics and overall story consistency before delivery.
