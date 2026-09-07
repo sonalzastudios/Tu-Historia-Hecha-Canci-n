@@ -39,6 +39,14 @@ module.exports = async function handler(req, res) {
     const email = clean(draft.email, 180);
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return res.status(400).json({ ok:false, error:'Correo electrónico inválido.' });
     if (!clean(draft.nombre, 80) || !clean(draft.paraQuien, 80)) return res.status(400).json({ ok:false, error:'Faltan datos esenciales del formulario.' });
+    if (product === 'corrido') {
+      const requiredLife = [draft.ocasion,draft.raices,draft.trayectoria,draft.personasClave,draft.cualidades,draft.legado,draft.emocion,draft.genero,draft.voz,draft.idioma];
+      if (requiredLife.some(v => clean(v,2000).length < 2)) return res.status(400).json({ok:false,error:'Faltan datos de la historia de vida. Revisa el formulario antes de continuar.'});
+      if (clean(draft.raices).length < 20 || clean(draft.trayectoria).length < 20 || clean(draft.legado).length < 10) return res.status(400).json({ok:false,error:'Necesitamos un poco más de detalle para preparar el Corrido de una Vida.'});
+    } else {
+      const requiredSong = [draft.ocasion,draft.genero,draft.voz,draft.idioma,draft.cualidades,draft.recuerdo,draft.emocion];
+      if (requiredSong.some(v => clean(v,1500).length < 2)) return res.status(400).json({ok:false,error:'Faltan datos de la canción. Revisa el formulario antes de continuar.'});
+    }
 
     let total = PRICING[product][currency];
     addons.forEach(key => total += PRICING[key][currency]);
@@ -63,7 +71,8 @@ module.exports = async function handler(req, res) {
         paraQuien: clean(draft.paraQuien, 100), nombre: clean(draft.nombre, 100), ocasion: clean(draft.ocasion, 120),
         genero: clean(draft.genero, 120), voz: clean(draft.voz, 80), idioma: clean(draft.idioma, 80),
         cualidades: clean(draft.cualidades), recuerdo: clean(draft.recuerdo), frase: clean(draft.frase), emocion: clean(draft.emocion),
-        customCoverPrompt: clean(draft.coverPrompt, 1500), customCoverMustShow: clean(draft.coverCropMustShow, 800), customCoverImageName: clean(draft.coverImageName, 180)
+        raices: clean(draft.raices), trayectoria: clean(draft.trayectoria), personasClave: clean(draft.personasClave), retos: clean(draft.retos), logros: clean(draft.logros), legado: clean(draft.legado),
+        customCoverPrompt: clean(draft.coverPrompt, 1500), customCoverMustShow: clean(draft.coverCropMustShow, 800), customCoverImageName: clean(draft.coverImageName, 180), customCoverImagePath: clean(draft.coverImagePath, 500)
       },
       source: {
         page: clean(body.page, 300), referrer: clean(body.referrer, 500), utm: body.utm || {}
@@ -94,10 +103,11 @@ module.exports = async function handler(req, res) {
         ['Pedido', orderId], ['Región seleccionada', region], ['País detectado', detectedCountry || 'No disponible'], ['Verificación regional', regionMismatch ? 'REQUERIDA AL PAGAR' : 'Sin discrepancia'], ['Idioma del sitio', language.toUpperCase()], ['Producto', product === 'corrido' ? 'Corrido de una Vida' : 'Canción Personalizada'], ['Total', money(total,currency)],
         ['Cliente', draft.nombre], ['Para quién', draft.paraQuien], ['Ocasión', draft.ocasion], ['Género', draft.genero], ['Voz', draft.voz], ['Idioma', draft.idioma],
         ['Email', email], ['Teléfono', draft.telefono || '—'], ['Extras', addons.join(', ') || 'Ninguno'],
-        ['Custom cover idea', draft.coverPrompt || '—'], ['Must remain visible after square crop', draft.coverCropMustShow || '—'], ['Reference photo', draft.coverImageName || '—']
+        ['Portada - idea', draft.coverPrompt || '—'], ['Portada - visible tras recorte', draft.coverCropMustShow || '—'], ['Portada - archivo', draft.coverImageName || '—'], ['Portada - ruta privada', draft.coverImagePath || '—']
       ];
-      const customCoverHtml = addons.includes('premium') ? `<h2>Custom cover</h2><p><b>Idea visual:</b><br>${esc(draft.coverPrompt || '—')}</p><p><b>Qué debe verse tras el recorte cuadrado:</b><br>${esc(draft.coverCropMustShow || '—')}</p><p><b>Foto de referencia:</b><br>${esc(draft.coverImageName || '—')}</p>` : '';
-      const html = `<div style="font-family:Arial,sans-serif;color:#071a33;max-width:700px"><h1>Nuevo pedido SONALZA</h1><p><b>${esc(orderId)}</b> · ${esc(money(total,currency))}</p><table style="border-collapse:collapse;width:100%">${rows.map(([a,b])=>`<tr><td style="padding:8px;border-bottom:1px solid #eee;color:#667">${esc(a)}</td><td style="padding:8px;border-bottom:1px solid #eee"><b>${esc(b)}</b></td></tr>`).join('')}</table><h2>Historia</h2><p><b>Cualidades:</b><br>${esc(draft.cualidades)}</p><p><b>Recuerdo:</b><br>${esc(draft.recuerdo)}</p><p><b>Frase:</b><br>${esc(draft.frase || '—')}</p><p><b>Mensaje:</b><br>${esc(draft.emocion)}</p>${customCoverHtml}</div>`;
+      const customCoverHtml = addons.includes('premium') ? `<h2>Portada personalizada</h2><p><b>Idea visual:</b><br>${esc(draft.coverPrompt || '—')}</p><p><b>Qué debe verse tras el recorte cuadrado:</b><br>${esc(draft.coverCropMustShow || '—')}</p><p><b>Foto de referencia:</b><br>${esc(draft.coverImageName || '—')}</p><p><b>Ruta privada:</b><br>${esc(draft.coverImagePath || '—')}</p>` : '';
+      const lifeHtml = product === 'corrido' ? `<h2>Historia de vida</h2><p><b>Raíces:</b><br>${esc(draft.raices || '—')}</p><p><b>Trayectoria:</b><br>${esc(draft.trayectoria || '—')}</p><p><b>Personas clave:</b><br>${esc(draft.personasClave || '—')}</p><p><b>Retos:</b><br>${esc(draft.retos || '—')}</p><p><b>Logros:</b><br>${esc(draft.logros || '—')}</p><p><b>Legado:</b><br>${esc(draft.legado || '—')}</p>` : '';
+      const html = `<div style="font-family:Arial,sans-serif;color:#071a33;max-width:700px"><h1>Nuevo pedido SONALZA</h1><p><b>${esc(orderId)}</b> · ${esc(money(total,currency))}</p><table style="border-collapse:collapse;width:100%">${rows.map(([a,b])=>`<tr><td style="padding:8px;border-bottom:1px solid #eee;color:#667">${esc(a)}</td><td style="padding:8px;border-bottom:1px solid #eee"><b>${esc(b)}</b></td></tr>`).join('')}</table><h2>Historia</h2><p><b>Cualidades:</b><br>${esc(draft.cualidades)}</p><p><b>Recuerdo:</b><br>${esc(draft.recuerdo)}</p><p><b>Frase:</b><br>${esc(draft.frase || '—')}</p><p><b>Mensaje:</b><br>${esc(draft.emocion)}</p>${lifeHtml}${customCoverHtml}</div>`;
       const r = await fetch('https://api.resend.com/emails', {
         method:'POST',
         headers:{Authorization:`Bearer ${process.env.RESEND_API_KEY}`,'Content-Type':'application/json'},
@@ -111,7 +121,7 @@ module.exports = async function handler(req, res) {
       return res.status(503).json({
         ok:false,
         setupRequired:true,
-        error:'La recepción de pedidos aún no está configurada. Agrega Supabase y/o Resend en las variables de entorno de Vercel.'
+        error:'Los pedidos en línea todavía no están habilitados. Intenta de nuevo más tarde.'
       });
     }
 

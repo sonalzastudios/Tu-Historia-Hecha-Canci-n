@@ -149,6 +149,108 @@
   });
 
 
+  Object.assign(TEXT_EN, {
+    'ELIGE TU EXPERIENCIA':'CHOOSE YOUR EXPERIENCE',
+    'Elige primero el nivel de profundidad. Después te guiamos una pregunta a la vez.':'First choose how deep you want to go. Then we guide you one question at a time.',
+    'CANCIÓN PERSONALIZADA':'CUSTOM SONG',
+    'Una historia, un momento.':'One story, one moment.',
+    'Para una persona, ocasión o mensaje específico. Puedes elegir corrido, banda, cumbia, mariachi y más.':'For a specific person, occasion, or message. You can choose corrido, banda, cumbia, mariachi, and more.',
+    'Cualquier género':'Any genre',
+    '1 revisión':'1 revision',
+    'Elegir Canción Personalizada →':'Choose Custom Song →',
+    'CORRIDO DE UNA VIDA':'A LIFE CORRIDO',
+    'Una vida merece más espacio.':'A life deserves more space.',
+    'Una narrativa biográfica más profunda sobre raíces, familia, trabajo, migración, retos, logros y legado.':'A deeper biographical narrative about roots, family, work, migration, challenges, achievements, and legacy.',
+    'Historia ampliada':'Expanded story',
+    'Elegir Corrido de una Vida →':'Choose A Life Corrido →',
+    '¿Cuál es la diferencia?':'What is the difference?',
+    'Canción Personalizada se enfoca en un momento, mensaje u ocasión. Corrido de una Vida desarrolla una trayectoria completa y por eso hace preguntas adicionales sobre raíces, familia, retos, logros y legado.':'Custom Song focuses on a moment, message, or occasion. A Life Corrido develops a full life journey, so it asks additional questions about roots, family, challenges, achievements, and legacy.',
+    'El protagonista puede ser tú o cualquier otra persona. El precio cambia por la profundidad del proceso, no simplemente por elegir el género corrido.':'The main person can be you or anyone else. The price changes because of the depth of the process, not simply because you choose corrido as a genre.',
+    'Portada personalizada':'Custom cover',
+    'Portada personalizada para tu canción. Describe la idea o sube una foto de referencia.':'A custom cover for your song. Describe the idea or upload a reference photo.',
+    'Describe cómo quieres que se vea tu portada':'Describe how you want your cover to look',
+    'Subir foto para usar en la portada':'Upload a photo to use on the cover',
+    'La portada tendrá formato cuadrado. Procura que lo más importante quede cerca del centro.':'The cover will use a square format. Try to keep the most important part near the center.',
+    '¿Qué debe quedar visible después del recorte?':'What must remain visible after cropping?',
+    'Esto nos ayuda a proteger lo importante cuando adaptemos la foto al formato cuadrado.':'This helps us protect what matters when we adapt the photo to a square format.',
+    'Precio de lanzamiento':'Launch price',
+    'Proceso de pago':'Checkout',
+    'Modo de prueba':'Test mode',
+    'No se realizará ningún cargo en esta etapa.':'No charge will be made at this stage.',
+    'ANTES DE ELEGIR':'BEFORE YOU CHOOSE',
+    'Escucha el universo SONALZA.':'Hear the SONALZA universe.',
+    'Una canción personalizada se entiende mejor cuando puedes escuchar la dirección musical. Nuestro canal reúne canciones y ejemplos de distintos estilos.':'A custom song makes more sense when you can hear the musical direction. Our channel brings together songs and examples across different styles.',
+    'Historias, raíces y trayectoria.':'Stories, roots, and life journeys.',
+    'Celebración, movimiento y recuerdos.':'Celebration, movement, and memories.',
+    'Acordeón, cercanía y emoción.':'Accordion, warmth, and emotion.',
+    'Escuchar más en YouTube →':'Hear more on YouTube →',
+    'Canciones reales publicadas por SONALZA.':'Real songs published by SONALZA.',
+    'Cuando activemos el pago seguro, podrás continuar sin volver a llenar tu información.':'When secure payment is enabled, you can continue without filling in your information again.',
+    'Escucha':'Listen',
+    'Crear este corrido →':'Create this corrido →',
+    'Una narrativa más profunda para contar una trayectoria completa — tuya o de alguien más — con raíces, familia, sacrificios y legado.':'A deeper narrative for telling a complete life journey—yours or someone else’s—with roots, family, sacrifice, and legacy.',
+    'Crear Corrido de una Vida →':'Create A Life Corrido →',
+    'Escuchar ejemplos':'Hear examples',
+    'Homenaje':'Tribute',
+    'Legado familiar':'Family legacy',
+    'Regalo especial':'Special gift',
+    'Porque su historia merece contarse':'Because their story deserves to be told',
+    'Corrido clásico':'Classic corrido',
+    'Corrido moderno':'Modern corrido',
+    'Norteño-corrido':'Norteño-corrido',
+    'Sierreño-corrido':'Sierreño-corrido',
+    'Volver':'Back',
+    'AYUDA SONALZA':'SONALZA HELP',
+    'Preguntas frecuentes':'Frequently asked questions',
+    'Respuestas claras antes de convertir una historia en canción.':'Clear answers before turning a story into a song.',
+    '¿Qué necesito para crear una canción?':'What do I need to create a song?',
+    'Solo necesitas conocer la historia. Nuestro formulario te guía con preguntas sobre la persona, recuerdos, frases, ocasión, género, voz e idioma.':'You only need to know the story. Our form guides you through the person, memories, phrases, occasion, genre, voice, and language.',
+    '¿Cuál es la diferencia entre Canción Personalizada y Corrido de una Vida?':'What is the difference between Custom Song and A Life Corrido?',
+    'La Canción Personalizada se enfoca en un momento, mensaje u ocasión. Corrido de una Vida desarrolla una trayectoria completa con preguntas adicionales sobre raíces, familia, retos, logros y legado.':'Custom Song focuses on a moment, message, or occasion. A Life Corrido develops a full life journey with additional questions about roots, family, challenges, achievements, and legacy.',
+    '¿El Corrido de una Vida tiene que ser sobre mí?':'Does A Life Corrido have to be about me?',
+    'No. Puede ser sobre tu papá, mamá, pareja, abuelo, amigo, jefe o cualquier persona cuya historia quieras convertir en música.':'No. It can be about your parent, partner, grandparent, friend, boss, or anyone whose story you want to turn into music.',
+    '¿Puedo pedir una revisión?':'Can I request a revision?',
+    'Sí. Los productos que muestran una revisión incluida permiten ajustar la dirección dentro del alcance indicado antes de la entrega final.':'Yes. Products that include one revision allow you to adjust the direction within the stated scope before final delivery.',
+    '¿Cómo se entrega?':'How is it delivered?',
+    'La entrega es digital. Los tiempos y cualquier opción prioritaria se muestran antes de confirmar el pedido.':'Delivery is digital. Timing and any priority option are shown before you confirm the order.',
+    '¿Los precios cambian entre Estados Unidos y México?':'Are prices different in the United States and Mexico?',
+    'Sí. SONALZA utiliza precios regionales: Estados Unidos se cobra en USD y México en MXN. La región se verifica durante el proceso de pago.':'Yes. SONALZA uses regional pricing: United States orders are charged in USD and Mexico orders in MXN. Region is verified during payment.',
+    '¿Necesitas ayuda con algo específico?':'Need help with something specific?',
+    'Escríbenos a sonalzastudios@gmail.com':'Email us at sonalzastudios@gmail.com',
+    'Privacidad':'Privacy',
+    'Términos':'Terms',
+    'Ayuda':'Help',
+    'Política de privacidad':'Privacy policy',
+    'Versión de lanzamiento. Debe revisarse legalmente antes de activar pagos reales.':'Launch version. It should be legally reviewed before real payments are enabled.',
+    'Información que recopilamos':'Information we collect',
+    'Podemos recopilar nombre, correo electrónico, teléfono opcional, información de la historia, preferencias musicales, región, idioma y archivos que decidas proporcionar para producir tu pedido.':'We may collect name, email address, optional phone number, story information, music preferences, region, language, and files you choose to provide for your order.',
+    'Cómo usamos la información':'How we use information',
+    'La usamos para preparar, administrar, entregar y dar soporte a tu pedido, prevenir fraude y mejorar la experiencia del servicio.':'We use it to prepare, manage, deliver, and support your order, prevent fraud, and improve the service experience.',
+    'Historias y fotografías':'Stories and photos',
+    'Las historias, fotografías y materiales que compartas se utilizan para prestar el servicio solicitado. No necesitas publicar tu historia para crear una canción.':'Stories, photos, and materials you share are used to provide the requested service. You do not need to publish your story to create a song.',
+    'Proveedores':'Service providers',
+    'Podemos utilizar proveedores especializados de hosting, base de datos, correo, almacenamiento y pagos. Solo reciben la información necesaria para prestar su función.':'We may use specialized hosting, database, email, storage, and payment providers. They receive only the information needed to perform their function.',
+    'Contacto':'Contact',
+    'Para preguntas de privacidad, escribe a':'For privacy questions, email',
+    'Términos de servicio':'Terms of service',
+    'Versión de lanzamiento. Los términos definitivos deben revisarse legalmente antes de aceptar pagos reales.':'Launch version. Final terms should be legally reviewed before accepting real payments.',
+    'Servicio personalizado':'Custom service',
+    'SONALZA crea piezas musicales a partir de la información y dirección que proporciona el cliente. El resultado creativo implica interpretación artística y no puede garantizar una reproducción literal de cada detalle.':'SONALZA creates musical pieces from the information and direction provided by the customer. The creative result involves artistic interpretation and cannot guarantee a literal reproduction of every detail.',
+    'Revisiones':'Revisions',
+    'Cuando un producto indique una revisión incluida, esta se aplica al alcance descrito en la oferta y no implica rehacer ilimitadamente una pieza desde cero.':'When a product includes one revision, it applies to the scope described in the offer and does not imply unlimited full remakes from scratch.',
+    'Contenido proporcionado por el cliente':'Customer-provided content',
+    'El cliente debe tener derecho a compartir las fotos, textos, nombres y demás materiales que proporcione para la producción.':'The customer must have the right to share any photos, text, names, and other materials provided for production.',
+    'Pago y entrega':'Payment and delivery',
+    'El precio, moneda, impuestos aplicables, tiempos y extras se muestran antes del cargo. La producción pagada se gestiona según la confirmación del pedido.':'Price, currency, applicable taxes, timing, and extras are shown before the charge. Paid production is handled according to the confirmed order.',
+    'Uso de la canción':'Use of the song',
+    'El alcance de uso personal o comercial debe corresponder al producto adquirido. Los proyectos para marcas pueden requerir condiciones de licencia específicas.':'Personal or commercial usage must match the product purchased. Brand projects may require specific licensing terms.',
+    'Preguntas:':'Questions:',
+
+    'se enfoca en un momento, mensaje u ocasión.':'focuses on a moment, message, or occasion.',
+    'desarrolla una trayectoria completa y por eso hace preguntas adicionales sobre raíces, familia, retos, logros y legado.':'develops a complete life journey, so it asks additional questions about roots, family, challenges, achievements, and legacy.'
+  });
+
+
   let storedRegion = localStorage.getItem(REGION_KEY);
   let detectedRegion = sessionStorage.getItem(DETECTED_REGION_KEY);
   detectedRegion = detectedRegion === 'MX' || detectedRegion === 'US' ? detectedRegion : null;
@@ -202,6 +304,12 @@
       thanks:'Order received — SONALZA STUDIOS'
     };
     if (titles[page]) document.title = titles[page];
+    if (page === 'legal' && currentLanguage === 'en') {
+      const heading = document.querySelector('h1')?.textContent.trim();
+      if (heading === 'Frequently asked questions') document.title = 'FAQ — SONALZA STUDIOS';
+      if (heading === 'Privacy policy') document.title = 'Privacy Policy — SONALZA STUDIOS';
+      if (heading === 'Terms of service') document.title = 'Terms of Service — SONALZA STUDIOS';
+    }
   }
 
   function syncBusinessBudgetOptions() {
@@ -363,6 +471,7 @@
     }
     applyRegionalDisplay();
     translateDOM(document.body);
+    document.body.classList.add('locale-ready');
     window.dispatchEvent(new CustomEvent('sonalza:regionready', {detail:{region:currentRegion, detectedRegion, language:currentLanguage, currency:currentCurrency}}));
   }
 
@@ -382,7 +491,14 @@
     telefono: '',
     coverPrompt: '',
     coverCropMustShow: '',
-    coverImageName: ''
+    coverImageName: '',
+    coverImagePath: '',
+    raices: '',
+    trayectoria: '',
+    personasClave: '',
+    retos: '',
+    logros: '',
+    legado: ''
   };
 
   const load = () => {
@@ -425,7 +541,7 @@
 
   function setupRevealAnimations() {
     const selectors = [
-      '.hero-copy', '.hero-media', '.trust-strip-grid > div', '.quick-head', '.quick-card',
+      '.hero-copy', '.hero-media', '.trust-strip-grid > div', '.quick-head', '.quick-card', '.listen-head', '.listen-card',
       '.manifest-kicker', '.manifest-copy', '.manifest-points article', '.latin-copy', '.latin-side-note', '.latin-editorial-card', '.latin-values article',
       '.genre-heading-main', '.genre-heading-side', '.genre-tile', '.service-card', '.pricing-tools',
       '.process-intro', '.process-list article', '.standard-card', '.story-cta-copy', '.story-quote',
@@ -517,12 +633,15 @@
     const genreParam = params.get('genre');
     const occasionParam = params.get('occasion');
     const relationParam = params.get('relation');
-    if (productParam === 'corrido') { data.product = 'corrido'; data.genero = 'Corrido'; }
+    const explicitProduct = productParam === 'song' || productParam === 'corrido';
+
+    if (productParam === 'corrido') { data.product = 'corrido'; data.genero = data.genero || 'Corrido clásico'; }
     else if (productParam === 'song') data.product = 'song';
     if (genreParam) data.genero = genreParam.slice(0,80);
     if (occasionParam) data.ocasion = occasionParam.slice(0,80);
     if (relationParam) data.paraQuien = relationParam.slice(0,80);
     save(data);
+
     let step = 0;
     const question = document.getElementById('question');
     const nextBtn = document.getElementById('nextBtn');
@@ -536,14 +655,18 @@
     const songFlow = document.getElementById('songFlow');
     const productChoiceButtons = [...document.querySelectorAll('[data-product-choice]')];
     const selectedProductSummary = document.getElementById('selectedProductSummary');
+    const flowDurationMeta = document.getElementById('flowDurationMeta');
     const changeProductBtn = document.getElementById('changeProductBtn');
 
-    const productName = key => key === 'corrido' ? translatePhrase('Corrido de una Vida') : translatePhrase('Canción Personalizada');
+    const t = (es,en) => currentLanguage === 'en' ? en : es;
+    const escapeHtml = (value='') => String(value).replace(/[&<>'"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[ch]));
+    const productName = key => key === 'corrido' ? t('Corrido de una Vida','A Life Corrido') : t('Canción Personalizada','Custom Song');
     const productPrice = key => formatMoney(PRICING[key][currentCurrency]);
 
     function syncProductChoiceUI() {
       productChoiceButtons.forEach(btn => btn.classList.toggle('selected', btn.dataset.productChoice === data.product));
       if (selectedProductSummary) selectedProductSummary.textContent = `${productName(data.product)} · ${productPrice(data.product)}`;
+      if (flowDurationMeta) flowDurationMeta.textContent = data.product === 'corrido' ? t('Privado · 8–12 min','Private · 8–12 min') : t('Privado · 3–5 min','Private · 3–5 min');
     }
 
     function showProductChooser() {
@@ -553,104 +676,198 @@
       window.scrollTo({top:0,behavior:'smooth'});
     }
 
-    function startSelectedProduct(key) {
+    function startSelectedProduct(key, {scroll=true}={}) {
       data.product = key === 'corrido' ? 'corrido' : 'song';
-      if (data.product === 'corrido') data.genero = 'Corrido';
+      const corridoGenres = ['Corrido clásico','Corrido moderno','Norteño-corrido','Sierreño-corrido','Sorpréndeme'];
+      const songGenres = ['Corrido','Banda','Norteño','Cumbia','Mariachi','Duranguense','Huapango','Sierreño','Pop Latino','Reguetón','Balada','Sorpréndeme'];
+      if (data.product === 'corrido' && !corridoGenres.includes(data.genero)) data.genero = 'Corrido clásico';
+      if (data.product === 'song' && !songGenres.includes(data.genero)) data.genero = 'Corrido';
       save(data);
       syncProductChoiceUI();
       if (productChooser) productChooser.hidden = true;
       if (songFlow) songFlow.hidden = false;
       step = 0;
       render();
+      if (scroll) window.scrollTo({top:0,behavior:'smooth'});
     }
 
     productChoiceButtons.forEach(btn => btn.addEventListener('click', () => startSelectedProduct(btn.dataset.productChoice)));
     changeProductBtn?.addEventListener('click', showProductChooser);
-    window.addEventListener('sonalza:regionready', syncProductChoiceUI);
+    window.addEventListener('sonalza:regionready', () => { syncProductChoiceUI(); if (songFlow && !songFlow.hidden) render(); });
 
-    const optionButtons = (items, selected, key) => `
-      <div class="option-grid">
-        ${items.map(item => `<button type="button" class="option ${selected === item ? 'selected' : ''}" data-key="${key}" data-value="${item}">${item}</button>`).join('')}
-      </div>`;
+    function optionButtons(items, selected, key, columns='') {
+      const cls = columns ? ` option-grid-${columns}` : '';
+      return `<div class="option-grid${cls}">${items.map(item => {
+        const obj = typeof item === 'string' ? {value:item,label:item} : item;
+        const label = obj.labelEn && currentLanguage === 'en' ? obj.labelEn : (obj.labelEs || translatePhrase(obj.label || obj.value));
+        return `<button type="button" class="option ${selected === obj.value ? 'selected' : ''}" data-key="${key}" data-value="${escapeHtml(obj.value)}">${escapeHtml(label)}</button>`;
+      }).join('')}</div>`;
+    }
 
-    const steps = [
-      () => `
-        <div class="smallcaps">Paso 1</div>
-        <h1>¿Para quién es esta canción?</h1>
-        <p class="sub">Elige la relación más cercana. Si no aparece exactamente, selecciona “Otro”.</p>
-        <div class="why-box"><strong>¿Por qué te lo preguntamos?</strong><span>La relación cambia el tono de la letra y la forma de contar la historia.</span></div>
-        ${optionButtons(['Esposo','Esposa','Pareja','Novio','Novia','Papá','Mamá','Hijo','Hija','Abuelo/a','Hermano/a','Amigo/a','Para mí','Otro'], data.paraQuien, 'paraQuien')}`,
-      () => `
-        <div class="smallcaps">Paso 2</div>
-        <h1>¿Cómo se llama?</h1>
-        <p class="sub">Escribe el nombre tal como quieres que aparezca o se cante.</p>
-        <div class="why-box"><strong>Ejemplo</strong><span>“José”, “Mamá Lupita”, “Mi viejo”, “César”. Usa la forma que realmente le dices.</span></div>
-        <div class="form-box"><label for="nombre">Nombre</label><input id="nombre" maxlength="60" placeholder="Ejemplo: Julián" value="${escapeHtml(data.nombre)}"><div class="field-meta"><span>Así lo usaremos dentro del formulario.</span><span id="nombreCount">${data.nombre.length}/60</span></div></div>`,
-      () => `
-        <div class="smallcaps">Paso 3</div>
-        <h1>¿Cuál es la ocasión?</h1>
-        <p class="sub">Elige la ocasión que mejor explica por qué estás creando esta canción.</p>
-        <div class="why-box"><strong>No tiene que ser una fecha especial.</strong><span>“Porque sí”, “Te amo” o “Gracias” también pueden producir canciones muy fuertes.</span></div>
-        ${optionButtons(['Porque sí','Te amo','Cumpleaños','Aniversario','Te extraño','Gracias','Perdón','Boda','Amistad','En memoria','Logro especial','Propuesta','Jubilación','Graduación','Otra ocasión'], data.ocasion, 'ocasion')}`,
-      () => `
-        <div class="smallcaps">Paso 4</div>
-        <h1>Elige el estilo de la canción</h1>
-        <p class="sub">Elige la dirección musical. Si no estás seguro, “Sorpréndeme” nos deja proponerla.</p>
-        <div class="why-box"><strong>Piensa en la persona que la recibirá.</strong><span>No elijas solo tu género favorito: elige el que más conectaría con esa historia.</span></div>
-        ${optionButtons(['Corrido','Banda','Norteño','Cumbia','Mariachi','Duranguense','Huapango','Sierreño','Pop Latino','Reguetón','Balada','Sorpréndeme'], data.genero, 'genero')}
-        <div class="dual-grid">
-          <div><div class="helper" style="text-align:center;margin-bottom:10px">Voz</div>${optionButtons(['Masculina','Femenina','Sorpréndeme'], data.voz, 'voz')}</div>
-          <div><div class="helper" style="text-align:center;margin-bottom:10px">Idioma de la canción</div>${optionButtons(['Español','Inglés','Bilingüe'], data.idioma, 'idioma')}</div>
-        </div>`,
-      () => `
-        <div class="smallcaps">Paso 5</div>
-        <h1>¿Qué hace especial a ${escapeHtml(data.nombre) || 'esta persona'}?</h1>
-        <p class="sub">Descríbela con tus propias palabras. Una o dos frases claras suelen dar mejores resultados.</p>
-        <div class="prompt-chips"><span>Cómo es</span><span>Qué admiras</span><span>Qué hace por ustedes</span></div>
-        <div class="form-box"><label for="cualidades">Sus mejores cualidades</label><textarea id="cualidades" maxlength="700" placeholder="Ejemplo: Siempre ha cuidado de nuestra familia, tiene un gran sentido del humor y nunca deja que nadie se rinda.">${escapeHtml(data.cualidades)}</textarea><div class="field-meta"><span>Escribe natural. No necesitas rimar.</span><span id="cualidadesCount">${data.cualidades.length}/700</span></div></div>`,
-      () => `
-        <div class="smallcaps">Paso 6</div>
-        <h1>Comparte un recuerdo inolvidable</h1>
-        <p class="sub">Los detalles específicos hacen que la canción se sienta verdaderamente personal.</p>
-        <div class="prompt-chips"><span>Un lugar</span><span>Una anécdota</span><span>Una frase</span><span>Un momento</span></div>
-        <div class="form-box"><label for="recuerdo">Momento especial</label><textarea id="recuerdo" maxlength="900" placeholder="Ejemplo: Nos conocimos trabajando en Anaheim. Siempre dice ‘primero la familia’. El viaje a Chihuahua en 2018 fue cuando…">${escapeHtml(data.recuerdo)}</textarea><div class="field-meta"><span>Entre más específico, menos genérica se sentirá la canción.</span><span id="recuerdoCount">${data.recuerdo.length}/900</span></div></div>`,
-      () => `
-        <div class="smallcaps">Paso 7</div>
-        <h1>¿Qué quieres que sienta al escucharla?</h1>
-        <p class="sub">Dinos el mensaje que debe quedar en el corazón de quien la reciba.</p>
-        <div class="dual-grid">
-          <div class="form-box"><label for="frase">Frase que te gustaría escuchar <span class="helper">(opcional)</span></label><textarea id="frase" maxlength="300" placeholder="Ejemplo: Gracias por cruzar fronteras por nosotros.">${escapeHtml(data.frase)}</textarea><div class="field-meta"><span>Puede ser una frase familiar o algo que tú quieres decirle.</span><span id="fraseCount">${data.frase.length}/300</span></div></div>
-          <div class="form-box"><label for="emocion">Mensaje principal</label><textarea id="emocion" maxlength="700" placeholder="Ejemplo: Quiero que entienda que todo su esfuerzo valió la pena y que estamos orgullosos de él.">${escapeHtml(data.emocion)}</textarea><div class="field-meta"><span>Piensa en cómo quieres que se sienta al terminar.</span><span id="emocionCount">${data.emocion.length}/700</span></div></div>
-        </div>`,
-      () => `
-        <div class="smallcaps">Paso final</div>
-        <h1>¿A dónde enviamos tu canción?</h1>
-        <p class="sub">Usaremos estos datos para identificar tu pedido y comunicarnos contigo sobre la entrega.</p>
-        <div class="privacy-note"><span>🔒</span><div><strong>Tu historia es privada.</strong><p>No necesitas publicar nada para crear tu canción.</p></div></div>
-        <div class="dual-grid contact-grid">
-          <div class="form-box compact-field" id="emailField"><label for="email">Correo electrónico</label><input type="email" id="email" inputmode="email" autocomplete="email" placeholder="tu@correo.com" value="${escapeHtml(data.email)}"><div id="emailValidation" class="field-validation" hidden></div></div>
-          <div class="form-box compact-field"><label for="telefono">Teléfono <span class="helper">(opcional)</span></label><input id="telefono" inputmode="tel" autocomplete="tel" placeholder="(555) 555-5555" value="${escapeHtml(data.telefono)}"><div class="helper">Más adelante podremos usarlo para avisos de entrega por mensaje de texto.</div></div>
-        </div>`
+    const relationOptions = ['Esposo','Esposa','Pareja','Novio','Novia','Papá','Mamá','Hijo','Hija','Abuelo/a','Hermano/a','Amigo/a','Para mí','Otro'];
+    const songOccasions = ['Porque sí','Te amo','Cumpleaños','Aniversario','Te extraño','Gracias','Perdón','Boda','Amistad','En memoria','Logro especial','Propuesta','Jubilación','Graduación','Otra ocasión'];
+    const lifeOccasions = [
+      {value:'Homenaje',labelEs:'Homenaje',labelEn:'Tribute'},
+      {value:'Cumpleaños',labelEs:'Cumpleaños',labelEn:'Birthday'},
+      {value:'En memoria',labelEs:'En memoria',labelEn:'In memory'},
+      {value:'Jubilación',labelEs:'Jubilación',labelEn:'Retirement'},
+      {value:'Legado familiar',labelEs:'Legado familiar',labelEn:'Family legacy'},
+      {value:'Regalo especial',labelEs:'Regalo especial',labelEn:'Special gift'},
+      {value:'Porque su historia merece contarse',labelEs:'Porque su historia merece contarse',labelEn:'Because their story deserves to be told'},
+      {value:'Otra ocasión',labelEs:'Otra ocasión',labelEn:'Another occasion'}
     ];
 
-    function escapeHtml(value='') {
-      return String(value).replace(/[&<>'"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[ch]));
+    const songSteps = [
+      () => `
+        <div class="smallcaps">${t('Paso 1','Step 1')}</div>
+        <h1>${t('¿Para quién es esta canción?','Who is this song for?')}</h1>
+        <p class="sub">${t('Elige la relación más cercana. Si no aparece exactamente, selecciona “Otro”.','Choose the closest relationship. If it is not listed, select “Other.”')}</p>
+        <div class="why-box"><strong>${t('¿Por qué te lo preguntamos?','Why do we ask?')}</strong><span>${t('La relación cambia el tono de la letra y la forma de contar la historia.','The relationship changes the tone and how the story is told.')}</span></div>
+        ${optionButtons(relationOptions, data.paraQuien, 'paraQuien')}`,
+      () => `
+        <div class="smallcaps">${t('Paso 2','Step 2')}</div>
+        <h1>${t('¿Cómo se llama?','What is their name?')}</h1>
+        <p class="sub">${t('Escribe el nombre tal como quieres que aparezca o se cante.','Enter the name exactly as you want it written or sung.')}</p>
+        <div class="why-box"><strong>${t('Ejemplo','Example')}</strong><span>${t('“José”, “Mamá Lupita”, “Mi viejo”, “César”. Usa la forma que realmente le dices.','“José,” “Mamá Lupita,” “Mi viejo,” “César.” Use the name you actually call them.')}</span></div>
+        <div class="form-box"><label for="nombre">${t('Nombre','Name')}</label><input id="nombre" maxlength="60" placeholder="${t('Ejemplo: Julián','Example: Julian')}" value="${escapeHtml(data.nombre)}"><div class="field-meta"><span>${t('Así lo usaremos dentro de la canción.','This is how we will use it in the song.')}</span><span id="nombreCount">${data.nombre.length}/60</span></div></div>`,
+      () => `
+        <div class="smallcaps">${t('Paso 3','Step 3')}</div>
+        <h1>${t('¿Cuál es la ocasión?','What is the occasion?')}</h1>
+        <p class="sub">${t('Elige la ocasión que mejor explica por qué estás creando esta canción.','Choose the occasion that best explains why you are creating this song.')}</p>
+        ${optionButtons(songOccasions, data.ocasion, 'ocasion')}`,
+      () => `
+        <div class="smallcaps">${t('Paso 4','Step 4')}</div>
+        <h1>${t('Elige el estilo de la canción','Choose the musical style')}</h1>
+        <p class="sub">${t('Piensa en la persona que la recibirá. El género cambia por completo la emoción.','Think about the person receiving it. The genre completely changes the emotion.')}</p>
+        ${optionButtons(['Corrido','Banda','Norteño','Cumbia','Mariachi','Duranguense','Huapango','Sierreño','Pop Latino','Reguetón','Balada','Sorpréndeme'], data.genero, 'genero')}
+        <div class="dual-grid music-settings">
+          <div><div class="helper setting-label">${t('Voz','Voice')}</div>${optionButtons(['Masculina','Femenina','Sorpréndeme'], data.voz, 'voz')}</div>
+          <div><div class="helper setting-label">${t('Idioma de la canción','Song language')}</div>${optionButtons(['Español','Inglés','Bilingüe'], data.idioma, 'idioma')}</div>
+        </div>`,
+      () => `
+        <div class="smallcaps">${t('Paso 5','Step 5')}</div>
+        <h1>${t(`¿Qué hace especial a ${escapeHtml(data.nombre) || 'esta persona'}?`,`What makes ${escapeHtml(data.nombre) || 'this person'} special?`)}</h1>
+        <p class="sub">${t('Descríbela con tus propias palabras. Una o dos frases claras suelen dar mejores resultados.','Describe them in your own words. One or two clear sentences often work best.')}</p>
+        <div class="prompt-chips"><span>${t('Cómo es','Personality')}</span><span>${t('Qué admiras','What you admire')}</span><span>${t('Qué hace por ustedes','What they do for you')}</span></div>
+        <div class="form-box"><label for="cualidades">${t('Sus mejores cualidades','Their best qualities')}</label><textarea id="cualidades" maxlength="700" placeholder="${t('Ejemplo: Siempre ha cuidado de nuestra familia, tiene un gran sentido del humor y nunca deja que nadie se rinda.','Example: They have always taken care of our family, have a great sense of humor, and never let anyone give up.')}">${escapeHtml(data.cualidades)}</textarea><div class="field-meta"><span>${t('Escribe natural. No necesitas rimar.','Write naturally. You do not need to rhyme.')}</span><span id="cualidadesCount">${data.cualidades.length}/700</span></div></div>`,
+      () => `
+        <div class="smallcaps">${t('Paso 6','Step 6')}</div>
+        <h1>${t('Comparte un recuerdo inolvidable','Share a favorite memory')}</h1>
+        <p class="sub">${t('Los detalles específicos hacen que la canción se sienta verdaderamente personal.','Specific details are what make the song feel genuinely personal.')}</p>
+        <div class="prompt-chips"><span>${t('Un lugar','A place')}</span><span>${t('Una anécdota','A story')}</span><span>${t('Una frase','A phrase')}</span><span>${t('Un momento','A moment')}</span></div>
+        <div class="form-box"><label for="recuerdo">${t('Momento especial','Special moment')}</label><textarea id="recuerdo" maxlength="900" placeholder="${t('Ejemplo: Nos conocimos trabajando en Anaheim. Siempre dice “primero la familia”. El viaje a Chihuahua en 2018 fue cuando…','Example: We met while working in Anaheim. They always say “family first.” The trip to Chihuahua in 2018 was when…')}">${escapeHtml(data.recuerdo)}</textarea><div class="field-meta"><span>${t('Entre más específico, menos genérica se sentirá la canción.','The more specific you are, the less generic the song will feel.')}</span><span id="recuerdoCount">${data.recuerdo.length}/900</span></div></div>`,
+      () => `
+        <div class="smallcaps">${t('Paso 7','Step 7')}</div>
+        <h1>${t('¿Qué quieres que sienta al escucharla?','What do you want them to feel?')}</h1>
+        <p class="sub">${t('Dinos el mensaje que debe quedar en el corazón de quien la reciba.','Tell us the message you want to stay with them after the song ends.')}</p>
+        <div class="dual-grid">
+          <div class="form-box"><label for="frase">${t('Frase que te gustaría escuchar','A phrase you would like included')} <span class="helper">(${t('opcional','optional')})</span></label><textarea id="frase" maxlength="300" placeholder="${t('Ejemplo: Gracias por cruzar fronteras por nosotros.','Example: Thank you for crossing borders for us.')}">${escapeHtml(data.frase)}</textarea><div class="field-meta"><span>${t('Puede ser una frase familiar o algo que tú quieres decirle.','It can be a family phrase or something you want to tell them.')}</span><span id="fraseCount">${data.frase.length}/300</span></div></div>
+          <div class="form-box"><label for="emocion">${t('Mensaje principal','Main message')}</label><textarea id="emocion" maxlength="700" placeholder="${t('Ejemplo: Quiero que entienda que todo su esfuerzo valió la pena y que estamos orgullosos de él.','Example: I want him to know that all his effort was worth it and that we are proud of him.')}">${escapeHtml(data.emocion)}</textarea><div class="field-meta"><span>${t('Piensa en cómo quieres que se sienta al terminar.','Think about how you want them to feel when it ends.')}</span><span id="emocionCount">${data.emocion.length}/700</span></div></div>
+        </div>`,
+      contactStep
+    ];
+
+    const corridoSteps = [
+      () => `
+        <div class="smallcaps">${t('Paso 1','Step 1')}</div>
+        <h1>${t('¿De quién vamos a contar la vida?','Whose life story are we telling?')}</h1>
+        <p class="sub">${t('Puede ser tu historia o la de alguien más. Elige la relación que tienes con el protagonista.','It can be your story or someone else’s. Choose your relationship to the person at the center of the story.')}</p>
+        ${optionButtons(relationOptions, data.paraQuien, 'paraQuien')}`,
+      () => `
+        <div class="smallcaps">${t('Paso 2','Step 2')}</div>
+        <h1>${t('¿Cómo se llama el protagonista?','What is the main person’s name?')}</h1>
+        <p class="sub">${t('Escribe el nombre o apodo tal como quieres que aparezca en la historia.','Enter the name or nickname exactly as you want it to appear in the story.')}</p>
+        <div class="form-box"><label for="nombre">${t('Nombre','Name')}</label><input id="nombre" maxlength="60" placeholder="${t('Ejemplo: Don Julián','Example: Don Julian')}" value="${escapeHtml(data.nombre)}"><div class="field-meta"><span>${t('Usa la forma en que la familia realmente le llama.','Use the name the family actually calls them.')}</span><span id="nombreCount">${data.nombre.length}/60</span></div></div>`,
+      () => `
+        <div class="smallcaps">${t('Paso 3','Step 3')}</div>
+        <h1>${t('¿Por qué quieres contar esta historia?','Why do you want to tell this story?')}</h1>
+        <p class="sub">${t('La intención nos ayuda a decidir qué momentos deben tener más peso.','Your reason helps us decide which parts of the story should carry the most weight.')}</p>
+        ${optionButtons(lifeOccasions, data.ocasion, 'ocasion', '2')}`,
+      () => `
+        <div class="smallcaps">${t('Paso 4','Step 4')}</div>
+        <h1>${t('¿De dónde viene su historia?','Where does their story begin?')}</h1>
+        <p class="sub">${t('Cuéntanos sus raíces: lugar de origen, familia, infancia o aquello que marcó sus primeros años.','Tell us about their roots: where they are from, family background, childhood, or what shaped their early years.')}</p>
+        <div class="form-box"><label for="raices">${t('Raíces e infancia','Roots and early years')}</label><textarea id="raices" maxlength="1200" placeholder="${t('Ejemplo: Nació en Delicias, Chihuahua. Creció con seis hermanos y desde joven ayudaba a su papá en el campo…','Example: Born in Delicias, Chihuahua. Grew up with six siblings and helped his father in the fields from a young age…')}">${escapeHtml(data.raices)}</textarea><div class="field-meta"><span>${t('Lugar, familia, costumbres y recuerdos de origen ayudan muchísimo.','Places, family, traditions, and early memories are extremely useful.')}</span><span id="raicesCount">${data.raices.length}/1200</span></div></div>`,
+      () => `
+        <div class="smallcaps">${t('Paso 5','Step 5')}</div>
+        <h1>${t('¿Cómo fue construyendo su camino?','How did they build their path?')}</h1>
+        <p class="sub">${t('Trabajo, oficios, migración, ciudades, negocios, sacrificios o decisiones que cambiaron su vida.','Work, trades, migration, cities, businesses, sacrifices, or decisions that changed their life.')}</p>
+        <div class="form-box"><label for="trayectoria">${t('Trayectoria','Life journey')}</label><textarea id="trayectoria" maxlength="1500" placeholder="${t('Ejemplo: Llegó a California con poco dinero, trabajó en construcción, después abrió su propio negocio y nunca dejó de ayudar a su familia en México…','Example: Arrived in California with little money, worked construction, later opened a business, and never stopped helping family in Mexico…')}">${escapeHtml(data.trayectoria)}</textarea><div class="field-meta"><span>${t('No necesitas escribir bonito; danos los hechos y nosotros encontramos la narrativa.','You do not need polished writing; give us the facts and we will shape the narrative.')}</span><span id="trayectoriaCount">${data.trayectoria.length}/1500</span></div></div>`,
+      () => `
+        <div class="smallcaps">${t('Paso 6','Step 6')}</div>
+        <h1>${t('¿Quiénes son parte importante de su historia?','Who matters most in their story?')}</h1>
+        <p class="sub">${t('Familia, pareja, hijos, amigos, mentores o personas que no deberían faltar.','Family, partner, children, friends, mentors, or anyone who should not be left out.')}</p>
+        <div class="form-box"><label for="personasClave">${t('Personas y vínculos clave','Key people and relationships')}</label><textarea id="personasClave" maxlength="1200" placeholder="${t('Ejemplo: Su esposa Rosa estuvo con él desde el principio. Sus hijos Ana y Luis son su mayor orgullo…','Example: His wife Rosa has been with him from the beginning. His children Ana and Luis are his greatest pride…')}">${escapeHtml(data.personasClave)}</textarea><div class="field-meta"><span>${t('Incluye nombres si quieres escucharlos dentro de la canción.','Include names if you may want them mentioned in the song.')}</span><span id="personasClaveCount">${data.personasClave.length}/1200</span></div></div>`,
+      () => `
+        <div class="smallcaps">${t('Paso 7','Step 7')}</div>
+        <h1>${t('Los momentos que lo pusieron a prueba y los que lo hicieron grande.','The moments that tested them—and the ones that made them proud.')}</h1>
+        <div class="dual-grid">
+          <div class="form-box"><label for="retos">${t('Retos y sacrificios','Challenges and sacrifices')}</label><textarea id="retos" maxlength="1000" placeholder="${t('Momentos difíciles, pérdidas, obstáculos, empezar de cero, decisiones duras…','Hard moments, losses, obstacles, starting over, difficult decisions…')}">${escapeHtml(data.retos)}</textarea><div class="field-meta"><span>${t('Puedes omitir cualquier tema que no quieras mencionar.','You can leave out anything you do not want mentioned.')}</span><span id="retosCount">${data.retos.length}/1000</span></div></div>
+          <div class="form-box"><label for="logros">${t('Logros y momentos de orgullo','Achievements and proud moments')}</label><textarea id="logros" maxlength="1000" placeholder="${t('Familia, negocio, casa, carrera, estudios, ayudar a otros, metas cumplidas…','Family, business, home, career, education, helping others, goals achieved…')}">${escapeHtml(data.logros)}</textarea><div class="field-meta"><span>${t('No tienen que ser premios; también cuentan las victorias personales.','They do not have to be awards; personal victories count too.')}</span><span id="logrosCount">${data.logros.length}/1000</span></div></div>
+        </div>`,
+      () => `
+        <div class="smallcaps">${t('Paso 8','Step 8')}</div>
+        <h1>${t('¿Cómo es esa persona de verdad?','What are they really like?')}</h1>
+        <p class="sub">${t('Personalidad, valores, sentido del humor, costumbres y una frase que todos le reconocen.','Personality, values, humor, habits, and a phrase everyone associates with them.')}</p>
+        <div class="dual-grid">
+          <div class="form-box"><label for="cualidades">${t('Personalidad y valores','Personality and values')}</label><textarea id="cualidades" maxlength="900" placeholder="${t('Ejemplo: Trabajador, bromista, protector, terco para rendirse y siempre pone a la familia primero.','Example: Hard-working, funny, protective, too stubborn to quit, and always puts family first.')}">${escapeHtml(data.cualidades)}</textarea><div class="field-meta"><span>${t('Escribe como tú lo describirías en una conversación.','Write it the way you would describe them in a conversation.')}</span><span id="cualidadesCount">${data.cualidades.length}/900</span></div></div>
+          <div class="form-box"><label for="frase">${t('Frase, dicho o expresión','Phrase, saying, or expression')} <span class="helper">(${t('opcional','optional')})</span></label><textarea id="frase" maxlength="400" placeholder="${t('Ejemplo: “Primero la familia” o “Si vas a hacer algo, hazlo bien”.','Example: “Family first” or “If you are going to do something, do it right.”')}">${escapeHtml(data.frase)}</textarea><div class="field-meta"><span>${t('Una frase auténtica puede convertirse en uno de los momentos más memorables.','A real phrase can become one of the most memorable moments.')}</span><span id="fraseCount">${data.frase.length}/400</span></div></div>
+        </div>`,
+      () => `
+        <div class="smallcaps">${t('Paso 9','Step 9')}</div>
+        <h1>${t('¿Qué legado quieres que quede al final?','What legacy should remain at the end?')}</h1>
+        <p class="sub">${t('Dinos qué significa su vida para ustedes y qué quieres que sienta cuando termine la canción.','Tell us what their life means to you and what you want them to feel when the song ends.')}</p>
+        <div class="dual-grid">
+          <div class="form-box"><label for="legado">${t('Legado','Legacy')}</label><textarea id="legado" maxlength="1000" placeholder="${t('Ejemplo: Nos enseñó que se puede empezar desde cero sin olvidar de dónde venimos.','Example: He taught us that you can start from zero without forgetting where you came from.')}">${escapeHtml(data.legado)}</textarea><div class="field-meta"><span>${t('Piensa en lo que esa vida dejó en otras personas.','Think about what this life has left in other people.')}</span><span id="legadoCount">${data.legado.length}/1000</span></div></div>
+          <div class="form-box"><label for="emocion">${t('Mensaje final','Final message')}</label><textarea id="emocion" maxlength="900" placeholder="${t('Ejemplo: Quiero que se sienta orgulloso y que sepa que todo su esfuerzo valió la pena.','Example: I want him to feel proud and know that all his effort was worth it.')}">${escapeHtml(data.emocion)}</textarea><div class="field-meta"><span>${t('Esto nos ayuda a cerrar la historia con intención.','This helps us close the story with intention.')}</span><span id="emocionCount">${data.emocion.length}/900</span></div></div>
+        </div>`,
+      () => `
+        <div class="smallcaps">${t('Paso 10','Step 10')}</div>
+        <h1>${t('Elige la dirección del corrido','Choose the corrido direction')}</h1>
+        <p class="sub">${t('La historia es la misma; aquí decides cómo quieres que se sienta musicalmente.','The story stays the same; here you choose how you want it to feel musically.')}</p>
+        ${optionButtons([
+          {value:'Corrido clásico',labelEs:'Corrido clásico',labelEn:'Classic corrido'},
+          {value:'Corrido moderno',labelEs:'Corrido moderno',labelEn:'Modern corrido'},
+          {value:'Norteño-corrido',labelEs:'Norteño-corrido',labelEn:'Norteño-corrido'},
+          {value:'Sierreño-corrido',labelEs:'Sierreño-corrido',labelEn:'Sierreño-corrido'},
+          {value:'Sorpréndeme',labelEs:'Sorpréndeme',labelEn:'Surprise me'}
+        ], data.genero, 'genero')}
+        <div class="dual-grid music-settings">
+          <div><div class="helper setting-label">${t('Voz','Voice')}</div>${optionButtons(['Masculina','Femenina','Sorpréndeme'], data.voz, 'voz')}</div>
+          <div><div class="helper setting-label">${t('Idioma de la canción','Song language')}</div>${optionButtons(['Español','Inglés','Bilingüe'], data.idioma, 'idioma')}</div>
+        </div>`,
+      contactStep
+    ];
+
+    function contactStep() {
+      const phonePlaceholder = currentRegion === 'MX' ? '614 123 4567' : '(714) 555-1234';
+      return `
+        <div class="smallcaps">${t('Paso final','Final step')}</div>
+        <h1>${t('¿A dónde enviamos tu canción?','Where should we send your song?')}</h1>
+        <p class="sub">${t('Usaremos estos datos para identificar tu pedido y comunicarnos contigo sobre la entrega.','We use these details to identify your order and contact you about delivery.')}</p>
+        <div class="privacy-note"><span>🔒</span><div><strong>${t('Tu historia es privada.','Your story is private.')}</strong><p>${t('No necesitas publicar nada para crear tu canción.','You do not need to publish anything to create your song.')}</p></div></div>
+        <div class="dual-grid contact-grid">
+          <div class="form-box compact-field" id="emailField"><label for="email">${t('Correo electrónico','Email address')}</label><input type="email" id="email" inputmode="email" autocomplete="email" placeholder="${t('tu@correo.com','you@email.com')}" value="${escapeHtml(data.email)}"><div id="emailValidation" class="field-validation" hidden></div></div>
+          <div class="form-box compact-field"><label for="telefono">${t('Teléfono','Phone')} <span class="helper">(${t('opcional','optional')})</span></label><input id="telefono" inputmode="tel" autocomplete="tel" placeholder="${phonePlaceholder}" value="${escapeHtml(data.telefono)}"><div class="helper">${t('Solo lo usaríamos para avisos importantes de entrega.','We would only use it for important delivery updates.')}</div></div>
+        </div>`;
     }
+
+    function getSteps() { return data.product === 'corrido' ? corridoSteps : songSteps; }
 
     function bindOptions() {
       question.querySelectorAll('.option').forEach(btn => {
         btn.addEventListener('click', () => {
           const key = btn.dataset.key;
-          data[key] = btn.dataset.value;
+          const value = btn.dataset.value;
+          data[key] = value;
           save(data);
-          question.querySelectorAll(`.option[data-key="${key}"]`).forEach(option => option.classList.remove('selected'));
-          btn.classList.add('selected');
+          question.querySelectorAll(`.option[data-key="${key}"]`).forEach(x => x.classList.toggle('selected', x === btn));
         });
       });
     }
 
     function collectInputs() {
-      const ids = ['nombre','cualidades','recuerdo','frase','emocion','email','telefono'];
+      const ids = ['nombre','cualidades','recuerdo','frase','emocion','email','telefono','raices','trayectoria','personasClave','retos','logros','legado'];
       ids.forEach(id => {
         const el = document.getElementById(id);
         if (el) data[id] = el.value.trim();
@@ -659,20 +876,9 @@
     }
 
     const EMAIL_DOMAIN_FIXES = {
-      'gmil.com':'gmail.com',
-      'gmai.com':'gmail.com',
-      'gmail.co':'gmail.com',
-      'gmal.com':'gmail.com',
-      'gnail.com':'gmail.com',
-      'hotnail.com':'hotmail.com',
-      'hotmai.com':'hotmail.com',
-      'hotmail.co':'hotmail.com',
-      'outlok.com':'outlook.com',
-      'outloo.com':'outlook.com',
-      'icloud.co':'icloud.com',
-      'iclod.com':'icloud.com',
-      'yaho.com':'yahoo.com',
-      'yahoo.co':'yahoo.com'
+      'gmil.com':'gmail.com','gmai.com':'gmail.com','gmail.co':'gmail.com','gmal.com':'gmail.com','gnail.com':'gmail.com',
+      'hotnail.com':'hotmail.com','hotmai.com':'hotmail.com','hotmail.co':'hotmail.com','outlok.com':'outlook.com','outloo.com':'outlook.com',
+      'icloud.co':'icloud.com','iclod.com':'icloud.com','yaho.com':'yahoo.com','yahoo.co':'yahoo.com'
     };
 
     function getEmailSuggestion(email='') {
@@ -688,22 +894,10 @@
 
     function validateEmailValue(email='') {
       const clean = String(email || '').trim().toLowerCase();
-      if (!clean) {
-        return { valid:false, code:'empty', message: currentLanguage === 'en' ? 'Enter a valid email address to continue.' : 'Escribe un correo electrónico válido para continuar.' };
-      }
+      if (!clean) return { valid:false, message:t('Escribe un correo electrónico válido para continuar.','Enter a valid email address to continue.') };
       const suggestion = getEmailSuggestion(clean);
-      if (suggestion && suggestion !== clean) {
-        return {
-          valid:false,
-          code:'suggestion',
-          suggestion,
-          message: currentLanguage === 'en' ? `Did you mean ${suggestion}?` : `¿Quisiste decir ${suggestion}?`
-        };
-      }
-      const basicPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!basicPattern.test(clean)) {
-        return { valid:false, code:'format', message: currentLanguage === 'en' ? 'Enter a complete email, for example name@gmail.com.' : 'Escribe un correo completo, por ejemplo nombre@gmail.com.' };
-      }
+      if (suggestion && suggestion !== clean) return { valid:false, suggestion, message:t(`¿Quisiste decir ${suggestion}?`,`Did you mean ${suggestion}?`) };
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(clean)) return { valid:false, message:t('Escribe un correo completo, por ejemplo nombre@gmail.com.','Enter a complete email, for example name@gmail.com.') };
       return { valid:true, message:'' };
     }
 
@@ -712,75 +906,68 @@
       const emailField = document.getElementById('emailField');
       const emailValidation = document.getElementById('emailValidation');
       if (!emailInput || !emailField || !emailValidation) return;
-
       const renderState = () => {
         const value = emailInput.value.trim();
-        data.email = value;
-        save(data);
-        if (!value) {
-          emailField.classList.remove('invalid');
-          emailValidation.hidden = true;
-          emailValidation.innerHTML = '';
-          return;
-        }
+        data.email = value; save(data);
+        if (!value) { emailField.classList.remove('invalid'); emailValidation.hidden = true; emailValidation.innerHTML = ''; return; }
         const result = validateEmailValue(value);
-        if (result.valid) {
-          emailField.classList.remove('invalid');
-          emailValidation.hidden = true;
-          emailValidation.innerHTML = '';
-          return;
-        }
+        if (result.valid) { emailField.classList.remove('invalid'); emailValidation.hidden = true; emailValidation.innerHTML = ''; return; }
         emailField.classList.add('invalid');
         if (result.suggestion) {
-          const label = currentLanguage === 'en' ? `Correct to ${result.suggestion}` : `Corregir a ${result.suggestion}`;
+          const label = t(`Corregir a ${result.suggestion}`,`Correct to ${result.suggestion}`);
           emailValidation.innerHTML = `${result.message} <button type="button" class="email-suggestion" data-email-suggestion="${result.suggestion}">${label}</button>`;
-        } else {
-          emailValidation.textContent = result.message;
-        }
+        } else emailValidation.textContent = result.message;
         emailValidation.hidden = false;
       };
-
       emailInput.addEventListener('input', renderState);
       emailInput.addEventListener('blur', renderState);
       emailValidation.addEventListener('click', e => {
         const button = e.target.closest('[data-email-suggestion]');
         if (!button) return;
         emailInput.value = button.dataset.emailSuggestion || '';
-        renderState();
-        emailInput.focus();
+        renderState(); emailInput.focus();
       });
       renderState();
     }
 
     function formatPhoneValue(value='') {
-      const digits = String(value || '').replace(/\D/g,'').slice(0,11);
+      const digits = String(value || '').replace(/\D/g,'');
       if (!digits) return '';
-      if (digits.length === 11 && digits.startsWith('1')) {
-        const a = digits.slice(1,4), b = digits.slice(4,7), c = digits.slice(7,11);
-        return `+1 (${a}) ${b}-${c}`;
+      if (currentRegion === 'MX') {
+        const d = digits.replace(/^52/,'').slice(0,10);
+        if (d.length <= 3) return d;
+        if (d.length <= 6) return `${d.slice(0,3)} ${d.slice(3)}`;
+        return `${d.slice(0,3)} ${d.slice(3,6)} ${d.slice(6,10)}`;
       }
-      if (digits.length <= 3) return `(${digits}`;
-      if (digits.length <= 6) return `(${digits.slice(0,3)}) ${digits.slice(3)}`;
-      return `(${digits.slice(0,3)}) ${digits.slice(3,6)}-${digits.slice(6,10)}`;
+      const d = digits.slice(0,11);
+      if (d.length === 11 && d.startsWith('1')) return `+1 (${d.slice(1,4)}) ${d.slice(4,7)}-${d.slice(7,11)}`;
+      if (d.length <= 3) return `(${d}`;
+      if (d.length <= 6) return `(${d.slice(0,3)}) ${d.slice(3)}`;
+      return `(${d.slice(0,3)}) ${d.slice(3,6)}-${d.slice(6,10)}`;
     }
 
     function bindPhoneFormatting() {
       const phoneInput = document.getElementById('telefono');
       if (!phoneInput) return;
-      const apply = () => {
-        const formatted = formatPhoneValue(phoneInput.value);
-        phoneInput.value = formatted;
-        data.telefono = formatted;
-        save(data);
-      };
-      phoneInput.addEventListener('input', apply);
-      phoneInput.addEventListener('blur', apply);
-      if (phoneInput.value) apply();
+      const apply = () => { const formatted = formatPhoneValue(phoneInput.value); phoneInput.value = formatted; data.telefono = formatted; save(data); };
+      phoneInput.addEventListener('input', apply); phoneInput.addEventListener('blur', apply); if (phoneInput.value) apply();
     }
 
-    function isValid() {
-      collectInputs();
-      const required = [
+    function validators() {
+      if (data.product === 'corrido') return [
+        () => !!data.paraQuien,
+        () => data.nombre.length >= 2,
+        () => !!data.ocasion,
+        () => data.raices.length >= 20,
+        () => data.trayectoria.length >= 20,
+        () => data.personasClave.length >= 10,
+        () => data.retos.length >= 10 || data.logros.length >= 10,
+        () => data.cualidades.length >= 10,
+        () => data.legado.length >= 10 && data.emocion.length >= 8,
+        () => !!data.genero && !!data.voz && !!data.idioma,
+        () => validateEmailValue(data.email).valid
+      ];
+      return [
         () => !!data.paraQuien,
         () => data.nombre.length >= 2,
         () => !!data.ocasion,
@@ -790,87 +977,145 @@
         () => data.emocion.length >= 8,
         () => validateEmailValue(data.email).valid
       ];
-      return required[step]();
     }
+
+    function isValid() { collectInputs(); const v = validators(); return v[step] ? v[step]() : true; }
 
     function showError() {
       question.querySelector('.error')?.remove();
-      const div = document.createElement('div');
-      div.className = 'error';
-      if (step === 7) {
+      const div = document.createElement('div'); div.className = 'error';
+      const steps = getSteps();
+      if (step === steps.length - 1) {
         const result = validateEmailValue(data.email);
-        div.textContent = result.message || (currentLanguage === 'en' ? 'Enter a valid email address to continue.' : 'Escribe un correo electrónico válido para continuar.');
-        bindEmailValidation();
-        document.getElementById('email')?.focus();
+        div.textContent = result.message || t('Escribe un correo electrónico válido para continuar.','Enter a valid email address to continue.');
+        bindEmailValidation(); document.getElementById('email')?.focus();
       } else {
-        div.textContent = currentLanguage === 'en' ? 'Complete this information to continue.' : 'Completa esta información para continuar.';
+        div.textContent = t('Completa esta información para continuar. No necesitas escribir perfecto; solo danos suficiente contexto.','Complete this information to continue. It does not need to be perfect—just give us enough context.');
       }
       question.appendChild(div);
     }
 
-    const stepTips = [
-      ['Empieza simple.','La relación nos ayuda a definir cercanía, lenguaje y tono emocional.'],
-      ['Usa el nombre real.','Escribe cómo le dices de verdad. Ese detalle puede hacer que la canción se sienta mucho más personal.'],
-      ['Define el motivo.','La ocasión nos ayuda a decidir qué debe quedar al frente: celebración, amor, gratitud, homenaje o memoria.'],
-      ['El sonido también cuenta la historia.','Un corrido narra distinto a una cumbia. Elige pensando en quién recibirá la canción.'],
-      ['No busques palabras perfectas.','Escribe como hablas. Nosotros nos encargamos de convertir esas ideas en una letra musical.'],
-      ['Los detalles pequeños son oro.','Lugares, apodos, frases y momentos concretos son lo que evita que la canción se sienta genérica.'],
-      ['Piensa en la última sensación.','¿Quieres que sonría, llore, se sienta orgulloso o quiera bailar? Dínoslo tal cual.'],
-      ['Ya casi está.','Tu correo identifica el pedido y será el canal principal para la entrega y cualquier aclaración.']
+    const songTips = [
+      [t('Empieza simple.','Start simple.'),t('La relación nos ayuda a definir cercanía, lenguaje y tono emocional.','The relationship helps us set closeness, language, and emotional tone.')],
+      [t('Usa el nombre real.','Use the real name.'),t('Escribe cómo le dices de verdad.','Use the name you actually call them.')],
+      [t('Define el motivo.','Define the reason.'),t('La ocasión nos ayuda a decidir qué debe quedar al frente.','The occasion helps us decide what should lead the story.')],
+      [t('El sonido también cuenta.','The sound tells the story too.'),t('Elige pensando en quién recibirá la canción.','Choose with the recipient in mind.')],
+      [t('No busques palabras perfectas.','Do not look for perfect words.'),t('Escribe como hablas. Nosotros nos encargamos de convertirlo en música.','Write the way you speak. We will turn it into music.')],
+      [t('Los detalles pequeños son oro.','Small details are gold.'),t('Lugares, apodos y momentos concretos evitan que suene genérica.','Places, nicknames, and specific moments keep it from sounding generic.')],
+      [t('Piensa en la última sensación.','Think about the final feeling.'),t('Dinos si quieres orgullo, nostalgia, alegría, lágrimas o ganas de bailar.','Tell us if you want pride, nostalgia, joy, tears, or the urge to dance.')],
+      [t('Ya casi está.','Almost there.'),t('Tu correo será el canal principal para la entrega.','Your email will be the main delivery channel.')]
+    ];
+    const corridoTips = [
+      [t('El protagonista puede ser cualquiera.','The main person can be anyone.'),t('No tiene que ser tu propia vida.','It does not have to be your own life.')],
+      [t('Usa el nombre de verdad.','Use the real name.'),t('Apodos familiares también pueden hacer la historia más cercana.','Family nicknames can make the story feel more personal.')],
+      [t('Define por qué importa contarla.','Define why this story matters.'),t('Eso nos ayuda a decidir qué momentos deben tener más peso.','That helps us decide which moments deserve more weight.')],
+      [t('Las raíces dan contexto.','Roots create context.'),t('Lugar, familia e infancia le dan identidad a la historia.','Place, family, and childhood give the story identity.')],
+      [t('Los hechos primero.','Facts first.'),t('No necesitas escribir como escritor; nosotros encontramos la narrativa.','You do not need to write like a songwriter; we shape the narrative.')],
+      [t('Las personas importan.','People matter.'),t('Nombres y vínculos hacen que la historia se sienta verdaderamente de ustedes.','Names and relationships make the story unmistakably yours.')],
+      [t('No todo tiene que ser perfecto.','Not everything has to be perfect.'),t('Los retos hacen que los logros tengan más significado.','Challenges give achievements more meaning.')],
+      [t('La personalidad evita clichés.','Personality prevents clichés.'),t('Hábitos, frases y valores son material creativo de alto valor.','Habits, phrases, and values are high-value creative details.')],
+      [t('Piensa en el legado.','Think about the legacy.'),t('¿Qué dejó esta vida en las personas que la rodean?','What did this life leave in the people around them?')],
+      [t('Ahora elegimos cómo debe sonar.','Now choose how it should sound.'),t('La historia ya está; aquí definimos la dirección musical.','The story is already there; here we define the musical direction.')],
+      [t('Ya casi está.','Almost there.'),t('Tu correo será el canal principal para la entrega.','Your email will be the main delivery channel.')]
     ];
 
-    function bindCounters(){
-      const fields = [['nombre',60],['cualidades',700],['recuerdo',900],['frase',300],['emocion',700]];
-      fields.forEach(([id,max])=>{
-        const el=document.getElementById(id); const count=document.getElementById(id+'Count');
-        if(!el||!count) return;
-        const update=()=>{ count.textContent=`${el.value.length}/${max}`; };
-        el.addEventListener('input',update); update();
+    function bindCounters() {
+      const fields = [['nombre',60],['cualidades',900],['recuerdo',900],['frase',400],['emocion',900],['raices',1200],['trayectoria',1500],['personasClave',1200],['retos',1000],['logros',1000],['legado',1000]];
+      fields.forEach(([id,max]) => {
+        const el = document.getElementById(id); const count = document.getElementById(id+'Count'); if (!el || !count) return;
+        const update = () => { count.textContent = `${el.value.length}/${max}`; }; el.addEventListener('input',update); update();
       });
     }
 
     function render() {
+      const steps = getSteps();
+      if (step > steps.length - 1) step = steps.length - 1;
       question.innerHTML = steps[step]();
-      translateDOM(question);
-      bindOptions();
-      bindCounters();
-      if (step === steps.length - 1) {
-        bindEmailValidation();
-        bindPhoneFormatting();
-      }
-      if (railTipTitle && railTipText) {
-        railTipTitle.textContent = translatePhrase(stepTips[step][0]);
-        railTipText.textContent = translatePhrase(stepTips[step][1]);
-      }
+      bindOptions(); bindCounters();
+      if (step === steps.length - 1) { bindEmailValidation(); bindPhoneFormatting(); }
+      const tips = data.product === 'corrido' ? corridoTips : songTips;
+      if (railTipTitle && railTipText && tips[step]) { railTipTitle.textContent = tips[step][0]; railTipText.textContent = tips[step][1]; }
       const pct = Math.round(((step + 1) / steps.length) * 100);
-      stepLabel.textContent = currentLanguage === 'en' ? (step === 7 ? 'Final step' : `Step ${step + 1} of ${steps.length}`) : (step === 7 ? 'Paso final' : `Paso ${step + 1} de ${steps.length}`);
-      pctLabel.textContent = currentLanguage === 'en' ? `${pct}% complete` : `${pct}% completado`;
+      const isFinal = step === steps.length - 1;
+      stepLabel.textContent = isFinal ? t('Paso final','Final step') : t(`Paso ${step + 1} de ${steps.length}`,`Step ${step + 1} of ${steps.length}`);
+      pctLabel.textContent = t(`${pct}% completado`,`${pct}% complete`);
       bar.style.width = `${pct}%`;
       backBtn.disabled = step === 0;
-      nextBtn.textContent = currentLanguage === 'en' ? (step === 7 ? 'Review my order →' : 'Next →') : (step === 7 ? 'Revisar mi pedido →' : 'Siguiente →');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      nextBtn.textContent = isFinal ? t('Revisar mi pedido →','Review my order →') : t('Siguiente →','Next →');
+      syncProductChoiceUI();
+      window.scrollTo({top:0,behavior:'smooth'});
     }
 
     nextBtn.addEventListener('click', () => {
       if (!isValid()) return showError();
+      const steps = getSteps();
       if (step < steps.length - 1) { step += 1; render(); }
       else location.href = 'order.html';
     });
-    backBtn.addEventListener('click', () => {
-      collectInputs();
-      if (step > 0) { step -= 1; render(); }
-    });
+    backBtn.addEventListener('click', () => { collectInputs(); if (step > 0) { step -= 1; render(); } });
 
-    showProductChooser();
+    if (explicitProduct) startSelectedProduct(productParam, {scroll:false}); else showProductChooser();
     setupExitIntent();
   }
 
   if (page === 'business') {
     const form = document.getElementById('businessForm');
     const status = document.getElementById('businessStatus');
+    const emailInput = document.getElementById('businessEmail');
+    const emailField = document.getElementById('businessEmailField');
+    const emailValidation = document.getElementById('businessEmailValidation');
+    const phoneInput = document.getElementById('businessPhone');
+    const domainFixes = {'gmil.com':'gmail.com','gmai.com':'gmail.com','gmail.co':'gmail.com','hotnail.com':'hotmail.com','hotmai.com':'hotmail.com','outlok.com':'outlook.com','yaho.com':'yahoo.com'};
+
+    const validateBusinessEmail = () => {
+      if (!emailInput) return {valid:true};
+      const value = emailInput.value.trim().toLowerCase();
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return {valid:false,message:currentLanguage==='en'?'Enter a valid email address.':'Escribe un correo electrónico válido.'};
+      const [local,domain] = value.split('@');
+      if (domainFixes[domain]) {
+        const suggestion = `${local}@${domainFixes[domain]}`;
+        return {valid:false,suggestion,message:currentLanguage==='en'?`Did you mean ${suggestion}?`:`¿Quisiste decir ${suggestion}?`};
+      }
+      return {valid:true};
+    };
+
+    const renderBusinessEmailState = () => {
+      if (!emailInput || !emailValidation || !emailField) return true;
+      if (!emailInput.value.trim()) { emailField.classList.remove('invalid'); emailValidation.hidden=true; emailValidation.textContent=''; return false; }
+      const result = validateBusinessEmail();
+      emailField.classList.toggle('invalid',!result.valid);
+      if (result.valid) { emailValidation.hidden=true; emailValidation.textContent=''; return true; }
+      emailValidation.hidden=false;
+      if (result.suggestion) {
+        const label=currentLanguage==='en'?`Correct to ${result.suggestion}`:`Corregir a ${result.suggestion}`;
+        emailValidation.innerHTML=`${result.message} <button type="button" class="email-suggestion" data-business-email="${result.suggestion}">${label}</button>`;
+      } else emailValidation.textContent=result.message;
+      return false;
+    };
+    emailInput?.addEventListener('input',renderBusinessEmailState);
+    emailInput?.addEventListener('blur',renderBusinessEmailState);
+    emailValidation?.addEventListener('click',e=>{const b=e.target.closest('[data-business-email]');if(!b)return;emailInput.value=b.dataset.businessEmail||'';renderBusinessEmailState();emailInput.focus();});
+
+    const formatBusinessPhone = () => {
+      if (!phoneInput) return;
+      const digits=phoneInput.value.replace(/\D/g,'');
+      if (!digits) { phoneInput.value=''; return; }
+      if (currentRegion==='MX') {
+        const d=digits.replace(/^52/,'').slice(0,10);
+        phoneInput.placeholder='614 123 4567';
+        phoneInput.value=d.length<=3?d:d.length<=6?`${d.slice(0,3)} ${d.slice(3)}`:`${d.slice(0,3)} ${d.slice(3,6)} ${d.slice(6,10)}`;
+      } else {
+        const d=digits.slice(0,10); phoneInput.placeholder='(714) 555-1234';
+        phoneInput.value=d.length<=3?`(${d}`:d.length<=6?`(${d.slice(0,3)}) ${d.slice(3)}`:`(${d.slice(0,3)}) ${d.slice(3,6)}-${d.slice(6,10)}`;
+      }
+    };
+    phoneInput?.addEventListener('input',formatBusinessPhone);
+    window.addEventListener('sonalza:regionready',()=>{if(phoneInput){phoneInput.placeholder=currentRegion==='MX'?'614 123 4567':'(714) 555-1234';if(phoneInput.value)formatBusinessPhone();}});
+
     form?.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const btn = form.querySelector('button[type=\"submit\"]');
+      if (!renderBusinessEmailState()) { emailInput?.focus(); return; }
+      const btn = form.querySelector('button[type="submit"]');
       const fd = new FormData(form);
       const payload = Object.fromEntries(fd.entries());
       payload.region = currentRegion;
@@ -885,8 +1130,8 @@
       try {
         const r = await fetch('/api/submit-lead', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
         const result = await r.json().catch(()=>({}));
-        if (!r.ok || !result.ok) throw new Error(result.error || 'No pudimos enviar la solicitud.');
-        form.innerHTML = `<div class=\"business-success\"><div class=\"eyebrow\">SOLICITUD RECIBIDA</div><h2>Ya llegó a SONALZA.</h2><p>Referencia <strong>${result.leadId}</strong>. Te responderemos usando el correo que nos compartiste.</p><a href=\"index.html\" class=\"btn btn-primary\">Volver al inicio →</a></div>`;
+        if (!r.ok || !result.ok) throw new Error(result.error || (currentLanguage==='en'?'We could not send the request.':'No pudimos enviar la solicitud.'));
+        form.innerHTML = `<div class="business-success"><div class="eyebrow">${currentLanguage==='en'?'REQUEST RECEIVED':'SOLICITUD RECIBIDA'}</div><h2>${currentLanguage==='en'?'SONALZA received it.':'Ya llegó a SONALZA.'}</h2><p>${currentLanguage==='en'?'Reference':'Referencia'} <strong>${result.leadId}</strong>. ${currentLanguage==='en'?'We will reply using the email you provided.':'Te responderemos usando el correo que nos compartiste.'}</p><a href="index.html" class="btn btn-primary">${currentLanguage==='en'?'Back to home →':'Volver al inicio →'}</a></div>`;
       } catch(err) {
         if (status) { status.textContent=err.message; status.className='submit-status error-status'; }
         btn.disabled=false; btn.textContent=original;
@@ -897,16 +1142,34 @@
   if (page === 'order') {
     const data = load();
     const briefRows = document.getElementById('briefRows');
-    const rows = [
-      [currentLanguage === 'en' ? 'Product' : 'Producto', data.product === 'corrido' ? translatePhrase('Corrido de una Vida') : translatePhrase('Canción personalizada')],
-      [translatePhrase('Para'), `${data.nombre || translatePhrase('Sin nombre')} (${translatePhrase(data.paraQuien || 'Sin especificar')})`],
-      [translatePhrase('Ocasión'), translatePhrase(data.ocasion || 'Sin especificar')],
-      [translatePhrase('Estilo'), translatePhrase(data.genero || 'Sin especificar')],
-      [translatePhrase('Voz'), translatePhrase(data.voz || 'Sin especificar')],
-      [translatePhrase('Idioma'), translatePhrase(data.idioma || 'Español')],
-      [translatePhrase('Correo'), data.email || translatePhrase('Sin especificar')]
-    ];
-    briefRows.innerHTML = rows.map(([label, value]) => `<div class="brief-row"><span>${label}</span><strong>${escapeHtml(value)}</strong></div>`).join('');
+    const storyDetails = document.getElementById('storyDetails');
+    function renderOrderBrief() {
+      const rows = [
+        [currentLanguage === 'en' ? 'Product' : 'Producto', data.product === 'corrido' ? (currentLanguage === 'en' ? 'A Life Corrido' : 'Corrido de una Vida') : (currentLanguage === 'en' ? 'Custom Song' : 'Canción personalizada')],
+        [currentLanguage === 'en' ? 'For' : 'Para', `${data.nombre || (currentLanguage === 'en' ? 'No name' : 'Sin nombre')} (${currentLanguage === 'en' ? translatePhrase(data.paraQuien || 'Sin especificar') : (data.paraQuien || 'Sin especificar')})`],
+        [currentLanguage === 'en' ? 'Occasion' : 'Ocasión', currentLanguage === 'en' ? translatePhrase(data.ocasion || 'Sin especificar') : (data.ocasion || 'Sin especificar')],
+        [currentLanguage === 'en' ? 'Style' : 'Estilo', currentLanguage === 'en' ? translatePhrase(data.genero || 'Sin especificar') : (data.genero || 'Sin especificar')],
+        [currentLanguage === 'en' ? 'Voice' : 'Voz', currentLanguage === 'en' ? translatePhrase(data.voz || 'Sin especificar') : (data.voz || 'Sin especificar')],
+        [currentLanguage === 'en' ? 'Language' : 'Idioma', currentLanguage === 'en' ? translatePhrase(data.idioma || 'Español') : (data.idioma || 'Español')],
+        [currentLanguage === 'en' ? 'Email' : 'Correo', data.email || (currentLanguage === 'en' ? 'Not specified' : 'Sin especificar')]
+      ];
+      briefRows.innerHTML = rows.map(([label, value]) => `<div class="brief-row"><span>${label}</span><strong>${escapeHtml(value)}</strong></div>`).join('');
+      if (storyDetails) {
+        if (data.product === 'corrido') {
+          const lifeRows = [
+            [currentLanguage === 'en' ? 'Roots & early years' : 'Raíces e infancia', data.raices],
+            [currentLanguage === 'en' ? 'Life journey' : 'Trayectoria', data.trayectoria],
+            [currentLanguage === 'en' ? 'Key people' : 'Personas clave', data.personasClave],
+            [currentLanguage === 'en' ? 'Challenges' : 'Retos y sacrificios', data.retos],
+            [currentLanguage === 'en' ? 'Achievements' : 'Logros', data.logros],
+            [currentLanguage === 'en' ? 'Legacy' : 'Legado', data.legado]
+          ].filter(([,value]) => String(value || '').trim());
+          storyDetails.innerHTML = `<details class="story-details"><summary>${currentLanguage === 'en' ? 'Review life-story details' : 'Revisar detalles de la historia de vida'}</summary><div class="story-details-body">${lifeRows.map(([label,value]) => `<div><span>${escapeHtml(label)}</span><p>${escapeHtml(value)}</p></div>`).join('')}</div></details>`;
+        } else storyDetails.innerHTML = '';
+      }
+    }
+    renderOrderBrief();
+
 
     function escapeHtml(value='') {
       return String(value).replace(/[&<>'"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[ch]));
@@ -919,6 +1182,7 @@
     const currencyLabel = document.getElementById('orderCurrencyLabel');
     const checkoutBtn = document.getElementById('checkoutBtn');
     const addons = [...document.querySelectorAll('.addon')];
+    let pendingCoverFile = null;
 
     function bindCoverAddonInputs() {
       const premiumToggle = document.querySelector('.addon[data-key="premium"]');
@@ -943,14 +1207,18 @@
         fileInput.addEventListener('change', () => {
           const file = fileInput.files && fileInput.files[0];
           if (!file) {
+            pendingCoverFile = null;
             data.coverImageName = '';
+            data.coverImagePath = '';
             save(data);
             if (fileName) { fileName.hidden = true; fileName.textContent = ''; }
             if (previewWrap) previewWrap.hidden = true;
             if (previewImage) previewImage.removeAttribute('src');
             return;
           }
+          pendingCoverFile = file;
           data.coverImageName = file.name;
+          data.coverImagePath = '';
           save(data);
           if (fileName) { fileName.hidden = false; fileName.textContent = file.name; }
           if (previewWrap && previewImage && file.type && file.type.startsWith('image/')) {
@@ -995,12 +1263,55 @@
           ? `<strong>Region verification required.</strong> We detected ${REGIONS[detectedRegion].labelEn}. The ${REGIONS[currentRegion].labelEn} regional price will only apply if the billing country is verified as ${REGIONS[currentRegion].labelEn} when payment is enabled.`
           : `<strong>Se requiere verificar la región.</strong> Detectamos ${REGIONS[detectedRegion].labelEs}. El precio regional de ${REGIONS[currentRegion].labelEs} solo aplicará si el país de facturación se verifica como ${REGIONS[currentRegion].labelEs} cuando habilitemos el pago.`) : '';
       }
-      if (checkoutBtn) checkoutBtn.textContent = `${currentLanguage === 'en' ? 'Submit order' : 'Enviar pedido'} · ${formatMoney(total)} →`;
+      if (checkoutBtn) checkoutBtn.textContent = `${currentLanguage === 'en' ? 'Register order' : 'Registrar pedido'} · ${formatMoney(total)} →`;
     };
+
+    function readFileDataUrl(file) {
+      return new Promise((resolve,reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(String(reader.result || ''));
+        reader.onerror = () => reject(new Error(currentLanguage === 'en' ? 'We could not read the selected image.' : 'No pudimos leer la imagen seleccionada.'));
+        reader.readAsDataURL(file);
+      });
+    }
+
+    async function prepareImageForUpload(file) {
+      const rawUrl = await readFileDataUrl(file);
+      if (!/^data:image\//.test(rawUrl)) throw new Error(currentLanguage === 'en' ? 'Choose a valid image file.' : 'Selecciona un archivo de imagen válido.');
+      const img = await new Promise((resolve,reject) => {
+        const el = new Image();
+        el.onload = () => resolve(el);
+        el.onerror = () => reject(new Error(currentLanguage === 'en' ? 'We could not prepare this image. Try JPG or PNG.' : 'No pudimos preparar esta imagen. Intenta con JPG o PNG.'));
+        el.src = rawUrl;
+      });
+      const maxSide = 1600;
+      const scale = Math.min(1, maxSide / Math.max(img.naturalWidth || img.width, img.naturalHeight || img.height));
+      const width = Math.max(1, Math.round((img.naturalWidth || img.width) * scale));
+      const height = Math.max(1, Math.round((img.naturalHeight || img.height) * scale));
+      const canvas = document.createElement('canvas');
+      canvas.width = width; canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, width, height);
+      const compressed = canvas.toDataURL('image/jpeg', .86);
+      return { dataBase64: compressed.split(',')[1] || '', mimeType:'image/jpeg', fileName:String(file.name || 'cover').replace(/\.[^.]+$/,'') + '.jpg' };
+    }
+
+    async function uploadCoverIfNeeded(chosenAddons) {
+      if (!chosenAddons.includes('premium') || !pendingCoverFile) return;
+      if (pendingCoverFile.size > 15 * 1024 * 1024) throw new Error(currentLanguage === 'en' ? 'The original image is too large. Choose a photo under 15 MB.' : 'La imagen original es demasiado grande. Elige una foto menor de 15 MB.');
+      if (!String(pendingCoverFile.type || '').startsWith('image/')) throw new Error(currentLanguage === 'en' ? 'Choose a valid image file.' : 'Selecciona un archivo de imagen válido.');
+      const prepared = await prepareImageForUpload(pendingCoverFile);
+      const r = await fetch('/api/upload-cover', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(prepared)});
+      const result = await r.json().catch(()=>({}));
+      if (!r.ok || !result.ok) throw new Error(result.error || (currentLanguage === 'en' ? 'We could not save the cover photo.' : 'No pudimos guardar la foto de portada.'));
+      data.coverImagePath = result.path || '';
+      save(data);
+    }
 
     bindCoverAddonInputs();
     addons.forEach(a => a.addEventListener('change', updateTotal));
     window.addEventListener('sonalza:currencychange', updateTotal);
+    window.addEventListener('sonalza:regionready', () => { renderOrderBrief(); updateTotal(); });
     checkoutBtn?.addEventListener('click', async () => {
       const original = checkoutBtn.textContent;
       const statusEl = document.getElementById('submitStatus');
@@ -1009,6 +1320,10 @@
       if (statusEl) { statusEl.textContent = ''; statusEl.className = 'submit-status'; }
       try {
         const chosenAddons = addons.filter(a=>a.checked).map(a=>a.dataset.key);
+        if (chosenAddons.includes('premium') && data.coverImageName && !pendingCoverFile && !data.coverImagePath) {
+          throw new Error(currentLanguage === 'en' ? 'Please select the cover photo again before registering the order.' : 'Vuelve a seleccionar la foto de portada antes de registrar el pedido.');
+        }
+        await uploadCoverIfNeeded(chosenAddons);
         const utmParams = new URLSearchParams(location.search);
         const utm = {};
         ['utm_source','utm_medium','utm_campaign','utm_content','utm_term'].forEach(k=>{ if(utmParams.get(k)) utm[k]=utmParams.get(k); });

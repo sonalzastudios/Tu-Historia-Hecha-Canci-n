@@ -64,3 +64,9 @@ alter table public.orders add column if not exists region_verification_required 
 alter table public.business_leads add column if not exists detected_country text;
 alter table public.business_leads add column if not exists region_override boolean not null default false;
 alter table public.business_leads add column if not exists region_verification_required boolean not null default false;
+
+-- V22 · private storage bucket for optional custom-cover photos.
+-- Run once in Supabase SQL Editor. Keep the bucket private.
+insert into storage.buckets (id, name, public)
+values ('sonalza-covers', 'sonalza-covers', false)
+on conflict (id) do nothing;

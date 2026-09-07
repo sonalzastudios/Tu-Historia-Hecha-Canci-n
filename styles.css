@@ -1225,3 +1225,124 @@ body{background:linear-gradient(180deg,#fff 0%,#fbfbfc 62%,#f5f6f8 100%)}
   .question h1,.question h2{font-size:31px;line-height:1.02}
   .why-box{margin-top:0}
 }
+
+/* ===== V22 · conversion + product clarity + mobile focus ===== */
+/* Avoid a flash of the wrong regional price while location is resolving. */
+body:not(.locale-ready) .price-value,
+body:not(.locale-ready) .compare-price,
+body:not(.locale-ready) .savings-value,
+body:not(.locale-ready) .product-choice-price strong{opacity:0}
+.price-value,.compare-price,.savings-value,.product-choice-price strong{transition:opacity .18s ease}
+
+/* Product chooser: a decision, not another long landing page. */
+.product-choice-highlights{display:flex;flex-wrap:wrap;gap:7px;margin:0 0 22px}
+.product-choice-highlights span{font-size:10px;font-weight:800;color:#56657a;background:#f5f7f9;border:1px solid #e7ebef;border-radius:999px;padding:7px 10px}
+.product-choice-featured .product-choice-highlights span{color:#d5deea;background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.12)}
+.product-difference{max-width:820px;margin:20px auto 0;border:1px solid #e3e7ec;border-radius:18px;background:#fff;overflow:hidden}
+.product-difference summary{list-style:none;cursor:pointer;padding:15px 18px;font-size:12px;font-weight:850;color:#304058;display:flex;align-items:center;justify-content:space-between}
+.product-difference summary::-webkit-details-marker{display:none}
+.product-difference summary:after{content:'+';font-size:18px;color:#a35d10;font-weight:500}
+.product-difference[open] summary:after{content:'−'}
+.product-difference>div{padding:0 18px 17px;color:#6d798a;font-size:12px;line-height:1.65}
+.product-difference strong{color:#25364d}
+
+/* YouTube sample gateway: real proof, no fabricated reviews. */
+.listen-v22{padding:96px 0;background:linear-gradient(180deg,#fffdfa 0%,#f7f8fa 100%);border-top:1px solid #f0ece6;border-bottom:1px solid #edf0f3}
+.listen-head{display:grid;grid-template-columns:1.15fr .85fr;gap:60px;align-items:end;margin-bottom:32px}
+.listen-head h2{font-size:clamp(40px,4.5vw,62px);line-height:1;margin:7px 0 0;color:var(--navy)}
+.listen-head p{margin:0;font-size:16px;line-height:1.7}
+.listen-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.listen-card{position:relative;min-height:330px;border-radius:28px;overflow:hidden;background:#071a33;isolation:isolate;box-shadow:0 18px 48px rgba(7,26,51,.10);transition:transform .28s cubic-bezier(.2,.8,.2,1),box-shadow .28s ease}
+.listen-card:after{content:'';position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(4,14,29,.06) 22%,rgba(4,14,29,.88) 100%)}
+.listen-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .5s cubic-bezier(.2,.8,.2,1);filter:saturate(.92)}
+.listen-card:hover{transform:translateY(-4px);box-shadow:0 28px 68px rgba(7,26,51,.16)}
+.listen-card:hover img{transform:scale(1.04)}
+.listen-card>div{position:absolute;z-index:3;left:24px;right:24px;bottom:22px;color:#fff}
+.listen-card small{display:block;color:#ffc174;font-size:9px;font-weight:900;letter-spacing:.16em;margin-bottom:6px}
+.listen-card strong{display:block;font-size:27px;letter-spacing:-.035em}
+.listen-card p{color:#cbd4df;font-size:12px;margin:4px 0 0}
+.listen-play{position:absolute;z-index:4;top:20px;right:20px;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;color:#071a33;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);font-size:12px;box-shadow:0 10px 28px rgba(0,0,0,.16)}
+.listen-cta{display:flex;align-items:center;justify-content:space-between;gap:24px;margin-top:22px}
+.listen-cta span{font-size:11px;color:#8a95a4}
+
+/* Discount restraint: premium, not infomercial. */
+.service-launch-label{align-self:flex-start;margin:6px 0 14px;font-size:9px;font-weight:900;letter-spacing:.12em;color:#a45d0b}
+.pricing-tools-v22{justify-content:flex-start}
+
+/* Corrido premium review details. */
+.story-details{margin-top:18px;border:1px solid #e6eaf0;border-radius:17px;background:#fbfcfd;overflow:hidden}
+.story-details summary{cursor:pointer;list-style:none;padding:14px 16px;font-size:12px;font-weight:850;color:#35445a;display:flex;justify-content:space-between}
+.story-details summary::-webkit-details-marker{display:none}
+.story-details summary:after{content:'+';font-size:17px;color:#a35e12}
+.story-details[open] summary:after{content:'−'}
+.story-details-body{padding:0 16px 8px}
+.story-details-body>div{padding:11px 0;border-top:1px solid #edf0f3}
+.story-details-body span{display:block;font-size:9px;font-weight:900;letter-spacing:.12em;text-transform:uppercase;color:#a35e12;margin-bottom:4px}
+.story-details-body p{font-size:12px;line-height:1.6;margin:0;color:#667487;white-space:pre-wrap}
+
+/* A more focused writing surface for the longer life-story flow. */
+.setting-label{text-align:center;margin-bottom:10px}
+.question-shell textarea{scroll-margin-top:130px}
+.option-grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+
+@media(max-width:980px){
+  .listen-head{grid-template-columns:1fr;gap:14px}
+  .listen-grid{grid-template-columns:1fr 1fr}.listen-card:last-child{grid-column:1/-1;min-height:280px}
+}
+
+@media(max-width:680px){
+  /* Product cards must fit the decision into the first few phone screens. */
+  .product-chooser{padding:12px 0 44px}
+  .product-choice-head{margin-bottom:16px}
+  .product-choice-head .eyebrow{font-size:9px}
+  .product-choice-head h1{font-size:36px;margin:6px 0 10px}
+  .product-choice-head p{font-size:13px;line-height:1.5}
+  .product-choice-card{padding:18px;border-radius:21px}
+  .product-choice-top{margin-bottom:14px}.product-choice-tag{font-size:8px}
+  .product-choice-check{width:24px;height:24px}
+  .product-choice-card h2{font-size:24px;margin-bottom:8px}
+  .product-choice-card>p{font-size:12px;line-height:1.55;margin-bottom:13px}
+  .product-choice-price{padding:12px 0;margin-bottom:12px}
+  .product-choice-price span{font-size:9px}.product-choice-price strong{font-size:25px}
+  .product-choice-highlights{margin-bottom:14px;gap:5px}
+  .product-choice-highlights span{font-size:9px;padding:5px 8px}
+  .product-choice-cta{font-size:11px}
+  .product-choice-note{font-size:10px;line-height:1.5;margin-top:12px}
+  .product-difference{margin-top:12px;border-radius:15px}.product-difference summary{padding:12px 14px;font-size:11px}.product-difference>div{font-size:11px;padding:0 14px 14px}
+
+  /* The form is the only hero on mobile. */
+  .creative-rail{display:none!important}
+  .flow-stage{display:block!important;margin-top:12px}
+  .question-topline{display:none!important}
+  .question-shell{padding:18px!important;border-radius:20px!important;min-height:0!important;box-shadow:0 10px 34px rgba(7,26,51,.06)}
+  .flow-intro-bar{position:sticky;top:63px;z-index:20;padding:9px 12px!important;border-radius:15px!important;background:rgba(255,255,255,.94)!important;backdrop-filter:blur(16px);box-shadow:0 8px 24px rgba(7,26,51,.06)}
+  .flow-intro-kicker{display:none}.flow-intro-bar strong{font-size:12px}.flow-intro-meta{font-size:8px!important}.change-product-btn{font-size:9px!important}
+  .progress-meta{margin-top:12px;margin-bottom:6px;font-size:10px}.progress{height:5px}
+  .question .smallcaps{font-size:9px;margin-bottom:8px}.question h1,.question h2{font-size:29px!important;line-height:1.02;margin-bottom:9px}.question .sub{font-size:13px!important;line-height:1.5;margin-bottom:15px!important}
+  .why-box{padding:10px 11px!important;border-radius:13px!important;margin:0 0 13px!important}.why-box strong,.why-box span{font-size:10px!important}
+  .option-grid{grid-template-columns:1fr 1fr;gap:7px!important}.option-grid-2{grid-template-columns:1fr}
+  .option{min-height:47px!important;padding:12px 11px!important;border-radius:13px!important;font-size:12px!important}
+  .dual-grid{grid-template-columns:1fr!important;gap:10px!important}.form-box{padding:14px!important;border-radius:15px!important}.form-box textarea{min-height:118px!important;font-size:14px!important}.form-box input{font-size:15px!important}
+  .prompt-chips{gap:5px;margin-bottom:9px}.prompt-chips span{font-size:9px;padding:5px 7px}
+  .field-meta{font-size:9px!important}.privacy-note{padding:11px 12px!important;margin-bottom:12px!important}
+  .flow-actions{padding:11px 18px 13px!important;margin-top:14px!important}.flow-actions .btn{font-size:12px!important;padding:11px 14px!important}
+
+  .listen-v22{padding:68px 0}.listen-head h2{font-size:36px}.listen-head p{font-size:13px}.listen-grid{grid-template-columns:1fr;gap:10px}.listen-card,.listen-card:last-child{grid-column:auto;min-height:240px;border-radius:22px}.listen-card>div{left:19px;right:19px;bottom:18px}.listen-card strong{font-size:24px}.listen-play{width:38px;height:38px;top:15px;right:15px}.listen-cta{align-items:flex-start;flex-direction:column;gap:8px}.listen-cta span{font-size:10px}
+  .story-details{border-radius:14px}.story-details summary{font-size:11px;padding:12px 13px}.story-details-body{padding:0 13px 6px}
+}
+
+@media(max-width:390px){
+  .option-grid{grid-template-columns:1fr!important}
+  .product-choice-card h2{font-size:22px}
+}
+.business-form label.invalid input{border-color:#e25b4d;background:#fff7f5;box-shadow:0 0 0 4px rgba(226,91,77,.10)}
+.business-form .field-validation{margin-top:2px}
+.business-form-note{margin:10px 0 0;text-align:center;font-size:10px;color:#8a95a4}
+.product-preselected #productChooser{display:none!important}
+.faq-list{margin-top:30px;border-top:1px solid #e9edf1}
+.faq-list details{border-bottom:1px solid #e9edf1}
+.faq-list summary{cursor:pointer;list-style:none;padding:22px 0;font-size:18px;font-weight:800;color:var(--navy);display:flex;justify-content:space-between;gap:20px}
+.faq-list summary::-webkit-details-marker{display:none}.faq-list summary:after{content:'+';font-size:24px;color:#a35d10;font-weight:400}.faq-list details[open] summary:after{content:'−'}
+.faq-list details p{padding:0 0 22px;margin:0;max-width:760px;font-size:15px;line-height:1.75;color:#667487}
+.legal-footer{background:#071a33;color:#fff;padding:22px 0}.legal-footer-inner{display:flex;justify-content:space-between;gap:18px;align-items:center;font-size:11px;color:#aeb8c6}.legal-footer-inner div{display:flex;gap:16px}.legal-footer a{color:#d6dde6}
+@media(max-width:680px){.legal-page{padding:52px 0 72px}.legal-shell h1{font-size:42px}.faq-list summary{font-size:16px}.legal-footer-inner{flex-direction:column;align-items:flex-start}}

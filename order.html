@@ -24,10 +24,10 @@
 
   <main class="flow-wrap order-wrap">
     <div class="order-hero">
-      <div class="order-stage-pill"><span></span> REVISIÓN FINAL · SIN CARGOS TODAVÍA</div>
+      <div class="order-stage-pill"><span></span> REVISIÓN FINAL</div>
       <div class="eyebrow light">ÚLTIMO REPASO</div>
       <h1>Tu historia ya está armada.</h1>
-      <p>Revisa lo esencial, elige si quieres algún extra y envía el pedido. Cuando conectemos el checkout, el pago aparecerá aquí de forma clara y segura.</p>
+      <p>Revisa lo esencial y elige si quieres algún extra. Tu precio regional se mantendrá visible antes de cualquier pago.</p>
       <div class="order-trust"><span>✓ Formulario guardado</span><span>✓ Precio regional visible</span><span>✓ 1 revisión incluida</span></div>
     </div>
 
@@ -35,37 +35,36 @@
       <section class="summary-card brief-card premium-surface">
         <div class="card-cap"><span>FORMULARIO / 01</span><span>SONALZA SESSION</span></div>
         <h2>Tu historia</h2>
-        <div id="briefRows"></div>
+        <div id="briefRows"></div><div id="storyDetails"></div>
         <div class="promise"><strong>Incluye 1 revisión</strong><p>Si la dirección se aleja de manera importante de lo que nos compartiste, corregiremos el enfoque dentro del alcance de la revisión incluida.</p></div>
       </section>
 
       <section class="summary-card checkout-card premium-surface">
         <div class="card-cap"><span>ORDEN / 02</span><span>PERSONALIZA</span></div>
         <h2>Tu pedido</h2>
-        <div class="order-promo"><span>OFERTA DE LANZAMIENTO</span><strong>POR TIEMPO LIMITADO</strong></div>
-        <div class="summary-row base-row"><span><span id="orderProductLabel">Canción personalizada</span><small>Precio promocional aplicado</small></span><div class="order-base-prices"><del id="baseComparePrice">US$79</del><strong id="basePrice">US$49</strong></div></div>
-        <div class="summary-row discount-row"><span>Descuento de lanzamiento</span><strong id="baseSavings">−US$30</strong></div>
+        <div class="order-promo"><span>PRECIO DE LANZAMIENTO</span><strong>SONALZA</strong></div>
+        <div class="summary-row base-row"><span><span id="orderProductLabel">Canción personalizada</span><small>Precio regional del producto</small></span><div class="order-base-prices"><del id="baseComparePrice">US$79</del><strong id="basePrice">US$49</strong></div></div>
         <div class="upsell-block">
-          <label class="upsell"><input type="checkbox" class="addon" data-key="premium"><span><strong>Custom cover <em class="addon-price">+US$29</em></strong><small>Portada personalizada para tu canción. Puedes escribir la idea visual o subir una foto de referencia.</small></span></label>
+          <label class="upsell"><input type="checkbox" class="addon" data-key="premium"><span><strong>Portada personalizada <em class="addon-price">+US$29</em></strong><small>Portada personalizada para tu canción. Describe la idea o sube una foto de referencia.</small></span></label>
           <div id="premiumCoverOptions" class="addon-detail" hidden>
             <div class="form-box addon-form-box compact-area">
-              <label for="coverPrompt">Escribe qué te gustaría ver en tu custom cover</label>
+              <label for="coverPrompt">Describe cómo quieres que se vea tu portada</label>
               <textarea id="coverPrompt" maxlength="700" placeholder="Ejemplo: Un retrato elegante de mi papá con sombrero, tonos dorados, su nombre al frente y una vibra emotiva."></textarea>
               <div class="helper">Puedes describir personas, colores, estilo, fondo, texto o la emoción que quieres transmitir.</div>
             </div>
             <div class="form-box addon-form-box compact-area">
-              <label for="coverFile">Upload foto you would like to use as cover <span class="helper">(opcional)</span></label>
+              <label for="coverFile">Subir foto para usar en la portada <span class="helper">(opcional)</span></label>
               <input type="file" id="coverFile" accept="image/*">
-              <div class="helper">La portada se usará en tamaño cuadrado. Trata de dejar visible lo más importante.</div>
+              <div class="helper">La portada tendrá formato cuadrado. Procura que lo más importante quede cerca del centro.</div>
               <div id="coverFileName" class="upload-file-name" hidden></div>
               <div id="coverPreviewWrap" class="cover-preview" hidden>
                 <img id="coverPreviewImage" alt="Vista previa de la foto para la portada">
               </div>
             </div>
             <div class="form-box addon-form-box compact-area">
-              <label for="coverCropMustShow">Dinos qué sí o sí debe verse una vez que recortemos la imagen</label>
+              <label for="coverCropMustShow">¿Qué debe quedar visible después del recorte?</label>
               <textarea id="coverCropMustShow" maxlength="350" placeholder="Ejemplo: Que se vea completa la cara, el sombrero y el nombre Derek."></textarea>
-              <div class="helper">Esto nos ayuda a no cortar justo lo importante cuando adaptemos la imagen al formato cuadrado.</div>
+              <div class="helper">Esto nos ayuda a proteger lo importante cuando adaptemos la foto al formato cuadrado.</div>
             </div>
           </div>
         </div>
@@ -75,10 +74,10 @@
         <div class="summary-row total-row"><span>Total</span><strong id="total">US$39</strong></div>
         <div class="currency-order-note"><span>Moneda del pedido</span><strong id="orderCurrencyLabel">USD</strong></div>
         <div id="regionVerificationNote" class="region-verification-note" hidden></div>
-        <div class="notice"><strong>¿Qué pasa al enviarlo?</strong> Registramos tu formulario con un número de pedido y lo enviamos a SONALZA. El checkout de pago se conectará como siguiente integración; mientras tanto no se realiza ningún cargo.</div>
+        <div class="notice"><strong>Modo de prueba</strong> No se realizará ningún cargo en esta etapa. Cuando activemos el pago seguro, verás el total final antes de confirmar.</div>
         <div class="next-steps-mini"><div><span>1</span><p><strong>Recibimos tu formulario</strong><small>Tu historia queda asociada a un número de pedido.</small></p></div><div><span>2</span><p><strong>Confirmamos y producimos</strong><small>Revisamos la dirección antes de preparar la canción.</small></p></div><div><span>3</span><p><strong>Entrega digital</strong><small>Recibes tu canción y puedes usar la revisión incluida.</small></p></div></div>
         <div id="submitStatus" class="submit-status" aria-live="polite"></div>
-        <button class="btn btn-primary full btn-xl" id="checkoutBtn">Enviar mi pedido →</button>
+        <button class="btn btn-primary full btn-xl" id="checkoutBtn">Registrar pedido →</button>
       </section>
     </div>
   </main>

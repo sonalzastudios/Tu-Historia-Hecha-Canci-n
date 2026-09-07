@@ -1,94 +1,99 @@
-# SONALZA Website V12
+# SONALZA Website V22
 
+V22 is the conversion/UX pass. It keeps the premium SONALZA visual system and focuses on product clarity, mobile completion rate, regional pricing, real file handling, bilingual behavior, and launch readiness.
 
-V8 refina la experiencia con un enfoque **latino premium, didáctico y mobile-first**. Mantiene la identidad azul marino + naranja de SONALZA, pero evita clichés visuales y hace que el sitio se sienta diseñado a propósito.
+## Product architecture
 
-## Cambios principales de V8
-- Hero desktop en dos columnas para mostrar el estudio completo y centrado, sin recortes incómodos.
-- Navegación móvil con menú real y destinos funcionales.
-- Nueva sección “Empieza por la emoción” con accesos guiados para amor, familia, Corrido de Tu Vida y negocios.
-- Más identidad latina en copy, géneros y narrativa, sin caer en decoración genérica.
-- Brief de 8 pasos más didáctico: tips dinámicos, ejemplos, explicaciones de por qué se pregunta cada dato y contadores de caracteres.
-- En móvil, controles grandes, tipografía legible, navegación estable y acciones inferiores visibles.
-- Seleccionar una opción ya no hace saltar la página hacia arriba; el usuario conserva su posición.
-- Parámetros `relation`, `occasion`, `genre` y `product` pueden prellenar el brief desde la home.
-- Orden final más clara con “qué pasa después” y confirmación explícita de que el checkout aún no cobra.
-- El CTA final dice “Enviar pedido” mientras el procesador de pago no está conectado; no promete una función inexistente.
+### Canción Personalizada
+- US: US$49
+- MX: MX$599
+- Focus: one person, occasion, message, or moment.
+- Any supported genre, including corrido.
+- Short guided form: about 3–5 minutes.
 
-## Qué funciona
-- Home, formulario de 8 pasos, resumen de pedido, USD/MXN y precios promocionales.
-- Géneros y rutas rápidas abren el brief con selecciones precargadas.
-- Corrido de Tu Vida usa el flujo premium y su precio correspondiente.
-- Jingles y Música para Marcas abre `business.html`.
-- CTA móvil, selector de moneda y menú móvil funcionan con JavaScript.
-- El botón final hace POST a `/api/submit-order`.
-- El brief comercial hace POST a `/api/submit-lead`.
-- Exit feedback puede guardarse mediante `/api/feedback`.
+### Corrido de una Vida
+- US: US$249
+- MX: MX$1,999
+- Can be the buyer's life or someone else's life.
+- Premium biographical flow: roots, life journey, important people, challenges, achievements, personality, legacy, and corrido direction.
+- About 8–12 minutes.
 
-## Dónde llega la información
-Arquitectura preparada:
+### Música para Negocios
+- US: from US$499
+- MX: from MX$4,999
+- Separate business inquiry flow.
 
-`Navegador -> Vercel Serverless API -> Supabase (registro) + Resend (notificación por email)`
+The difference between US$49 and US$249 is now the depth of the creative process—not merely choosing "Corrido" as a genre.
 
-Email administrativo previsto: `sonalzastudios@gmail.com`.
+## V22 UX changes
+- Specific product CTAs skip the product chooser automatically.
+- Generic "Crear mi canción" still opens the product chooser.
+- Product chooser is compact on mobile and includes a "¿Cuál es la diferencia?" explanation.
+- Mobile hides the desktop support rail and the extra top helper row; the form becomes the primary interface.
+- Regional phone formatting: US `(714) 555-1234`, MX `614 123 4567`.
+- Email typo suggestions remain enabled, including common Gmail/Hotmail/Outlook mistakes.
+- Home navigation prioritizes Escucha, Estilos, Precios, Cómo funciona and Negocios.
+- Added an "Escucha el universo SONALZA" gateway linking to the real SONALZA YouTube channel; no fabricated reviews or ratings.
+- Reduced discount repetition. Pricing shows the launch reference price and final regional price without infomercial-style repetition.
+- Removed the repetitive "El enfoque SONALZA" section.
 
-## Variables de entorno en Vercel
-Configurar en Project > Settings > Environment Variables:
+## Language and regional pricing
+- US => USD; default language English.
+- MX => MXN; default language Spanish.
+- Language can be changed independently of country.
+- Regional pricing remains validated server-side.
+- UI prices stay hidden briefly while region resolution runs, avoiding the visual flash from USD to MXN.
 
-- `RESEND_API_KEY`
-- `SONALZA_ORDERS_EMAIL=sonalzastudios@gmail.com`
-- `SONALZA_FROM_EMAIL=SONALZA Orders <orders@sonalza.com>`
+## Checkout / order review
+- Spanish UI no longer uses customer-facing "brief" or "checkout" terminology.
+- Corrido de una Vida orders include an expandable life-story review section.
+- Custom Cover is now "Portada personalizada" in Spanish.
+- The cover-photo flow now prepares a real private Storage upload when Supabase Storage is configured.
+- Selected images are resized client-side to reduce upload size before being sent to the server.
+
+## Private cover photo storage
+Create the bucket by running the final block in `supabase-schema.sql` or create a private bucket named:
+
+`sonalza-covers`
+
+Then add this Vercel environment variable:
+
+`SUPABASE_COVER_BUCKET=sonalza-covers`
+
+The upload API also requires:
 - `SUPABASE_URL`
 - `SUPABASE_SERVICE_ROLE_KEY`
 
-## Supabase
-Ejecutar `supabase-schema.sql` en el SQL Editor del proyecto Supabase. Las tablas tienen RLS habilitado y la service-role key nunca se expone al navegador.
+The bucket should remain private. The order stores the private object path inside the order brief.
 
-## Pago
-V8 **todavía no cobra**. Registra la orden como `pending_payment`. El siguiente paso de producción es conectar el checkout y confirmar el pago por webhook antes de marcar una orden como pagada.
+## Order / email infrastructure
+Configure in Vercel:
+- `SUPABASE_URL`
+- `SUPABASE_SERVICE_ROLE_KEY`
+- `SUPABASE_COVER_BUCKET=sonalza-covers`
+- `RESEND_API_KEY`
+- `SONALZA_ORDERS_EMAIL=sonalzastudios@gmail.com`
+- `SONALZA_FROM_EMAIL=SONALZA Orders <orders@sonalza.com>`
 
-## V9 — Genre artwork
-The genre showcase now includes custom lightweight SVG artwork for Corrido, Banda, Norteño, Cumbia, Mariachi and Más estilos. The art is decorative, responsive and integrated into each clickable genre card without reducing text readability.
+Run `supabase-schema.sql` in Supabase SQL Editor.
 
-V10: upgraded genre cards with richer editorial vector artwork and stronger visual differentiation.
+## Payment status
+V22 still does not charge real money. Orders are registered as `pending_payment` once Supabase and/or Resend are configured.
 
+Recommended payment integration next:
+1. Stripe Checkout in test mode.
+2. Server-side product and regional price calculation.
+3. Billing-country validation for US/MX regional pricing.
+4. Stripe webhook (`checkout.session.completed`) to change the order to paid.
+5. Confirmation email only after payment confirmation.
 
-## V11
-Genre cards now use editorial photo artwork derived from the approved SONALZA visual concept, with live HTML text and responsive masking.
-
-
-## V12 · Mercado e idioma
-- Selector único de país + idioma.
-- Estados Unidos => USD; México => MXN. La moneda ya no se puede cambiar independientemente.
-- Detección inicial mediante `/api/geo` en Vercel.
-- Defaults: US => English, MX => Español. El usuario puede cambiar el idioma sin cambiar el país.
-- Precios de lanzamiento: US $49 / $249 / $499; MX $599 / $1,999 / $4,999.
-- Precios de referencia: US $79 / $349 / $699; MX $999 / $2,999 / $7,999.
-- El backend recalcula la moneda según el país, evitando que el frontend pueda enviar una moneda distinta.
-
-## V13 — Protección de precios regionales
-
-- Vercel detecta el país aproximado con `x-vercel-ip-country`.
-- US inicia en English + USD; MX inicia en Español + MXN.
-- El idioma puede cambiarse libremente sin afectar moneda/precio.
-- Si el usuario intenta cambiar a una región distinta a la detectada, aparece una confirmación explícita: debe usar esa región solamente si su país de facturación corresponde.
-- El pedido guarda `detected_country`, `region_override` y `region_verification_required` para detectar discrepancias.
-- **Importante:** la IP es una señal aproximada, no una prueba definitiva. Cuando se conecte Stripe/otro checkout, el precio final debe validarse server-side contra el país de facturación del método de pago. Esa validación de billing country es la barrera definitiva contra arbitraje regional.
-
-
-## V15
-- Corrección opcional de dominios de correo comunes con un clic.
-- Formateo automático de teléfono al escribir, por ejemplo `(555) 555-5555`.
-- Pulido adicional de campos de contacto en móvil.
-
-
-## V16
-- Added Custom Cover addon inputs on checkout: visual prompt, optional reference image picker, and square-crop guidance notes.
-
-
-## V21
-- Removed the oversized Latin editorial section.
-- Added a required product-choice screen before the song questionnaire: Custom Song vs. A Life Corrido.
-- Spanish UI now uses 'formulario' instead of 'brief'; English keeps 'brief'.
-- Mobile hides the desktop support rail so the questionnaire is immediately visible and distraction-free.
-- Renamed 'Corrido de Tu Vida' to 'Corrido de una Vida' to make clear it can be about the buyer or someone else.
+## Files added / changed in V22
+- `index.html` — simplified home funnel + listen section.
+- `create.html` — compact product chooser and direct-product routing.
+- `order.html` — cleaner Spanish checkout language and life-story review.
+- `business.html` — better contact validation and privacy note.
+- `faq.html`, `privacy.html`, `terms.html` — more polished support/legal pages.
+- `app.js` — separate product flows, regional phone formatting, no-price-flash behavior, better locale re-rendering.
+- `api/upload-cover.js` — private cover photo upload endpoint.
+- `api/submit-order.js` — stores the expanded life-story fields and private cover path.
+- `styles.css` — mobile-first V22 overrides and listening/product UX.

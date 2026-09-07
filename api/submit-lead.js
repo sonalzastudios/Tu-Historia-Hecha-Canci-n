@@ -7,6 +7,7 @@ module.exports = async function handler(req,res){
     const b=typeof req.body==='string'?JSON.parse(req.body||'{}'):(req.body||{});
     const email=clean(b.email,180);
     if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return res.status(400).json({ok:false,error:'Correo inválido.'});
+    if(clean(b.name,120).length<2 || clean(b.business,180).length<2 || clean(b.projectType,120).length<2 || clean(b.message).length<20) return res.status(400).json({ok:false,error:'Completa los datos esenciales de la solicitud.'});
     const leadId=`SZB-${Date.now().toString(36).toUpperCase()}`;
     const region=b.region==='MX'?'MX':'US'; const detectedCountry=getGeoCountry(req); const regionMismatch=Boolean(detectedCountry&&detectedCountry!==region); const language=b.language==='es'?'es':'en'; const currency=region==='MX'?'MXN':'USD';
     const record={lead_id:leadId,created_at:new Date().toISOString(),status:'new',name:clean(b.name,120),business:clean(b.business,180),email,phone:clean(b.phone,80),project_type:clean(b.projectType,120),budget:clean(b.budget,120),message:clean(b.message),currency,region,detected_country:detectedCountry,region_override:Boolean(b.regionOverride||regionMismatch),region_verification_required:regionMismatch,language};
@@ -22,7 +23,7 @@ module.exports = async function handler(req,res){
       const r=await fetch('https://api.resend.com/emails',{method:'POST',headers:{Authorization:`Bearer ${process.env.RESEND_API_KEY}`,'Content-Type':'application/json'},body:JSON.stringify({from,to:[to],reply_to:email,subject:`Solicitud comercial SONALZA · ${leadId}`,html})});
       if(!r.ok) throw new Error(`No se pudo enviar la notificación (${r.status}).`); emailed=true;
     }
-    if(!stored&&!emailed) return res.status(503).json({ok:false,setupRequired:true,error:'La recepción de solicitudes aún no está configurada en Vercel.'});
+    if(!stored&&!emailed) return res.status(503).json({ok:false,setupRequired:true,error:'Las solicitudes en línea todavía no están habilitadas. Intenta de nuevo más tarde.'});
     return res.status(200).json({ok:true,leadId,stored,emailed});
   }catch(e){console.error(e);return res.status(500).json({ok:false,error:'No pudimos enviar la solicitud. Intenta de nuevo.'})}
 }
