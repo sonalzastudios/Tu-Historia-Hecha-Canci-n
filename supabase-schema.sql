@@ -70,3 +70,14 @@ alter table public.business_leads add column if not exists region_verification_r
 insert into storage.buckets (id, name, public)
 values ('sonalza-covers', 'sonalza-covers', false)
 on conflict (id) do nothing;
+
+
+-- V23 · clickwrap and legal-version evidence
+alter table public.orders add column if not exists terms_accepted boolean not null default false;
+alter table public.orders add column if not exists materials_accepted boolean not null default false;
+alter table public.orders add column if not exists terms_version text;
+alter table public.orders add column if not exists privacy_version text;
+alter table public.orders add column if not exists accepted_at timestamptz;
+
+alter table public.business_leads add column if not exists privacy_consent boolean not null default false;
+alter table public.business_leads add column if not exists privacy_version text;

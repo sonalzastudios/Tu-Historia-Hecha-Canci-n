@@ -97,3 +97,12 @@ Recommended payment integration next:
 - `api/upload-cover.js` — private cover photo upload endpoint.
 - `api/submit-order.js` — stores the expanded life-story fields and private cover path.
 - `styles.css` — mobile-first V22 overrides and listening/product UX.
+
+
+## V23
+- Removed the Listen to SONALZA section until a larger catalog is available.
+- Added comprehensive bilingual Terms & Conditions and Privacy Policy.
+- Added clickwrap evidence for Terms/Privacy/material-rights confirmation on orders.
+- Added privacy consent to Business inquiries.
+- Added Supabase columns for accepted legal versions and timestamps.
+- IMPORTANT before Mexico live payments: publish a physical business address and customer-support telephone number.

@@ -145,7 +145,13 @@
     'Formulario comercial':'Business brief',
     'Para una persona, ocasión o mensaje específico. Puedes elegir corrido, banda, cumbia, mariachi y más.':'For a specific person, occasion, or message. You can choose corrido, banda, cumbia, mariachi, and more.',
     'Para una persona, ocasión o momento específico. Puedes elegir corrido, banda, cumbia, mariachi y más; el enfoque es una historia concreta, no contar una vida completa.':'For a specific person, occasion, or moment. You can choose corrido, banda, cumbia, mariachi, and more; the focus is one specific story, not an entire life.',
-    'Para contar una trayectoria completa con más profundidad: raíces, familia, trabajo, migración, sacrificios, logros o legado.':'To tell a complete life journey in greater depth: roots, family, work, migration, sacrifices, achievements, or legacy.'
+    'Para contar una trayectoria completa con más profundidad: raíces, familia, trabajo, migración, sacrificios, logros o legado.':'To tell a complete life journey in greater depth: roots, family, work, migration, sacrifices, achievements, or legacy.',
+
+    'Confirmo que leí y acepto los Términos y condiciones y la Política de privacidad, incluyendo las reglas de revisiones, cancelaciones, licencias y entrega.':'I confirm that I have read and agree to the Terms & Conditions and Privacy Policy, including revision, cancellation, licensing, and delivery rules.',
+    'Confirmo que tengo derecho o autorización para enviar la historia, nombres, fotos y demás materiales. Si incluyo voluntariamente datos personales sensibles sobre mí, autorizo su tratamiento únicamente para preparar y administrar mi pedido; no enviaré datos sensibles de terceros sin autorización o base legal suficiente.':'I confirm that I have the right or authorization to submit the story, names, photos, and other materials. If I voluntarily include sensitive personal information about myself, I expressly authorize its processing only to prepare and administer my order; I will not submit third-party sensitive data without authorization or sufficient legal basis.',
+    'Estas aceptaciones se guardan con la versión legal aplicable al pedido.':'These acceptances are stored with the legal version applicable to the order.',
+    'Acepto la Política de privacidad y autorizo a SONALZA a usar estos datos para responder sobre este proyecto.':'I agree to the Privacy Policy and authorize SONALZA to use this information to respond about this project.',
+    'No usaremos tu solicitud como publicidad sin autorización expresa.':'We will not use your request in advertising without express permission.',
   });
 
 
@@ -1182,7 +1188,19 @@
     const currencyLabel = document.getElementById('orderCurrencyLabel');
     const checkoutBtn = document.getElementById('checkoutBtn');
     const addons = [...document.querySelectorAll('.addon')];
+    const termsAccept = document.getElementById('termsAccept');
+    const materialsAccept = document.getElementById('materialsAccept');
+    const TERMS_VERSION = '2026-09-06-v1';
+    const PRIVACY_VERSION = '2026-09-06-v1';
     let pendingCoverFile = null;
+
+    function syncLegalConsentState() {
+      const accepted = Boolean(termsAccept?.checked && materialsAccept?.checked);
+      if (checkoutBtn) checkoutBtn.classList.toggle('legal-pending', !accepted);
+      return accepted;
+    }
+    termsAccept?.addEventListener('change', syncLegalConsentState);
+    materialsAccept?.addEventListener('change', syncLegalConsentState);
 
     function bindCoverAddonInputs() {
       const premiumToggle = document.querySelector('.addon[data-key="premium"]');
@@ -1315,6 +1333,11 @@
     checkoutBtn?.addEventListener('click', async () => {
       const original = checkoutBtn.textContent;
       const statusEl = document.getElementById('submitStatus');
+      if (!syncLegalConsentState()) {
+        if (statusEl) { statusEl.textContent = currentLanguage === 'en' ? 'Please accept the Terms, Privacy Policy, and material-rights confirmation before continuing.' : 'Acepta los Términos, la Política de privacidad y la confirmación sobre tus materiales antes de continuar.'; statusEl.className='submit-status error-status'; }
+        document.getElementById('legalConsents')?.scrollIntoView({behavior:'smooth',block:'center'});
+        return;
+      }
       checkoutBtn.disabled = true;
       checkoutBtn.textContent = currentLanguage === 'en' ? 'Registering your order…' : 'Registrando tu pedido…';
       if (statusEl) { statusEl.textContent = ''; statusEl.className = 'submit-status'; }
@@ -1329,7 +1352,7 @@
         ['utm_source','utm_medium','utm_campaign','utm_content','utm_term'].forEach(k=>{ if(utmParams.get(k)) utm[k]=utmParams.get(k); });
         const response = await fetch('/api/submit-order', {
           method:'POST', headers:{'Content-Type':'application/json'},
-          body:JSON.stringify({draft:data,region:currentRegion,language:currentLanguage,currency:currentCurrency,detectedRegion,regionOverride:localStorage.getItem(REGION_OVERRIDE_KEY)==='1',addons:chosenAddons,page:location.href,referrer:document.referrer,utm})
+          body:JSON.stringify({draft:data,region:currentRegion,language:currentLanguage,currency:currentCurrency,detectedRegion,regionOverride:localStorage.getItem(REGION_OVERRIDE_KEY)==='1',addons:chosenAddons,page:location.href,referrer:document.referrer,utm,termsAccepted:true,materialsAccepted:true,termsVersion:TERMS_VERSION,privacyVersion:PRIVACY_VERSION,acceptedAt:new Date().toISOString()})
         });
         const result = await response.json().catch(()=>({}));
         if (!response.ok || !result.ok) throw new Error(result.error || 'No pudimos registrar el pedido.');
@@ -1342,6 +1365,7 @@
       }
     });
     updateTotal();
+    syncLegalConsentState();
     setupExitIntent();
   }
 
