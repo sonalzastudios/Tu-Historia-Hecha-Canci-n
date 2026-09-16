@@ -48,7 +48,94 @@ async function recordEventStart(event) {
 async function markEvent(eventId, patch) {
   await db.update('stripe_events', `stripe_event_id=eq.${eq(eventId)}`, patch);
 }
+async function sendPaidOrderToSheets(order, session, paidAt) {
+  const endpoint = process.env.SONALZA_SHEETS_ENDPOINT_URL;
+  const secret = process.env.SONALZA_WEBHOOK_SECRET;
 
+  if (!endpoint || !secret) {
+    throw new Error('SONALZA Sheets integration not configured');
+  }
+
+  const brief = order.brief || {};
+
+  const paymentId =
+    typeof session.payment_intent === 'string'
+      ? session.payment_intent
+      : session.payment_intent?.id || session.id || '';
+
+  const payload = {
+    secret,
+    order: {
+      ORDER_ID: order.order_id || '',
+      CREATED_AT: order.created_at || '',
+      PAID_AT: paidAt || '',
+
+      PRODUCT_TYPE: order.product || '',
+      REGION: order.region || '',
+      SITE_LANGUAGE: order.language || '',
+      SONG_LANGUAGE: brief.idioma || '',
+      CURRENCY: order.currency || '',
+
+      CUSTOMER_EMAIL: order.customer_email || '',
+      CUSTOMER_PHONE: order.customer_phone || '',
+
+      RECIPIENT_RELATION: brief.paraQuien || '',
+      RECIPIENT_NAME: brief.nombre || '',
+      OCCASION: brief.ocasion || '',
+      GENRE: brief.genero || '',
+      ARTIST_CHOICE: brief.voz || '',
+      TARGET_DURATION: brief.duracion || '',
+
+      QUALITIES: brief.cualidades || '',
+      MEMORY: brief.recuerdo || '',
+      KEY_PHRASE: brief.frase || '',
+      MAIN_MESSAGE: brief.emocion || '',
+
+      ROOTS: brief.raices || '',
+      JOURNEY: brief.trayectoria || '',
+      KEY_PEOPLE: brief.personasClave || '',
+      CHALLENGES: brief.retos || '',
+      ACHIEVEMENTS: brief.logros || '',
+      LEGACY: brief.legado || '',
+
+      ADDONS: order.addons || [],
+      AMOUNT_PAID: order.total ?? '',
+      PAYMENT_PROVIDER: 'stripe',
+      PAYMENT_ID: paymentId,
+      PAYMENT_STATUS: 'PAID',
+      PRODUCTION_STATUS: 'NEW'
+    }
+  };
+
+  const response = await fetch(endpoint, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(payload),
+    redirect: 'follow'
+  });
+
+  const text = await response.text();
+
+  let result;
+
+  try {
+    result = JSON.parse(text);
+  } catch (_) {
+    throw new Error(
+      `SONALZA Sheets returned invalid response (${response.status})`
+    );
+  }
+
+  if (!response.ok || !result?.ok) {
+    throw new Error(
+      `SONALZA Sheets sync failed: ${result?.error || response.status}`
+    );
+  }
+
+  return result;
+}
 async function sendPaidEmails(order, reviewRequired) {
   if (!email.configured()) return { customerSent:false, adminSent:false };
   let customerSent = false;
@@ -131,6 +218,9 @@ async function handleCheckoutPaid(session, eventType) {
   if (mail.customerSent) notifyPatch.customer_paid_email_at = new Date().toISOString();
   if (mail.adminSent) notifyPatch.admin_notified_at = new Date().toISOString();
   if (Object.keys(notifyPatch).length) await db.update('orders', `order_id=eq.${eq(orderId)}`, notifyPatch);
+  if (!reviewRequired) {
+    await sendPaidOrderToSheets(updated, session, now);
+  }
 }
 
 async function handleEvent(event) {
