@@ -1784,6 +1784,15 @@
     checkoutBtn?.addEventListener('click', async () => {
       const original = checkoutBtn.textContent;
       const statusEl = document.getElementById('submitStatus');
+      if (!publicRuntimeConfig.stripeCheckoutEnabled) {
+  if (statusEl) {
+    statusEl.textContent = currentLanguage === 'en'
+      ? 'Secure payment is temporarily unavailable. Please try again later.'
+      : 'El pago seguro está temporalmente no disponible. Intenta nuevamente más tarde.';
+    statusEl.className = 'submit-status error-status';
+  }
+  return;
+}
       if (!syncLegalConsentState()) {
         if (statusEl) { statusEl.textContent = currentLanguage === 'en' ? 'Please accept the Terms, Privacy Policy, and material-rights confirmation before continuing.' : 'Acepta los Términos, la Política de privacidad y la confirmación sobre tus materiales antes de continuar.'; statusEl.className='submit-status error-status'; }
         document.getElementById('legalConsents')?.scrollIntoView({behavior:'smooth',block:'center'});
