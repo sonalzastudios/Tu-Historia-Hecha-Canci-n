@@ -188,38 +188,60 @@ async function handleCheckoutPaid(session, eventType) {
   const amountMatches = Number(session.amount_total) === minorUnits(order.total);
   const countryMatches = billingCountry === expectedCountry(order.region);
   const reviewRequired = !currencyMatches || !amountMatches || !countryMatches;
+  const targetStatus = reviewRequired ? 'payment_review' : 'paid';
+  const targetPaymentStatus = reviewRequired ? 'paid_review' : 'paid';
+  const targetFulfillmentStatus = reviewRequired ? 'on_hold' : 'not_started';
   const now = new Date().toISOString();
 
-  await db.update('orders', `order_id=eq.${eq(orderId)}`, {
-    status: reviewRequired ? 'payment_review' : 'paid',
-    payment_status: reviewRequired ? 'paid_review' : 'paid',
-    fulfillment_status: reviewRequired ? 'on_hold' : 'not_started',
-    paid_at: now,
+  const paymentAlreadyRecorded =
+    order.stripe_session_id === session.id &&
+    order.payment_status === targetPaymentStatus &&
+    Boolean(order.paid_at);
+
+  const paidAt = paymentAlreadyRecorded ? order.paid_at : now;
+
+  if (!paymentAlreadyRecorded) {
+    await db.update('orders', `order_id=eq.${eq(orderId)}`, {
+      status: targetStatus,
+      payment_status: targetPaymentStatus,
+      fulfillment_status: targetFulfillmentStatus,
+      paid_at: paidAt,
+      payment_provider: 'stripe',
+      stripe_session_id: session.id,
+      stripe_payment_intent_id: typeof session.payment_intent === 'string' ? session.payment_intent : session.payment_intent?.id || null,
+      stripe_customer_id: typeof session.customer === 'string' ? session.customer : session.customer?.id || null
+    });
+    await db.insertEvent(orderId, reviewRequired ? 'payment_received_review_required' : 'payment_received', {
+      stripe_session_id: session.id,
+      event_type: eventType,
+      billing_country: billingCountry,
+      expected_country: expectedCountry(order.region),
+      currency_matches: currencyMatches,
+      amount_matches: amountMatches,
+      country_matches: countryMatches,
+      amount_total: session.amount_total,
+      currency: session.currency
+    });
+  }
+
+  const updated = {
+    ...order,
+    status: targetStatus,
+    payment_status: targetPaymentStatus,
+    fulfillment_status: targetFulfillmentStatus,
+    paid_at: paidAt,
     payment_provider: 'stripe',
     stripe_session_id: session.id,
     stripe_payment_intent_id: typeof session.payment_intent === 'string' ? session.payment_intent : session.payment_intent?.id || null,
     stripe_customer_id: typeof session.customer === 'string' ? session.customer : session.customer?.id || null
-  });
-  await db.insertEvent(orderId, reviewRequired ? 'payment_received_review_required' : 'payment_received', {
-    stripe_session_id: session.id,
-    event_type: eventType,
-    billing_country: billingCountry,
-    expected_country: expectedCountry(order.region),
-    currency_matches: currencyMatches,
-    amount_matches: amountMatches,
-    country_matches: countryMatches,
-    amount_total: session.amount_total,
-    currency: session.currency
-  });
-
-  const updated = { ...order, status: reviewRequired ? 'payment_review' : 'paid', payment_status: reviewRequired ? 'paid_review' : 'paid', paid_at: now };
+  };
   const mail = await sendPaidEmails(updated, reviewRequired);
   const notifyPatch = {};
   if (mail.customerSent) notifyPatch.customer_paid_email_at = new Date().toISOString();
   if (mail.adminSent) notifyPatch.admin_notified_at = new Date().toISOString();
   if (Object.keys(notifyPatch).length) await db.update('orders', `order_id=eq.${eq(orderId)}`, notifyPatch);
   if (!reviewRequired) {
-    await sendPaidOrderToSheets(updated, session, now);
+    await sendPaidOrderToSheets(updated, session, paidAt);
   }
 }
 
