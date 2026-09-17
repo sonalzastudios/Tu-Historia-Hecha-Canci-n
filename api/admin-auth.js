@@ -4,6 +4,7 @@ const db = require('./_supabase');
 const orderToken = require('./_order-token');
 const email = require('./_email');
 const { deliveryEmail } = require('./_delivery-email-template');
+const { paymentConfirmation } = require('./_email-templates');
 
 function readBody(req) {
   if (req.body && typeof req.body === 'object') return req.body;
@@ -216,14 +217,23 @@ async function sendDeliverabilityTest(body) {
   if (!to) throw new Error('Valid destination email required.');
 
   const timestamp = new Date().toISOString();
+  const testOrder = {
+    language:'es',
+    order_id:`TEST-${Date.now()}`,
+    total:49,
+    currency:'USD',
+    product:'song'
+  };
+  const message = paymentConfirmation(testOrder, false);
+
   await email.send({
     to,
-    subject:'SONALZA email authentication test',
-    html:`<!doctype html><html><body style="font-family:Arial,sans-serif;color:#0b1f3a"><h2>SONALZA email authentication test</h2><p>This message was sent from the same SONALZA/Resend email system used for order confirmations.</p><p>Test timestamp: ${timestamp}</p><p>No purchase was created.</p></body></html>`,
-    replyTo: process.env.SONALZA_REPLY_TO || undefined
+    subject:message.subject,
+    html:message.html,
+    replyTo:process.env.SONALZA_REPLY_TO || undefined
   });
 
-  return { to, timestamp };
+  return { to, timestamp, template:'payment_confirmation' };
 }
 
 module.exports = async function handler(req, res) {
