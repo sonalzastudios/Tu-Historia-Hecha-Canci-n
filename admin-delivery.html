@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f5f7fa">
+  <title>SONALZA Admin · Delivery</title>
+  <style>
+    *{box-sizing:border-box}body{margin:0;background:#f5f7fa;color:#0b1f3a;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif}.wrap{min-height:100vh;display:grid;place-items:center;padding:28px}.card{width:min(560px,100%);background:#fff;border:1px solid #e7ebf0;border-radius:28px;padding:38px;box-shadow:0 20px 60px rgba(11,31,58,.08)}.brand{text-align:center;margin-bottom:34px}.brand strong{display:block;font-size:26px;letter-spacing:.12em}.brand span{display:block;margin-top:6px;font-size:10px;letter-spacing:.28em;color:#7d8896}.eyebrow{font-size:11px;font-weight:800;letter-spacing:.14em;color:#a85311;text-transform:uppercase;margin-bottom:10px}h1{font-size:32px;line-height:1.15;letter-spacing:-.035em;margin:0 0 10px}p{margin:0;color:#667386;line-height:1.6}.panel{margin-top:28px}.field{margin-bottom:16px}label{display:block;font-size:13px;font-weight:700;margin-bottom:8px}input{width:100%;border:1px solid #dbe1e8;border-radius:14px;padding:14px 15px;font-size:15px;color:#0b1f3a;background:#fff;outline:none}input:focus{border-color:#0b1f3a;box-shadow:0 0 0 3px rgba(11,31,58,.08)}button{width:100%;border:0;border-radius:999px;background:#0b1f3a;color:#fff;padding:15px 20px;font-size:15px;font-weight:750;cursor:pointer}button.secondary{background:#eef2f6;color:#0b1f3a}.status{min-height:22px;margin-top:12px;font-size:13px;color:#a85311}.hidden{display:none}.admin-head{display:flex;align-items:center;justify-content:space-between;gap:16px}.admin-head button{width:auto;padding:10px 16px;font-size:13px}.delivery-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.full{grid-column:1/-1}.note{font-size:12px;color:#8792a1;margin-top:8px}@media(max-width:620px){.card{padding:26px}.delivery-grid{grid-template-columns:1fr}.full{grid-column:auto}h1{font-size:27px}}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <section class="card">
+      <div class="brand"><strong>SONALZA</strong><span>STUDIOS</span></div>
+
+      <div id="loginView">
+        <div class="eyebrow">Admin access</div>
+        <h1>Delivery Console</h1>
+        <p>Acceso privado para preparar entregas de canciones SONALZA.</p>
+        <div class="panel">
+          <div class="field">
+            <label for="adminKey">Admin key</label>
+            <input id="adminKey" type="password" autocomplete="current-password" placeholder="Enter your admin key">
+          </div>
+          <button id="loginBtn" type="button">Entrar</button>
+          <div id="loginStatus" class="status" aria-live="polite"></div>
+        </div>
+      </div>
+
+      <div id="adminView" class="hidden">
+        <div class="admin-head">
+          <div>
+            <div class="eyebrow">SONALZA Admin</div>
+            <h1 style="margin-bottom:6px">Preparar entrega</h1>
+          </div>
+          <button id="logoutBtn" class="secondary" type="button">Salir</button>
+        </div>
+        <p>Esta pantalla todavía no envía nada. En el siguiente paso conectaremos la entrega real de la canción.</p>
+        <div class="panel delivery-grid">
+          <div class="field full"><label for="orderId">Número de orden</label><input id="orderId" placeholder="SZ-..."></div>
+          <div class="field full"><label for="songTitle">Título de la canción</label><input id="songTitle" placeholder="Título final"></div>
+          <div class="field full"><label for="audioUrl">Audio final / MP3 URL</label><input id="audioUrl" placeholder="https://..."></div>
+          <div class="field full"><label for="coverUrl">Portada URL</label><input id="coverUrl" placeholder="https://... (opcional)"></div>
+          <div class="full"><button type="button" disabled style="opacity:.45;cursor:not-allowed">Enviar entrega</button><div class="note">El envío real se habilitará cuando conectemos el endpoint de entrega y la página privada del cliente.</div></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const loginView = document.getElementById('loginView');
+    const adminView = document.getElementById('adminView');
+    const loginBtn = document.getElementById('loginBtn');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const adminKey = document.getElementById('adminKey');
+    const loginStatus = document.getElementById('loginStatus');
+
+    function showAdmin(on){
+      loginView.classList.toggle('hidden', on);
+      adminView.classList.toggle('hidden', !on);
+    }
+
+    async function checkSession(){
+      try{
+        const r = await fetch('/api/admin-auth', { credentials:'same-origin' });
+        const data = await r.json();
+        showAdmin(Boolean(data.authenticated));
+      }catch(_){
+        showAdmin(false);
+      }
+    }
+
+    loginBtn.addEventListener('click', async () => {
+      loginStatus.textContent = '';
+      loginBtn.disabled = true;
+      try{
+        const r = await fetch('/api/admin-auth', {
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          credentials:'same-origin',
+          body:JSON.stringify({ action:'login', key:adminKey.value })
+        });
+        const data = await r.json();
+        if(!r.ok || !data.authenticated){
+          loginStatus.textContent = 'Clave incorrecta.';
+          return;
+        }
+        adminKey.value = '';
+        showAdmin(true);
+      }catch(_){
+        loginStatus.textContent = 'No se pudo iniciar sesión.';
+      }finally{
+        loginBtn.disabled = false;
+      }
+    });
+
+    adminKey.addEventListener('keydown', e => {
+      if(e.key === 'Enter') loginBtn.click();
+    });
+
+    logoutBtn.addEventListener('click', async () => {
+      try{
+        await fetch('/api/admin-auth', {
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          credentials:'same-origin',
+          body:JSON.stringify({ action:'logout' })
+        });
+      }finally{
+        showAdmin(false);
+      }
+    });
+
+    checkSession();
+  </script>
+</body>
+</html>
