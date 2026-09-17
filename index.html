@@ -403,6 +403,52 @@
     </div>
   </div>
 </footer>
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const buttons = document.querySelectorAll('.audio-play-btn');
+    let currentAudio = null;
+    let currentButton = null;
+
+    buttons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const src = button.dataset.audio;
+
+        if (currentButton === button && currentAudio && !currentAudio.paused) {
+          currentAudio.pause();
+          button.classList.remove('is-playing');
+          button.querySelector('.audio-play-icon').textContent = '▶';
+          return;
+        }
+
+        if (currentAudio) {
+          currentAudio.pause();
+          currentAudio.currentTime = 0;
+        }
+
+        if (currentButton) {
+          currentButton.classList.remove('is-playing');
+          const oldIcon = currentButton.querySelector('.audio-play-icon');
+          if (oldIcon) oldIcon.textContent = '▶';
+        }
+
+        currentAudio = new Audio(src);
+        currentButton = button;
+
+        button.classList.add('is-playing');
+        button.querySelector('.audio-play-icon').textContent = '❚❚';
+
+        currentAudio.play();
+
+        currentAudio.addEventListener('ended', () => {
+          button.classList.remove('is-playing');
+          button.querySelector('.audio-play-icon').textContent = '▶';
+          currentAudio = null;
+          currentButton = null;
+        });
+      });
+    });
+  });
+</script>
 <script src="app.js"></script>
 </body>
 </html>
