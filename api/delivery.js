@@ -205,7 +205,8 @@ async function handlePost(req, res) {
       'song_publish_consent',
       {
         choice,
-        consent_version:'2026-09-16-v1',
+        consent_version:'2026-09-16-v2',
+        scope:'song_social_media_website_official_channels',
         source:'delivery_page',
         submitted_at:new Date().toISOString()
       },
@@ -214,6 +215,31 @@ async function handlePost(req, res) {
 
     res.setHeader('Cache-Control', 'no-store');
     return res.status(200).json({ ok:true, choice });
+  }
+
+  if (action === 'revision_request') {
+    const notes = String(body.notes || '').trim();
+    if (notes.length < 5 || notes.length > 4000) {
+      return res.status(400).json({ ok:false, error:'Revision notes must be between 5 and 4000 characters.' });
+    }
+
+    await db.insertEvent(
+      orderId,
+      'revision_requested',
+      {
+        notes,
+        source:'delivery_page',
+        submitted_at:new Date().toISOString()
+      },
+      'customer'
+    );
+
+    await db.update('orders', `order_id=eq.${eq(orderId)}`, {
+      fulfillment_status:'revision_requested'
+    }).catch(() => {});
+
+    res.setHeader('Cache-Control', 'no-store');
+    return res.status(200).json({ ok:true, submitted:true });
   }
 
   if (action === 'prepare_reaction_upload') {
@@ -243,7 +269,8 @@ async function handlePost(req, res) {
         bucket,
         path,
         publish_authorized:publishAuthorized,
-        consent_version:'2026-09-16-v1',
+        consent_version:'2026-09-16-v2',
+        scope:publishAuthorized ? 'video_social_media_website_official_channels' : 'private_share_only',
         source:'delivery_page',
         submitted_at:new Date().toISOString()
       },
