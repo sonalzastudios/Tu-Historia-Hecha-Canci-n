@@ -23,8 +23,8 @@ function paymentConfirmation(order, reviewRequired = false) {
   const product = esc(productName(order, isEs));
 
   const subject = isEs
-    ? `Tu canción SONALZA ya está en proceso · ${order.order_id}`
-    : `Your SONALZA song is now in progress · ${order.order_id}`;
+    ? `Confirmación de tu pedido SONALZA · ${order.order_id}`
+    : `Your SONALZA order confirmation · ${order.order_id}`;
 
   const statusTitle = reviewRequired
     ? (isEs ? 'Pago confirmado · verificación en curso' : 'Payment confirmed · verification in progress')
