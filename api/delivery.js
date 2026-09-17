@@ -29,6 +29,38 @@ function testimonialBucket() {
   return String(process.env.SONALZA_TESTIMONIAL_BUCKET || 'sonalza-testimonials');
 }
 
+async function mirrorCustomerResponse(response) {
+  const endpoint = String(process.env.SONALZA_SHEETS_ENDPOINT_URL || '').trim();
+  const secret = String(process.env.SONALZA_WEBHOOK_SECRET || '').trim();
+
+  if (!endpoint || !secret) return false;
+
+  try {
+    const r = await fetch(endpoint, {
+      method:'POST',
+      headers:{ 'Content-Type':'application/json' },
+      body:JSON.stringify({
+        secret,
+        customer_response:response
+      })
+    });
+
+    const text = await r.text().catch(() => '');
+    let data = null;
+    try { data = text ? JSON.parse(text) : null; } catch (_) {}
+
+    if (!r.ok || data?.ok === false) {
+      console.error('customer response sheets mirror failed', r.status, text.slice(0,500));
+      return false;
+    }
+
+    return true;
+  } catch (err) {
+    console.error('customer response sheets mirror error', err);
+    return false;
+  }
+}
+
 async function getSongConsentHistory(orderId) {
   const rows = await db.select(
     'order_events',
@@ -247,23 +279,40 @@ async function handlePost(req, res) {
       });
     }
 
+    const submittedAt = new Date().toISOString();
+    const consentVersion = '2026-09-16-v3';
+    const scope = 'song_social_media_website_official_channels';
+
     await db.insertEvent(
       orderId,
       'song_publish_consent',
       {
         choice,
-        consent_version:'2026-09-16-v3',
-        scope:'song_social_media_website_official_channels',
+        consent_version:consentVersion,
+        scope,
         source:'delivery_page',
         change_number:history.length,
-        submitted_at:new Date().toISOString()
+        submitted_at:submittedAt
       },
       'customer'
     );
 
+    await mirrorCustomerResponse({
+      ORDER_ID:orderId,
+      RESPONSE_TYPE:'SONG_PUBLISH_CONSENT',
+      RESPONSE:choice.toUpperCase(),
+      PUBLISH_AUTHORIZED:choice === 'yes' ? 'YES' : 'NO',
+      VIDEO_PATH:'',
+      REVISION_NOTES:'',
+      SOURCE:'delivery_page',
+      CONSENT_VERSION:consentVersion,
+      SCOPE:scope,
+      CREATED_AT:submittedAt
+    });
+
     const stateAfter = songConsentState([
       ...history,
-      { metadata:{ choice }, created_at:new Date().toISOString() }
+      { metadata:{ choice }, created_at:submittedAt }
     ]);
 
     res.setHeader('Cache-Control', 'no-store');
@@ -281,16 +330,31 @@ async function handlePost(req, res) {
       return res.status(400).json({ ok:false, error:'Revision notes must be between 5 and 4000 characters.' });
     }
 
+    const submittedAt = new Date().toISOString();
+
     await db.insertEvent(
       orderId,
       'revision_requested',
       {
         notes,
         source:'delivery_page',
-        submitted_at:new Date().toISOString()
+        submitted_at:submittedAt
       },
       'customer'
     );
+
+    await mirrorCustomerResponse({
+      ORDER_ID:orderId,
+      RESPONSE_TYPE:'REVISION_REQUEST',
+      RESPONSE:'REQUESTED',
+      PUBLISH_AUTHORIZED:'',
+      VIDEO_PATH:'',
+      REVISION_NOTES:notes,
+      SOURCE:'delivery_page',
+      CONSENT_VERSION:'',
+      SCOPE:'',
+      CREATED_AT:submittedAt
+    });
 
     await db.update('orders', `order_id=eq.${eq(orderId)}`, {
       fulfillment_status:'revision_requested'
@@ -320,6 +384,12 @@ async function handlePost(req, res) {
       return res.status(400).json({ ok:false, error:'Invalid testimonial reference.' });
     }
 
+    const submittedAt = new Date().toISOString();
+    const consentVersion = '2026-09-16-v2';
+    const scope = publishAuthorized
+      ? 'video_social_media_website_official_channels'
+      : 'private_share_only';
+
     await db.insertEvent(
       orderId,
       'reaction_video_received',
@@ -327,13 +397,26 @@ async function handlePost(req, res) {
         bucket,
         path,
         publish_authorized:publishAuthorized,
-        consent_version:'2026-09-16-v2',
-        scope:publishAuthorized ? 'video_social_media_website_official_channels' : 'private_share_only',
+        consent_version:consentVersion,
+        scope,
         source:'delivery_page',
-        submitted_at:new Date().toISOString()
+        submitted_at:submittedAt
       },
       'customer'
     );
+
+    await mirrorCustomerResponse({
+      ORDER_ID:orderId,
+      RESPONSE_TYPE:'REACTION_VIDEO',
+      RESPONSE:'VIDEO_RECEIVED',
+      PUBLISH_AUTHORIZED:publishAuthorized ? 'YES' : 'NO',
+      VIDEO_PATH:path,
+      REVISION_NOTES:'',
+      SOURCE:'delivery_page',
+      CONSENT_VERSION:consentVersion,
+      SCOPE:scope,
+      CREATED_AT:submittedAt
+    });
 
     res.setHeader('Cache-Control', 'no-store');
     return res.status(200).json({ ok:true, received:true });
