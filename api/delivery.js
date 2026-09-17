@@ -1,3 +1,4 @@
+const crypto = require('crypto');
 const db = require('./_supabase');
 const orderToken = require('./_order-token');
 
@@ -14,12 +15,98 @@ function supabaseBase() {
   return String(process.env.SUPABASE_URL || '').replace(/\/$/, '');
 }
 
-function storageHeaders() {
+function storageHeaders(extra = {}) {
   const key = String(process.env.SUPABASE_SERVICE_ROLE_KEY || '');
   return {
     apikey:key,
     Authorization:`Bearer ${key}`,
-    'Content-Type':'application/json'
+    'Content-Type':'application/json',
+    ...extra
+  };
+}
+
+function testimonialBucket() {
+  return String(process.env.SONALZA_TESTIMONIAL_BUCKET || 'sonalza-testimonials');
+}
+
+async function ensureTestimonialBucket() {
+  const bucket = testimonialBucket();
+  const check = await fetch(`${supabaseBase()}/storage/v1/bucket/${encodeURIComponent(bucket)}`, {
+    method:'GET',
+    headers:storageHeaders()
+  });
+
+  if (check.ok) return bucket;
+  if (check.status !== 404 && check.status !== 400) {
+    const detail = await check.text().catch(() => '');
+    throw new Error(`Testimonial bucket check failed (${check.status}): ${detail.slice(0,300)}`);
+  }
+
+  const create = await fetch(`${supabaseBase()}/storage/v1/bucket`, {
+    method:'POST',
+    headers:storageHeaders(),
+    body:JSON.stringify({
+      id:bucket,
+      name:bucket,
+      public:false,
+      file_size_limit:250 * 1024 * 1024,
+      allowed_mime_types:['video/mp4','video/quicktime','video/webm']
+    })
+  });
+
+  if (!create.ok && create.status !== 409) {
+    const detail = await create.text().catch(() => '');
+    throw new Error(`Testimonial bucket creation failed (${create.status}): ${detail.slice(0,300)}`);
+  }
+
+  return bucket;
+}
+
+function videoSpec(contentType, size) {
+  const type = String(contentType || '').toLowerCase();
+  const bytes = Number(size || 0);
+  const map = {
+    'video/mp4':'mp4',
+    'video/quicktime':'mov',
+    'video/webm':'webm'
+  };
+  if (!map[type]) return null;
+  if (!bytes || bytes > 250 * 1024 * 1024) return null;
+  return { ext:map[type], contentType:type };
+}
+
+async function createTestimonialUpload(orderId, contentType, size) {
+  const spec = videoSpec(contentType, size);
+  if (!spec) throw new Error('Unsupported or oversized testimonial video.');
+
+  const bucket = await ensureTestimonialBucket();
+  const nonce = crypto.randomBytes(8).toString('hex');
+  const filename = `reaction-${Date.now()}-${nonce}.${spec.ext}`;
+  const path = `${String(orderId)}/${filename}`;
+  const encodedPath = path.split('/').map(encodeURIComponent).join('/');
+
+  const r = await fetch(
+    `${supabaseBase()}/storage/v1/object/upload/sign/${encodeURIComponent(bucket)}/${encodedPath}`,
+    {
+      method:'POST',
+      headers:storageHeaders(),
+      body:JSON.stringify({})
+    }
+  );
+
+  const text = await r.text();
+  let data = {};
+  try { data = text ? JSON.parse(text) : {}; } catch (_) {}
+
+  if (!r.ok || !data.url) {
+    throw new Error(`Unable to create testimonial upload (${r.status}).`);
+  }
+
+  return {
+    bucket,
+    path,
+    content_type:spec.contentType,
+    signed_url:`${supabaseBase()}/storage/v1${data.url}`
   };
 }
 
@@ -107,29 +194,67 @@ async function handlePost(req, res) {
   const orderId = verified.payload.orderId;
   const action = String(body.action || '');
 
-  if (action !== 'song_publish_consent') {
-    return res.status(400).json({ ok:false, error:'Unsupported response action.' });
+  if (action === 'song_publish_consent') {
+    const choice = cleanChoice(body.choice);
+    if (!choice) {
+      return res.status(400).json({ ok:false, error:'Invalid consent choice.' });
+    }
+
+    await db.insertEvent(
+      orderId,
+      'song_publish_consent',
+      {
+        choice,
+        consent_version:'2026-09-16-v1',
+        source:'delivery_page',
+        submitted_at:new Date().toISOString()
+      },
+      'customer'
+    );
+
+    res.setHeader('Cache-Control', 'no-store');
+    return res.status(200).json({ ok:true, choice });
   }
 
-  const choice = cleanChoice(body.choice);
-  if (!choice) {
-    return res.status(400).json({ ok:false, error:'Invalid consent choice.' });
+  if (action === 'prepare_reaction_upload') {
+    const upload = await createTestimonialUpload(
+      orderId,
+      body.content_type,
+      body.size
+    );
+
+    res.setHeader('Cache-Control', 'no-store');
+    return res.status(200).json({ ok:true, upload });
   }
 
-  await db.insertEvent(
-    orderId,
-    'song_publish_consent',
-    {
-      choice,
-      consent_version: '2026-09-16-v1',
-      source: 'delivery_page',
-      submitted_at: new Date().toISOString()
-    },
-    'customer'
-  );
+  if (action === 'reaction_video_uploaded') {
+    const bucket = String(body.bucket || '');
+    const path = String(body.path || '');
+    const publishAuthorized = Boolean(body.publish_authorized);
 
-  res.setHeader('Cache-Control', 'no-store');
-  return res.status(200).json({ ok:true, choice });
+    if (bucket !== testimonialBucket() || !path.startsWith(`${orderId}/reaction-`) || path.includes('..')) {
+      return res.status(400).json({ ok:false, error:'Invalid testimonial reference.' });
+    }
+
+    await db.insertEvent(
+      orderId,
+      'reaction_video_received',
+      {
+        bucket,
+        path,
+        publish_authorized:publishAuthorized,
+        consent_version:'2026-09-16-v1',
+        source:'delivery_page',
+        submitted_at:new Date().toISOString()
+      },
+      'customer'
+    );
+
+    res.setHeader('Cache-Control', 'no-store');
+    return res.status(200).json({ ok:true, received:true });
+  }
+
+  return res.status(400).json({ ok:false, error:'Unsupported response action.' });
 }
 
 module.exports = async function handler(req, res) {
