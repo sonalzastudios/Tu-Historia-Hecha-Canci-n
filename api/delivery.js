@@ -10,6 +10,42 @@ function cleanChoice(value) {
   return ['yes','no'].includes(v) ? v : '';
 }
 
+function supabaseBase() {
+  return String(process.env.SUPABASE_URL || '').replace(/\/$/, '');
+}
+
+function storageHeaders() {
+  const key = String(process.env.SUPABASE_SERVICE_ROLE_KEY || '');
+  return {
+    apikey:key,
+    Authorization:`Bearer ${key}`,
+    'Content-Type':'application/json'
+  };
+}
+
+async function signedAssetUrl(bucket, path, expiresIn = 60 * 60) {
+  if (!bucket || !path) return '';
+  const encodedPath = String(path).split('/').map(encodeURIComponent).join('/');
+  const r = await fetch(
+    `${supabaseBase()}/storage/v1/object/sign/${encodeURIComponent(bucket)}/${encodedPath}`,
+    {
+      method:'POST',
+      headers:storageHeaders(),
+      body:JSON.stringify({ expiresIn })
+    }
+  );
+
+  const text = await r.text();
+  let data = {};
+  try { data = text ? JSON.parse(text) : {}; } catch (_) {}
+
+  if (!r.ok || !data.signedURL) {
+    throw new Error(`Unable to sign delivery asset (${r.status}).`);
+  }
+
+  return `${supabaseBase()}/storage/v1${data.signedURL}`;
+}
+
 async function handleGet(req, res) {
   const token = String(req.query?.token || '');
   const verified = orderToken.verify(token);
@@ -35,9 +71,14 @@ async function handleGet(req, res) {
   );
 
   const meta = event?.metadata || {};
-  if (!meta.audio_url) {
+  if (!meta.audio_bucket || !meta.audio_path) {
     return res.status(404).json({ ok:false, error:'Delivery not available.' });
   }
+
+  const audioUrl = await signedAssetUrl(meta.audio_bucket, meta.audio_path);
+  const coverUrl = meta.cover_bucket && meta.cover_path
+    ? await signedAssetUrl(meta.cover_bucket, meta.cover_path)
+    : '';
 
   res.setHeader('Cache-Control', 'private, no-store, max-age=0');
   res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive');
@@ -46,9 +87,9 @@ async function handleGet(req, res) {
     ok:true,
     language: order.language === 'en' ? 'en' : 'es',
     song_title: meta.song_title || '',
-    audio_url: meta.audio_url,
-    download_url: meta.download_url || meta.audio_url,
-    cover_url: meta.cover_url || '',
+    audio_url: audioUrl,
+    download_url: audioUrl,
+    cover_url: coverUrl,
     revision_url: meta.revision_url || '',
     delivered_at: event.created_at || null
   });
