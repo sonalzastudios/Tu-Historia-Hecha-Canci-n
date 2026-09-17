@@ -125,5 +125,29 @@
     </div>
   </div>
   <script src="app.js"></script>
+  <script>
+    (() => {
+      const MAX_MEMORY_CHARS = 2500;
+      const question = document.getElementById('question');
+      if (!question) return;
+
+      const expandMemoryField = () => {
+        const field = document.getElementById('recuerdo');
+        if (!field || field.dataset.expandedLimit === 'true') return;
+
+        field.maxLength = MAX_MEMORY_CHARS;
+        field.dataset.expandedLimit = 'true';
+        const counter = document.getElementById('recuerdoCount');
+        const updateCounter = () => {
+          if (counter) counter.textContent = `${field.value.length}/${MAX_MEMORY_CHARS}`;
+        };
+        field.addEventListener('input', updateCounter);
+        updateCounter();
+      };
+
+      new MutationObserver(expandMemoryField).observe(question, { childList:true, subtree:true });
+      expandMemoryField();
+    })();
+  </script>
 </body>
 </html>
