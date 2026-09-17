@@ -21,8 +21,14 @@ function getGeoCountry(req) {
   return raw === 'US' || raw === 'MX' ? raw : null;
 }
 
-function makeOrderId() {
-  return `SZ-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).slice(2, 7).toUpperCase()}`;
+async function makeOrderId() {
+  for (let attempt = 0; attempt < 25; attempt += 1) {
+    const suffix = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+    const candidate = `SON-13-723${suffix}`;
+    const existing = await db.selectOne('orders', `order_id=eq.${encodeURIComponent(candidate)}&select=order_id&limit=1`);
+    if (!existing) return candidate;
+  }
+  throw new Error('No pudimos generar un numero de pedido unico.');
 }
 
 function validClientRequestId(value) {
@@ -113,7 +119,7 @@ module.exports = async function handler(req, res) {
     const turnstile = await verifyTurnstile(req, body.turnstileToken, 'order');
     if (!turnstile.ok) return res.status(400).json({ ok: false, error: turnstile.error || 'No pudimos validar la verificacion de seguridad.' });
 
-    const orderId = makeOrderId();
+    const orderId = await makeOrderId();
     const acceptedAt = new Date().toISOString();
     const record = {
       order_id: orderId,
