@@ -40,6 +40,11 @@ function cleanOrderId(value) {
   return /^[A-Z0-9-]{6,64}$/.test(id) ? id : '';
 }
 
+function validEmail(value) {
+  const v = String(value || '').trim();
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) ? v : '';
+}
+
 function fileSpec(kind, contentType, size) {
   const type = String(contentType || '').toLowerCase();
   const bytes = Number(size || 0);
@@ -206,6 +211,21 @@ async function finalizeDelivery(body) {
   return { orderId, deliveryUrl, customerEmail:order.customer_email };
 }
 
+async function sendDeliverabilityTest(body) {
+  const to = validEmail(body.to);
+  if (!to) throw new Error('Valid destination email required.');
+
+  const timestamp = new Date().toISOString();
+  await email.send({
+    to,
+    subject:'SONALZA email authentication test',
+    html:`<!doctype html><html><body style="font-family:Arial,sans-serif;color:#0b1f3a"><h2>SONALZA email authentication test</h2><p>This message was sent from the same SONALZA/Resend email system used for order confirmations.</p><p>Test timestamp: ${timestamp}</p><p>No purchase was created.</p></body></html>`,
+    replyTo: process.env.SONALZA_REPLY_TO || undefined
+  });
+
+  return { to, timestamp };
+}
+
 module.exports = async function handler(req, res) {
   if (!adminAuth.configured()) {
     return res.status(503).json({ ok:false, error:'Admin access is not configured.' });
@@ -256,6 +276,21 @@ module.exports = async function handler(req, res) {
       } catch (err) {
         console.error('finalize-delivery', err);
         return res.status(400).json({ ok:false, error:String(err.message || 'Unable to finalize delivery.').slice(0,300) });
+      }
+    }
+
+    if (action === 'send-email-auth-test') {
+      if (!adminAuth.isAuthenticated(req)) {
+        return res.status(401).json({ ok:false, error:'Admin authentication required.' });
+      }
+
+      try {
+        const result = await sendDeliverabilityTest(body);
+        res.setHeader('Cache-Control','no-store');
+        return res.status(200).json({ ok:true, ...result });
+      } catch (err) {
+        console.error('send-email-auth-test', err);
+        return res.status(400).json({ ok:false, error:String(err.message || 'Unable to send test email.').slice(0,300) });
       }
     }
 
