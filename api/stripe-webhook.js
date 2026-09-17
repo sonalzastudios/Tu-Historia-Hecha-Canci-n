@@ -1,6 +1,7 @@
 const db = require('./_supabase');
 const stripe = require('./_stripe');
 const email = require('./_email');
+const emailTemplates = require('./_email-templates');
 const autoProduction = require('./_auto-production');
 
 function eq(value) { return encodeURIComponent(String(value)); }
@@ -143,19 +144,15 @@ async function sendPaidEmails(order, reviewRequired) {
   if (!email.configured()) return { customerSent:false, adminSent:false };
   let customerSent = false;
   let adminSent = false;
-  const isEs = order.language === 'es';
+
   if (!order.customer_paid_email_at) {
-    const subject = isEs ? `Pago recibido · ${order.order_id}` : `Payment received · ${order.order_id}`;
-    const customerHtml = `<div style="font-family:Arial,sans-serif;color:#071a33;max-width:640px">
-      <h1>${isEs ? 'Recibimos tu pago.' : 'We received your payment.'}</h1>
-      <p>${isEs ? 'Tu pedido SONALZA quedo registrado con la referencia' : 'Your SONALZA order is registered under reference'} <b>${esc(order.order_id)}</b>.</p>
-      <p><b>${esc(money(order.total, order.currency))}</b> · ${esc(order.product === 'corrido' ? (isEs ? 'Corrido de una Vida' : 'A Life Corrido') : (isEs ? 'Cancion Personalizada' : 'Custom Song'))}</p>
-      <p>${reviewRequired
-        ? (isEs ? 'Estamos verificando un dato de region/facturacion antes de iniciar produccion. No necesitas volver a pagar.' : 'We are verifying a region/billing detail before production begins. You do not need to pay again.')
-        : (isEs ? 'El equipo de SONALZA revisara la historia y la direccion creativa antes de iniciar produccion.' : 'The SONALZA team will review your story and creative direction before production begins.')}</p>
-    </div>`;
+    const customerEmail = emailTemplates.paymentConfirmation(order, reviewRequired);
     try {
-      await email.send({ to: order.customer_email, subject, html: customerHtml });
+      await email.send({
+        to: order.customer_email,
+        subject: customerEmail.subject,
+        html: customerEmail.html
+      });
       customerSent = true;
     } catch (err) { console.error('customer paid email', err); }
   }
