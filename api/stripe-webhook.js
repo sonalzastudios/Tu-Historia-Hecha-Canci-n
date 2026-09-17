@@ -1,6 +1,7 @@
 const db = require('./_supabase');
 const stripe = require('./_stripe');
 const email = require('./_email');
+const autoProduction = require('./_auto-production');
 
 function eq(value) { return encodeURIComponent(String(value)); }
 function esc(value = '') { return String(value ?? '').replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c])); }
@@ -48,6 +49,7 @@ async function recordEventStart(event) {
 async function markEvent(eventId, patch) {
   await db.update('stripe_events', `stripe_event_id=eq.${eq(eventId)}`, patch);
 }
+
 async function sendPaidOrderToSheets(order, session, paidAt) {
   const endpoint = process.env.SONALZA_SHEETS_ENDPOINT_URL;
   const secret = process.env.SONALZA_WEBHOOK_SECRET;
@@ -136,6 +138,7 @@ async function sendPaidOrderToSheets(order, session, paidAt) {
 
   return result;
 }
+
 async function sendPaidEmails(order, reviewRequired) {
   if (!email.configured()) return { customerSent:false, adminSent:false };
   let customerSent = false;
@@ -176,6 +179,18 @@ async function sendPaidEmails(order, reviewRequired) {
     } catch (err) { console.error('admin paid email', err); }
   }
   return { customerSent, adminSent };
+}
+
+async function triggerAutoProduction(orderId) {
+  try {
+    return await autoProduction.processOrder(orderId);
+  } catch (err) {
+    console.error('auto-production', err);
+    await db.insertEvent(orderId, 'production_auto_failed', {
+      error: String(err.message || err).slice(0, 700)
+    }, 'sonalza-production-director').catch(() => {});
+    return { ok: false, error: String(err.message || err) };
+  }
 }
 
 async function handleCheckoutPaid(session, eventType) {
@@ -235,13 +250,16 @@ async function handleCheckoutPaid(session, eventType) {
     stripe_payment_intent_id: typeof session.payment_intent === 'string' ? session.payment_intent : session.payment_intent?.id || null,
     stripe_customer_id: typeof session.customer === 'string' ? session.customer : session.customer?.id || null
   };
+
   const mail = await sendPaidEmails(updated, reviewRequired);
   const notifyPatch = {};
   if (mail.customerSent) notifyPatch.customer_paid_email_at = new Date().toISOString();
   if (mail.adminSent) notifyPatch.admin_notified_at = new Date().toISOString();
   if (Object.keys(notifyPatch).length) await db.update('orders', `order_id=eq.${eq(orderId)}`, notifyPatch);
+
   if (!reviewRequired) {
     await sendPaidOrderToSheets(updated, session, paidAt);
+    await triggerAutoProduction(orderId);
   }
 }
 
