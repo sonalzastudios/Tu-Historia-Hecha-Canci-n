@@ -29,6 +29,27 @@ function testimonialBucket() {
   return String(process.env.SONALZA_TESTIMONIAL_BUCKET || 'sonalza-testimonials');
 }
 
+async function getSongConsentHistory(orderId) {
+  const rows = await db.select(
+    'order_events',
+    `order_id=eq.${eq(orderId)}&event_type=eq.song_publish_consent&select=metadata,created_at&order=created_at.asc`
+  );
+  return Array.isArray(rows) ? rows : [];
+}
+
+function songConsentState(history) {
+  const count = history.length;
+  const last = count ? history[count - 1] : null;
+  const currentChoice = String(last?.metadata?.choice || '').toLowerCase();
+  return {
+    current_choice:['yes','no'].includes(currentChoice) ? currentChoice : '',
+    response_count:count,
+    changes_used:Math.max(0, count - 1),
+    can_change:count > 0 && count < 2,
+    locked:count >= 2
+  };
+}
+
 async function ensureTestimonialBucket() {
   const bucket = testimonialBucket();
   const check = await fetch(`${supabaseBase()}/storage/v1/bucket/${encodeURIComponent(bucket)}`, {
@@ -162,10 +183,13 @@ async function handleGet(req, res) {
     return res.status(404).json({ ok:false, error:'Delivery not available.' });
   }
 
-  const audioUrl = await signedAssetUrl(meta.audio_bucket, meta.audio_path);
-  const coverUrl = meta.cover_bucket && meta.cover_path
-    ? await signedAssetUrl(meta.cover_bucket, meta.cover_path)
-    : '';
+  const [audioUrl, coverUrl, consentHistory] = await Promise.all([
+    signedAssetUrl(meta.audio_bucket, meta.audio_path),
+    meta.cover_bucket && meta.cover_path
+      ? signedAssetUrl(meta.cover_bucket, meta.cover_path)
+      : Promise.resolve(''),
+    getSongConsentHistory(orderId)
+  ]);
 
   res.setHeader('Cache-Control', 'private, no-store, max-age=0');
   res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive');
@@ -178,7 +202,8 @@ async function handleGet(req, res) {
     download_url: audioUrl,
     cover_url: coverUrl,
     revision_url: meta.revision_url || '',
-    delivered_at: event.created_at || null
+    delivered_at: event.created_at || null,
+    song_consent:songConsentState(consentHistory)
   });
 }
 
@@ -200,21 +225,54 @@ async function handlePost(req, res) {
       return res.status(400).json({ ok:false, error:'Invalid consent choice.' });
     }
 
+    const history = await getSongConsentHistory(orderId);
+    const stateBefore = songConsentState(history);
+
+    if (stateBefore.current_choice === choice) {
+      res.setHeader('Cache-Control', 'no-store');
+      return res.status(200).json({
+        ok:true,
+        choice,
+        duplicate:true,
+        song_consent:stateBefore
+      });
+    }
+
+    if (stateBefore.locked) {
+      res.setHeader('Cache-Control', 'no-store');
+      return res.status(409).json({
+        ok:false,
+        error:'CONSENT_CHANGE_LIMIT_REACHED',
+        song_consent:stateBefore
+      });
+    }
+
     await db.insertEvent(
       orderId,
       'song_publish_consent',
       {
         choice,
-        consent_version:'2026-09-16-v2',
+        consent_version:'2026-09-16-v3',
         scope:'song_social_media_website_official_channels',
         source:'delivery_page',
+        change_number:history.length,
         submitted_at:new Date().toISOString()
       },
       'customer'
     );
 
+    const stateAfter = songConsentState([
+      ...history,
+      { metadata:{ choice }, created_at:new Date().toISOString() }
+    ]);
+
     res.setHeader('Cache-Control', 'no-store');
-    return res.status(200).json({ ok:true, choice });
+    return res.status(200).json({
+      ok:true,
+      choice,
+      duplicate:false,
+      song_consent:stateAfter
+    });
   }
 
   if (action === 'revision_request') {
