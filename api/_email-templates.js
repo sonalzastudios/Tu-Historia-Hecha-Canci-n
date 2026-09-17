@@ -54,6 +54,10 @@ function paymentConfirmation(order, reviewRequired = false) {
     ? 'Tu pedido incluye 1 ronda consolidada de revisión. Cuando recibas la primera versión, podrás enviarnos todos tus ajustes juntos y con el mayor detalle posible.'
     : 'Your order includes 1 consolidated revision round. After receiving the first version, you can send all requested adjustments together and with as much detail as possible.';
 
+  const supportText = isEs
+    ? '¿Necesitas ayuda con tu pedido? Escríbenos a contact@sonalza.com.'
+    : 'Need help with your order? Contact us at contact@sonalza.com.';
+
   const html = `<!doctype html>
 <html>
   <body style="margin:0;padding:0;background:#f5f7fa;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;color:#0b1f3a;">
@@ -130,15 +134,8 @@ function paymentConfirmation(order, reviewRequired = false) {
             </tr>
             <tr>
               <td style="padding:32px 42px 36px 42px;text-align:center;">
-                <p style="margin:0 0 16px 0;font-size:12px;color:#8a95a5;">${isEs ? 'Sigue a SONALZA' : 'Follow SONALZA'}</p>
-                <p style="margin:0 0 14px 0;font-size:13px;line-height:1.8;">
-                  <a href="https://instagram.com/sonalzastudios" style="color:#0b1f3a;text-decoration:none;">Instagram</a>
-                  <span style="color:#c4cad2;padding:0 8px;">·</span>
-                  <a href="https://tiktok.com/@sonalzastudios" style="color:#0b1f3a;text-decoration:none;">TikTok</a>
-                  <span style="color:#c4cad2;padding:0 8px;">·</span>
-                  <a href="https://youtube.com/@sonalzastudios" style="color:#0b1f3a;text-decoration:none;">YouTube</a>
-                </p>
-                <a href="https://sonalza.com" style="font-size:12px;color:#7b8797;text-decoration:none;">sonalza.com</a>
+                <p style="margin:0 0 12px 0;font-size:12px;line-height:1.6;color:#7b8797;">${esc(supportText)}</p>
+                <a href="https://sonalza.com" style="font-size:12px;color:#0b1f3a;text-decoration:none;">sonalza.com</a>
                 <p style="margin:18px 0 0 0;font-size:11px;line-height:1.6;color:#a0a8b4;">© SONALZA STUDIOS</p>
               </td>
             </tr>
