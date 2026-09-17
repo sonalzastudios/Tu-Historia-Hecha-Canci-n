@@ -1,6 +1,10 @@
 <!doctype html>
 <html lang="es">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#ffffff"><title>Pedido recibido — SONALZA STUDIOS</title><link rel="stylesheet" href="styles.css"></head>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#ffffff"><title>Pedido recibido — SONALZA STUDIOS</title><link rel="stylesheet" href="styles.css"><style>
+  .thanks-email-notice{margin:22px auto 26px;max-width:620px;padding:15px 18px;border:1px solid rgba(13,29,50,.10);border-radius:16px;background:#f8fafc;color:#5d6877;font-size:.94rem;line-height:1.55;text-align:center}
+  .thanks-email-notice strong{color:#0d1d32}
+  .thanks-email-notice code{font-family:inherit;font-weight:700;color:#0d1d32;background:transparent}
+</style></head>
 <body class="flow thanks-page" data-page="thanks">
   <header class="flow-header"><div class="flow-header-inner"><a class="brand-lockup" href="index.html"><img src="assets/sonalza-mark.png" alt="" class="brand-mark"><span class="brand-word"><strong>SONALZA</strong><small>STUDIOS</small></span></a></div></header>
   <main class="thanks-wrap">
@@ -11,6 +15,7 @@
       <h1 id="thanksTitle">Tu historia ya llegó a SONALZA.</h1>
       <p id="thanksIntro">Guardamos los datos de tu pedido. Conserva este número como referencia:</p>
       <div class="order-code" id="thanksOrder">SONALZA</div>
+      <div class="thanks-email-notice" id="thanksEmailNotice" hidden></div>
       <div class="thanks-steps" id="thanksSteps">
         <div><span>1</span><p><strong>Revisamos tu formulario</strong><small>Validamos que la historia y dirección estén claras.</small></p></div>
         <div><span>2</span><p><strong>Confirmamos el siguiente paso</strong><small>Cuando activemos el pago seguro, podrás continuar sin volver a llenar tu información.</small></p></div>
@@ -34,6 +39,11 @@
     document.getElementById('thanksEyebrow').textContent=lang==='en'?'SECURE PAYMENT RETURN':'REGRESO DE PAGO SEGURO';
     document.getElementById('thanksTitle').textContent=lang==='en'?'Your order is now with SONALZA.':'Tu pedido ya está con SONALZA.';
     document.getElementById('thanksIntro').textContent=lang==='en'?'We are confirming the payment automatically. Keep this order reference:':'Estamos confirmando el pago automáticamente. Conserva esta referencia de pedido:';
+    const emailNotice=document.getElementById('thanksEmailNotice');
+    emailNotice.hidden=false;
+    emailNotice.innerHTML=lang==='en'
+      ?'<strong>You will receive a confirmation email from <code>orders@sonalza.com</code>.</strong> If you do not see it within a few minutes, check Spam, Promotions, or Junk.'
+      :'<strong>Recibirás un correo de confirmación desde <code>orders@sonalza.com</code>.</strong> Si no lo ves en unos minutos, revisa Spam, Promociones o No deseado.';
     document.getElementById('thanksSteps').innerHTML=lang==='en'
       ?'<div><span>1</span><p><strong>Payment confirmation</strong><small>Stripe notifies SONALZA directly; you do not need to pay again if the payment was approved.</small></p></div><div><span>2</span><p><strong>Creative review</strong><small>We review your story and musical direction before production begins.</small></p></div><div><span>3</span><p><strong>Production begins</strong><small>Your song enters the SONALZA creative process after payment is confirmed.</small></p></div>'
       :'<div><span>1</span><p><strong>Confirmación de pago</strong><small>Stripe avisa directamente a SONALZA; si el pago fue aprobado no necesitas pagar otra vez.</small></p></div><div><span>2</span><p><strong>Revisión creativa</strong><small>Revisamos tu historia y la dirección musical antes de iniciar producción.</small></p></div><div><span>3</span><p><strong>Comienza la producción</strong><small>Tu canción entra al proceso creativo SONALZA después de confirmar el pago.</small></p></div>';
