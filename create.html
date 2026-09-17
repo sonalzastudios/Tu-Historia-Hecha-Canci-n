@@ -127,26 +127,30 @@
   <script src="app.js"></script>
   <script>
     (() => {
-      const MAX_MEMORY_CHARS = 2500;
+      const FIELD_LIMITS = {
+        recuerdo: 2500,
+        emocion: 1800
+      };
       const question = document.getElementById('question');
       if (!question) return;
 
-      const expandMemoryField = () => {
-        const field = document.getElementById('recuerdo');
-        if (!field || field.dataset.expandedLimit === 'true') return;
-
-        field.maxLength = MAX_MEMORY_CHARS;
-        field.dataset.expandedLimit = 'true';
-        const counter = document.getElementById('recuerdoCount');
-        const updateCounter = () => {
-          if (counter) counter.textContent = `${field.value.length}/${MAX_MEMORY_CHARS}`;
-        };
-        field.addEventListener('input', updateCounter);
-        updateCounter();
+      const applyExpandedLimits = () => {
+        Object.entries(FIELD_LIMITS).forEach(([id, max]) => {
+          const field = document.getElementById(id);
+          if (!field || field.dataset.expandedLimit === String(max)) return;
+          field.maxLength = max;
+          field.dataset.expandedLimit = String(max);
+          const counter = document.getElementById(id + 'Count');
+          const updateCounter = () => {
+            if (counter) counter.textContent = `${field.value.length}/${max}`;
+          };
+          field.addEventListener('input', updateCounter);
+          updateCounter();
+        });
       };
 
-      new MutationObserver(expandMemoryField).observe(question, { childList:true, subtree:true });
-      expandMemoryField();
+      new MutationObserver(applyExpandedLimits).observe(question, { childList:true, subtree:true });
+      applyExpandedLimits();
     })();
   </script>
 </body>
