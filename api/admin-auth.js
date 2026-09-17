@@ -1,5 +1,9 @@
 const crypto = require('crypto');
 const adminAuth = require('./_admin-auth');
+const db = require('./_supabase');
+const orderToken = require('./_order-token');
+const email = require('./_email');
+const { deliveryEmail } = require('./_delivery-email-template');
 
 function readBody(req) {
   if (req.body && typeof req.body === 'object') return req.body;
@@ -132,6 +136,76 @@ async function createSignedUpload({ orderId, kind, contentType, size }) {
   };
 }
 
+function eq(value) {
+  return encodeURIComponent(String(value));
+}
+
+function validStoredPath(orderId, kind, bucket, path) {
+  if (bucket !== bucketName()) return false;
+  const cleanId = cleanOrderId(orderId);
+  const p = String(path || '');
+  return Boolean(cleanId && p.startsWith(`${cleanId}/${kind}-`) && !p.includes('..'));
+}
+
+async function finalizeDelivery(body) {
+  const orderId = cleanOrderId(body.order_id);
+  const songTitle = String(body.song_title || '').trim().slice(0,180);
+  const audio = body.audio || {};
+  const cover = body.cover || null;
+
+  if (!orderId || !songTitle) throw new Error('Order ID and song title are required.');
+  if (!validStoredPath(orderId, 'audio', audio.bucket, audio.path)) throw new Error('Invalid audio reference.');
+  if (cover && !validStoredPath(orderId, 'cover', cover.bucket, cover.path)) throw new Error('Invalid cover reference.');
+
+  const order = await db.selectOne(
+    'orders',
+    `order_id=eq.${eq(orderId)}&select=*&limit=1`
+  );
+
+  if (!order) throw new Error('Order not found.');
+  if (!['paid','paid_review'].includes(String(order.payment_status || ''))) {
+    throw new Error('Order is not paid.');
+  }
+  if (!order.customer_email) throw new Error('Customer email is missing.');
+
+  const deliveryToken = orderToken.sign(orderId, 365 * 24 * 60 * 60);
+  const baseUrl = String(process.env.SONALZA_BASE_URL || 'https://sonalza.com').replace(/\/$/, '');
+  const deliveryUrl = `${baseUrl}/delivery.html?token=${encodeURIComponent(deliveryToken)}`;
+  const now = new Date().toISOString();
+
+  await db.insertEvent(orderId, 'delivery_ready', {
+    song_title: songTitle,
+    audio_bucket: audio.bucket,
+    audio_path: audio.path,
+    cover_bucket: cover?.bucket || '',
+    cover_path: cover?.path || '',
+    revision_url: '',
+    delivered_at: now
+  }, 'sonalza-admin');
+
+  const message = deliveryEmail({
+    order,
+    songTitle,
+    deliveryUrl,
+    downloadUrl:'',
+    coverUrl:''
+  });
+
+  await email.send({
+    to: order.customer_email,
+    subject: message.subject,
+    html: message.html,
+    replyTo: process.env.SONALZA_REPLY_TO || undefined
+  });
+
+  await db.update('orders', `order_id=eq.${eq(orderId)}`, {
+    status:'completed',
+    fulfillment_status:'delivered'
+  }).catch(() => {});
+
+  return { orderId, deliveryUrl, customerEmail:order.customer_email };
+}
+
 module.exports = async function handler(req, res) {
   if (!adminAuth.configured()) {
     return res.status(503).json({ ok:false, error:'Admin access is not configured.' });
@@ -167,6 +241,21 @@ module.exports = async function handler(req, res) {
       } catch (err) {
         console.error('sign-delivery-upload', err);
         return res.status(400).json({ ok:false, error:'Unable to prepare secure upload.' });
+      }
+    }
+
+    if (action === 'finalize-delivery') {
+      if (!adminAuth.isAuthenticated(req)) {
+        return res.status(401).json({ ok:false, error:'Admin authentication required.' });
+      }
+
+      try {
+        const result = await finalizeDelivery(body);
+        res.setHeader('Cache-Control','no-store');
+        return res.status(200).json({ ok:true, ...result });
+      } catch (err) {
+        console.error('finalize-delivery', err);
+        return res.status(400).json({ ok:false, error:String(err.message || 'Unable to finalize delivery.').slice(0,300) });
       }
     }
 
