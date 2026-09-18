@@ -2,6 +2,7 @@ const crypto = require('crypto');
 const db = require('./_supabase');
 const orderToken = require('./_order-token');
 const email = require('./_email');
+const surveyFollowup = require('./_survey-followup');
 
 function eq(value) {
   return encodeURIComponent(String(value));
@@ -453,6 +454,10 @@ async function handlePost(req, res) {
       'customer'
     );
 
+    await surveyFollowup.cancelPending(orderId, 'survey_completed').catch(err => {
+      console.error('survey followup cancel after completion', err);
+    });
+
     await mirrorCustomerResponse({
       ORDER_ID:orderId,
       RESPONSE_TYPE:'CUSTOMER_SURVEY',
@@ -509,6 +514,10 @@ async function handlePost(req, res) {
     await db.update('orders', `order_id=eq.${eq(orderId)}`, {
       fulfillment_status:'revision_requested'
     }).catch(() => {});
+
+    await surveyFollowup.cancelPending(orderId, 'revision_requested').catch(err => {
+      console.error('survey followup cancel after revision request', err);
+    });
 
     if (email.configured()) {
       try {
