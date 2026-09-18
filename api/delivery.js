@@ -1,9 +1,16 @@
 const crypto = require('crypto');
 const db = require('./_supabase');
 const orderToken = require('./_order-token');
+const email = require('./_email');
 
 function eq(value) {
   return encodeURIComponent(String(value));
+}
+
+function esc(value = '') {
+  return String(value ?? '').replace(/[&<>\"']/g, ch => ({
+    '&':'&amp;', '<':'&lt;', '>':'&gt;', '\"':'&quot;', "'":'&#39;'
+  }[ch]));
 }
 
 function cleanChoice(value) {
@@ -359,6 +366,34 @@ async function handlePost(req, res) {
     await db.update('orders', `order_id=eq.${eq(orderId)}`, {
       fulfillment_status:'revision_requested'
     }).catch(() => {});
+
+    if (email.configured()) {
+      try {
+        const order = await db.selectOne(
+          'orders',
+          `order_id=eq.${eq(orderId)}&select=order_id,customer_email,brief&limit=1`
+        );
+        const admin = process.env.SONALZA_ORDERS_EMAIL || 'sonalzastudios@gmail.com';
+        const customerEmail = String(order?.customer_email || '');
+        const recipientName = String(order?.brief?.nombre || '-');
+        const adminHtml = `<div style="font-family:Arial,sans-serif;color:#071a33;max-width:700px">
+          <h1>REVISIÓN SOLICITADA</h1>
+          <p><b>Order ID:</b> ${esc(orderId)}<br>
+          <b>Cliente / destinatario:</b> ${esc(recipientName)}<br>
+          <b>Email:</b> ${esc(customerEmail || '-')}</p>
+          <p><b>Correcciones solicitadas:</b></p>
+          <div style="white-space:pre-wrap;padding:16px;border:1px solid #dfe6ee;border-radius:12px;background:#f7f9fc">${esc(notes)}</div>
+        </div>`;
+        await email.send({
+          to: admin,
+          replyTo: customerEmail || undefined,
+          subject: `REVISIÓN SOLICITADA · SONALZA · ${orderId}`,
+          html: adminHtml
+        });
+      } catch (err) {
+        console.error('revision request admin email', err);
+      }
+    }
 
     res.setHeader('Cache-Control', 'no-store');
     return res.status(200).json({ ok:true, submitted:true });
