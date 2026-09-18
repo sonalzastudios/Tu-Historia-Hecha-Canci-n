@@ -153,9 +153,36 @@ function validStoredPath(orderId, kind, bucket, path) {
   return Boolean(cleanId && p.startsWith(`${cleanId}/${kind}-`) && !p.includes('..'));
 }
 
+async function getDeliveryAdminStatus(orderId) {
+  const cleanId = cleanOrderId(orderId);
+  if (!cleanId) throw new Error('Invalid order ID.');
+
+  const order = await db.selectOne(
+    'orders',
+    `order_id=eq.${eq(cleanId)}&select=order_id,customer_email,language,payment_status,fulfillment_status,brief&limit=1`
+  );
+  if (!order) throw new Error('Order not found.');
+
+  const revisionEvent = await db.selectOne(
+    'order_events',
+    `order_id=eq.${eq(cleanId)}&event_type=eq.revision_requested&select=metadata,created_at&order=created_at.desc&limit=1`
+  );
+
+  const isRevision = String(order.fulfillment_status || '') === 'revision_requested';
+  return {
+    orderId:cleanId,
+    isRevision,
+    fulfillmentStatus:String(order.fulfillment_status || ''),
+    customerEmail:order.customer_email || '',
+    recipientName:order.brief?.nombre || '',
+    revisionNotes:isRevision ? String(revisionEvent?.metadata?.notes || '') : ''
+  };
+}
+
 async function finalizeDelivery(body) {
   const orderId = cleanOrderId(body.order_id);
   const songTitle = String(body.song_title || '').trim().slice(0,180);
+  const adminNote = String(body.admin_note || '').trim().slice(0,2000);
   const audio = body.audio || {};
   const cover = body.cover || null;
 
@@ -174,6 +201,7 @@ async function finalizeDelivery(body) {
   }
   if (!order.customer_email) throw new Error('Customer email is missing.');
 
+  const isRevision = String(order.fulfillment_status || '') === 'revision_requested';
   const deliveryToken = orderToken.sign(orderId, 365 * 24 * 60 * 60);
   const baseUrl = String(process.env.SONALZA_BASE_URL || 'https://sonalza.com').replace(/\/$/, '');
   const deliveryUrl = `${baseUrl}/delivery.html?token=${encodeURIComponent(deliveryToken)}`;
@@ -186,15 +214,27 @@ async function finalizeDelivery(body) {
     cover_bucket: cover?.bucket || '',
     cover_path: cover?.path || '',
     revision_url: '',
+    delivery_type:isRevision ? 'revision' : 'initial',
+    admin_note:adminNote,
     delivered_at: now
   }, 'sonalza-admin');
+
+  if (isRevision) {
+    await db.insertEvent(orderId, 'revision_delivered', {
+      song_title:songTitle,
+      admin_note:adminNote,
+      delivered_at:now
+    }, 'sonalza-admin');
+  }
 
   const message = deliveryEmail({
     order,
     songTitle,
     deliveryUrl,
     downloadUrl:'',
-    coverUrl:''
+    coverUrl:'',
+    isRevision,
+    adminNote
   });
 
   await email.send({
@@ -206,10 +246,10 @@ async function finalizeDelivery(body) {
 
   await db.update('orders', `order_id=eq.${eq(orderId)}`, {
     status:'completed',
-    fulfillment_status:'delivered'
+    fulfillment_status:isRevision ? 'revision_delivered' : 'delivered'
   }).catch(() => {});
 
-  return { orderId, deliveryUrl, customerEmail:order.customer_email };
+  return { orderId, deliveryUrl, customerEmail:order.customer_email, isRevision };
 }
 
 async function sendDeliverabilityTest(body) {
@@ -252,6 +292,21 @@ module.exports = async function handler(req, res) {
     if (action === 'logout') {
       res.setHeader('Set-Cookie', adminAuth.clearSessionCookie());
       return res.status(200).json({ ok:true, authenticated:false });
+    }
+
+    if (action === 'get-order-delivery-status') {
+      if (!adminAuth.isAuthenticated(req)) {
+        return res.status(401).json({ ok:false, error:'Admin authentication required.' });
+      }
+
+      try {
+        const result = await getDeliveryAdminStatus(body.order_id);
+        res.setHeader('Cache-Control','no-store');
+        return res.status(200).json({ ok:true, ...result });
+      } catch (err) {
+        console.error('get-order-delivery-status', err);
+        return res.status(400).json({ ok:false, error:String(err.message || 'Unable to load order.').slice(0,300) });
+      }
     }
 
     if (action === 'sign-delivery-upload') {
