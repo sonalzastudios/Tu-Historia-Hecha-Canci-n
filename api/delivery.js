@@ -76,6 +76,14 @@ async function getSongConsentHistory(orderId) {
   return Array.isArray(rows) ? rows : [];
 }
 
+async function getSurveyState(orderId) {
+  const row = await db.selectOne(
+    'order_events',
+    `order_id=eq.${eq(orderId)}&event_type=eq.customer_survey_completed&select=metadata,created_at&order=created_at.desc&limit=1`
+  );
+  return row ? { completed:true, completed_at:row.created_at || null } : { completed:false, completed_at:null };
+}
+
 function songConsentState(history) {
   const count = history.length;
   const last = count ? history[count - 1] : null;
@@ -205,7 +213,7 @@ async function handleGet(req, res) {
 
   const order = await db.selectOne(
     'orders',
-    `order_id=eq.${eq(orderId)}&select=order_id,language,payment_status,status&limit=1`
+    `order_id=eq.${eq(orderId)}&select=order_id,language,payment_status,status,fulfillment_status&limit=1`
   );
 
   if (!order || !['paid','paid_review'].includes(String(order.payment_status || ''))) {
@@ -222,12 +230,13 @@ async function handleGet(req, res) {
     return res.status(404).json({ ok:false, error:'Delivery not available.' });
   }
 
-  const [audioUrl, coverUrl, consentHistory] = await Promise.all([
+  const [audioUrl, coverUrl, consentHistory, surveyState] = await Promise.all([
     signedAssetUrl(meta.audio_bucket, meta.audio_path),
     meta.cover_bucket && meta.cover_path
       ? signedAssetUrl(meta.cover_bucket, meta.cover_path)
       : Promise.resolve(''),
-    getSongConsentHistory(orderId)
+    getSongConsentHistory(orderId),
+    getSurveyState(orderId)
   ]);
 
   res.setHeader('Cache-Control', 'private, no-store, max-age=0');
@@ -242,7 +251,11 @@ async function handleGet(req, res) {
     cover_url: coverUrl,
     revision_url: meta.revision_url || '',
     delivered_at: event.created_at || null,
-    song_consent:songConsentState(consentHistory)
+    delivery_type: meta.delivery_type || 'initial',
+    fulfillment_status: String(order.fulfillment_status || ''),
+    revision_available: !['revision_delivered','revision_approved','approved'].includes(String(order.fulfillment_status || '')),
+    song_consent:songConsentState(consentHistory),
+    survey:surveyState
   });
 }
 
@@ -361,6 +374,103 @@ async function handlePost(req, res) {
       choice,
       duplicate:false,
       song_consent:stateAfter
+    });
+  }
+
+  if (action === 'song_approved') {
+    const submittedAt = new Date().toISOString();
+    const order = await db.selectOne(
+      'orders',
+      `order_id=eq.${eq(orderId)}&select=fulfillment_status&limit=1`
+    );
+    const afterRevision = String(order?.fulfillment_status || '') === 'revision_delivered';
+
+    await db.insertEvent(
+      orderId,
+      'song_approved',
+      {
+        source:'delivery_page',
+        after_revision:afterRevision,
+        submitted_at:submittedAt
+      },
+      'customer'
+    );
+
+    await mirrorCustomerResponse({
+      ORDER_ID:orderId,
+      RESPONSE_TYPE:'SONG_APPROVED',
+      RESPONSE:afterRevision ? 'APPROVED_AFTER_REVISION' : 'APPROVED_NO_REVISION',
+      PUBLISH_AUTHORIZED:'',
+      VIDEO_PATH:'',
+      REVISION_NOTES:'',
+      SOURCE:'delivery_page',
+      CONSENT_VERSION:'',
+      SCOPE:'',
+      CREATED_AT:submittedAt
+    });
+
+    await db.update('orders', `order_id=eq.${eq(orderId)}`, {
+      fulfillment_status:afterRevision ? 'revision_approved' : 'approved'
+    }).catch(() => {});
+
+    res.setHeader('Cache-Control', 'no-store');
+    return res.status(200).json({ ok:true, approved:true, after_revision:afterRevision });
+  }
+
+  if (action === 'customer_survey') {
+    const ease = Number(body.ease);
+    const delivery = Number(body.delivery);
+    const satisfaction = Number(body.satisfaction);
+    const recommend = Number(body.recommend);
+    const comment = String(body.comment || '').trim().slice(0,2000);
+    const ratings = [ease, delivery, satisfaction, recommend];
+
+    if (ratings.some(v => !Number.isInteger(v) || v < 1 || v > 5)) {
+      return res.status(400).json({ ok:false, error:'Survey ratings must be between 1 and 5.' });
+    }
+
+    const existing = await getSurveyState(orderId);
+    if (existing.completed) {
+      res.setHeader('Cache-Control', 'no-store');
+      return res.status(200).json({ ok:true, duplicate:true, survey:existing });
+    }
+
+    const submittedAt = new Date().toISOString();
+    const surveyPayload = {
+      ease,
+      delivery,
+      satisfaction,
+      recommend,
+      comment,
+      source:'delivery_page',
+      submitted_at:submittedAt
+    };
+
+    await db.insertEvent(
+      orderId,
+      'customer_survey_completed',
+      surveyPayload,
+      'customer'
+    );
+
+    await mirrorCustomerResponse({
+      ORDER_ID:orderId,
+      RESPONSE_TYPE:'CUSTOMER_SURVEY',
+      RESPONSE:JSON.stringify({ ease, delivery, satisfaction, recommend }),
+      PUBLISH_AUTHORIZED:'',
+      VIDEO_PATH:'',
+      REVISION_NOTES:comment,
+      SOURCE:'delivery_page',
+      CONSENT_VERSION:'2026-09-survey-v1',
+      SCOPE:'customer_experience_feedback',
+      CREATED_AT:submittedAt
+    });
+
+    res.setHeader('Cache-Control', 'no-store');
+    return res.status(200).json({
+      ok:true,
+      submitted:true,
+      survey:{ completed:true, completed_at:submittedAt }
     });
   }
 
