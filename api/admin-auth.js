@@ -5,6 +5,7 @@ const orderToken = require('./_order-token');
 const email = require('./_email');
 const { deliveryEmail } = require('./_delivery-email-template');
 const { paymentConfirmation } = require('./_email-templates');
+const surveyFollowup = require('./_survey-followup');
 
 function readBody(req) {
   if (req.body && typeof req.body === 'object') return req.body;
@@ -248,6 +249,12 @@ async function finalizeDelivery(body) {
     status:'completed',
     fulfillment_status:isRevision ? 'revision_delivered' : 'delivered'
   }).catch(() => {});
+
+  await surveyFollowup.schedule({
+    order,
+    deliveryUrl,
+    reason:isRevision ? 'revision_delivery' : 'initial_delivery'
+  }).catch(err => console.error('survey followup schedule', err));
 
   return { orderId, deliveryUrl, customerEmail:order.customer_email, isRevision };
 }
