@@ -351,6 +351,34 @@ module.exports = async function handler(req, res) {
       }
     }
 
+    if (action === 'test-survey-followup') {
+      if (!adminAuth.isAuthenticated(req)) {
+        return res.status(401).json({ ok:false, error:'Admin authentication required.' });
+      }
+
+      try {
+        const orderId = cleanOrderId(body.order_id);
+        if (!orderId) throw new Error('Valid order ID required.');
+        const order = await db.selectOne(
+          'orders',
+          `order_id=eq.${eq(orderId)}&select=*&limit=1`
+        );
+        if (!order) throw new Error('Order not found.');
+
+        const deliveryToken = orderToken.sign(orderId, 365 * 24 * 60 * 60);
+        const baseUrl = String(process.env.SONALZA_BASE_URL || 'https://sonalza.com').replace(/\/$/, '');
+        const deliveryUrl = `${baseUrl}/delivery.html?token=${encodeURIComponent(deliveryToken)}`;
+        const recipient = process.env.SONALZA_ORDERS_EMAIL || 'sonalzastudios@gmail.com';
+
+        const result = await surveyFollowup.runLiveTest({ order, deliveryUrl, recipient });
+        res.setHeader('Cache-Control','no-store');
+        return res.status(200).json({ ok:true, ...result });
+      } catch (err) {
+        console.error('test-survey-followup', err);
+        return res.status(400).json({ ok:false, error:String(err.message || 'Unable to test survey follow-up.').slice(0,300) });
+      }
+    }
+
     if (action === 'send-email-auth-test') {
       if (!adminAuth.isAuthenticated(req)) {
         return res.status(401).json({ ok:false, error:'Admin authentication required.' });
