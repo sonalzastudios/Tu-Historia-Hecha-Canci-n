@@ -322,6 +322,39 @@ async function handlePost(req, res) {
       { metadata:{ choice }, created_at:submittedAt }
     ]);
 
+    if (email.configured()) {
+      try {
+        const order = await db.selectOne(
+          'orders',
+          `order_id=eq.${eq(orderId)}&select=order_id,customer_email,brief&limit=1`
+        );
+        const admin = process.env.SONALZA_ORDERS_EMAIL || 'sonalzastudios@gmail.com';
+        const customerEmail = String(order?.customer_email || '');
+        const recipientName = String(order?.brief?.nombre || '-');
+        const choiceLabel = choice === 'yes' ? 'SÍ' : 'NO';
+        const decisionText = choice === 'yes'
+          ? 'El cliente autorizó a SONALZA a publicar esta canción en redes sociales, canales oficiales y sonalza.com.'
+          : 'El cliente indicó que desea mantener esta canción privada.';
+        const adminHtml = `<div style="font-family:Arial,sans-serif;color:#071a33;max-width:700px">
+          <h1>AUTORIZACIÓN DE PUBLICACIÓN · ${choiceLabel}</h1>
+          <p><b>Order ID:</b> ${esc(orderId)}<br>
+          <b>Cliente / destinatario:</b> ${esc(recipientName)}<br>
+          <b>Email:</b> ${esc(customerEmail || '-')}</p>
+          <p>${esc(decisionText)}</p>
+          <p><b>Consent version:</b> ${esc(consentVersion)}<br>
+          <b>Scope:</b> ${esc(scope)}</p>
+        </div>`;
+        await email.send({
+          to: admin,
+          replyTo: customerEmail || undefined,
+          subject: `AUTORIZACIÓN DE PUBLICACIÓN · ${choiceLabel} · SONALZA · ${orderId}`,
+          html: adminHtml
+        });
+      } catch (err) {
+        console.error('publish consent admin email', err);
+      }
+    }
+
     res.setHeader('Cache-Control', 'no-store');
     return res.status(200).json({
       ok:true,
