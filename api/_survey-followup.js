@@ -137,4 +137,63 @@ async function schedule({ order, deliveryUrl, reason = 'delivery' }) {
   return { scheduled:true, emailId:result.id || null, scheduledAt };
 }
 
-module.exports = { schedule, cancelPending, surveyEmail };
+async function runLiveTest({ order, deliveryUrl, recipient }) {
+  if (!email.configured()) throw new Error('Email is not configured.');
+  if (!order?.order_id || !deliveryUrl || !recipient) throw new Error('Missing live-test data.');
+
+  const joiner = String(deliveryUrl).includes('?') ? '&' : '?';
+  const surveyUrl = `${deliveryUrl}${joiner}survey=1`;
+  const baseMessage = surveyEmail({ order, surveyUrl });
+
+  const liveAt = new Date(Date.now() + 2 * 60 * 1000).toISOString();
+  const live = await email.send({
+    to:recipient,
+    subject:`PRUEBA · ${baseMessage.subject}`,
+    html:baseMessage.html,
+    replyTo:process.env.SONALZA_REPLY_TO || undefined,
+    scheduledAt:liveAt,
+    tags:[
+      { name:'type', value:'survey_followup_test_live' },
+      { name:'order_id', value:String(order.order_id).replace(/[^A-Za-z0-9_-]/g,'_').slice(0,256) }
+    ],
+    idempotencyKey:`survey-live-test/${order.order_id}/${liveAt}`
+  });
+
+  const cancelAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
+  const cancelCandidate = await email.send({
+    to:recipient,
+    subject:`CANCEL TEST · ${baseMessage.subject}`,
+    html:baseMessage.html,
+    replyTo:process.env.SONALZA_REPLY_TO || undefined,
+    scheduledAt:cancelAt,
+    tags:[
+      { name:'type', value:'survey_followup_test_cancel' },
+      { name:'order_id', value:String(order.order_id).replace(/[^A-Za-z0-9_-]/g,'_').slice(0,256) }
+    ],
+    idempotencyKey:`survey-cancel-test/${order.order_id}/${cancelAt}`
+  });
+
+  if (!cancelCandidate.id) throw new Error('Cancellation test did not return an email ID.');
+  await email.cancelScheduled(cancelCandidate.id);
+
+  await db.insertEvent(order.order_id, 'survey_followup_live_test', {
+    recipient,
+    live_email_id:live.id || '',
+    live_scheduled_at:liveAt,
+    canceled_email_id:cancelCandidate.id,
+    canceled_scheduled_at:cancelAt,
+    cancellation_verified:true,
+    tested_at:new Date().toISOString()
+  }, 'sonalza-admin');
+
+  return {
+    liveEmailId:live.id || null,
+    liveScheduledAt:liveAt,
+    canceledEmailId:cancelCandidate.id,
+    canceledScheduledAt:cancelAt,
+    cancellationVerified:true,
+    recipient
+  };
+}
+
+module.exports = { schedule, cancelPending, surveyEmail, runLiveTest };
