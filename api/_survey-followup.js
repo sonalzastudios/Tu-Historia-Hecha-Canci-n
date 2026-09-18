@@ -40,8 +40,8 @@ function surveyEmail({ order, surveyUrl }) {
                 </a>
                 <p style="margin:22px auto 0;max-width:500px;font-size:13px;line-height:1.6;color:#7b8797;">
                   ${isEs
-                    ? 'Si ya respondiste la encuesta desde tu página de entrega, este recordatorio no debería enviarse.'
-                    : 'If you already answered the survey from your delivery page, this reminder should not be sent.'}
+                    ? 'Si ya nos compartiste tu opinión, muchas gracias; no necesitas hacer nada más.'
+                    : 'If you already shared your feedback with us, thank you; there is nothing else you need to do.'}
                 </p>
               </td>
             </tr>
