@@ -39,6 +39,11 @@
         <p>Selecciona la orden y los archivos finales que recibirá el cliente.</p>
         <div class="panel delivery-grid">
           <div class="field full"><label for="orderId">Número de orden</label><input id="orderId" placeholder="SON-13-7230001"></div><div id="orderMode" class="order-mode full hidden"></div>
+          <div class="full">
+            <button id="testSurveyBtn" class="secondary" type="button">Probar automatización de encuesta</button>
+            <div class="note">Prueba segura: programa un email para el admin en ~2 minutos y crea otro email programado que se cancela inmediatamente. No se envía nada al cliente.</div>
+            <div id="testSurveyStatus" class="send-status" aria-live="polite"></div>
+          </div>
           <div class="field full"><label for="songTitle">Título de la canción</label><input id="songTitle" placeholder="Título final"></div>
           <div class="field full">
             <label for="audioFile">MP3 final</label>
@@ -86,6 +91,8 @@
     const successBox = document.getElementById('successBox');
     const orderMode = document.getElementById('orderMode');
     const adminNote = document.getElementById('adminNote');
+    const testSurveyBtn = document.getElementById('testSurveyBtn');
+    const testSurveyStatus = document.getElementById('testSurveyStatus');
 
     const uploaded = { audio:null, cover:null };
     let sending = false;
@@ -226,6 +233,38 @@
         updateSendButton();
       }
     }
+
+    testSurveyBtn.addEventListener('click', async () => {
+      const oid = orderId.value.trim().toUpperCase();
+      testSurveyStatus.textContent = '';
+      testSurveyStatus.className = 'send-status';
+      if(!oid){
+        testSurveyStatus.textContent = 'Escribe primero un número de orden.';
+        testSurveyStatus.className = 'send-status error';
+        return;
+      }
+      testSurveyBtn.disabled = true;
+      testSurveyStatus.textContent = 'Programando prueba segura…';
+      testSurveyStatus.className = 'send-status working';
+      try{
+        const r = await fetch('/api/admin-auth', {
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          credentials:'same-origin',
+          body:JSON.stringify({ action:'test-survey-followup', order_id:oid })
+        });
+        const data = await r.json();
+        if(!r.ok || !data.ok) throw new Error(data?.error || 'No se pudo ejecutar la prueba.');
+        const when = new Date(data.liveScheduledAt).toLocaleTimeString([], {hour:'numeric', minute:'2-digit'});
+        testSurveyStatus.textContent = `✓ Programación aceptada. Email de prueba al admin: ~${when}. Cancelación de prueba: verificada.`;
+        testSurveyStatus.className = 'send-status ok';
+      }catch(err){
+        testSurveyStatus.textContent = err.message || 'No se pudo ejecutar la prueba.';
+        testSurveyStatus.className = 'send-status error';
+      }finally{
+        testSurveyBtn.disabled = false;
+      }
+    });
 
     loginBtn.addEventListener('click', async () => {
       loginStatus.textContent = '';
