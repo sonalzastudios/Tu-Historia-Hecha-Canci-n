@@ -32,6 +32,16 @@ def decode_images(pg):
     pg.evaluate("document.querySelectorAll('img').forEach(i=>i.loading='eager')")
     pg.evaluate("async()=>{await Promise.race([Promise.all([...document.images].map(i=>i.decode().catch(()=>null))),new Promise(r=>setTimeout(r,20000))])}")
     return pg.locator('img').evaluate_all('xs=>xs.map(i=>({src:i.src,ok:i.complete&&i.naturalWidth>0}))')
+def vinyl_state(pg):
+    # CSS animation pause becomes effective on the next rendering update.
+    # Wait for the browser's ready promise rather than sampling a stale compositor frame.
+    return pg.locator('.dedication-vinyl').evaluate("""async e=>{
+        const animations=e.getAnimations();
+        await Promise.all(animations.map(a=>a.ready));
+        await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+        return {css:getComputedStyle(e).animationPlayState,transform:getComputedStyle(e).transform,
+                times:animations.map(a=>a.currentTime),states:animations.map(a=>a.playState)};
+    }""")
 try:
     config=json.loads((ROOT/'home-v6.config.json').read_text())
     check('JSON version and content',config['version']==6 and len(config['ideas'])==15 and len(config['hero'])==6)
@@ -69,7 +79,6 @@ try:
                     pg.locator('#ideas-all').click();pg.locator('.dedication').screenshot(path=str(OUT/f'vinyl-v6-{lang}-{width}.png'))
                     pg.screenshot(path=str(OUT/f'home-v6-{lang}-{width}.png'),full_page=True)
                 c.close()
-        # Assert actual movement over time, not just that CSS contains an animation name.
         c=context(browser);pg=load(c);pg.mouse.move(1,1)
         before=pg.locator('.hero-stage').get_attribute('data-active-slide');pg.wait_for_timeout(6500)
         check('hero automatically changes image',pg.locator('.hero-stage').get_attribute('data-active-slide')!=before)
@@ -95,10 +104,14 @@ try:
         pg.locator('#ideas-track').focus();pg.locator('#ideas-track').press('ArrowRight');pg.wait_for_timeout(650)
         check('keyboard moves ideas',pg.locator('#ideas-track').evaluate('(e)=>e.scrollLeft')>20)
         pg.locator('.record-sleeve').scroll_into_view_if_needed();pg.wait_for_timeout(400)
-        before=pg.locator('.dedication-vinyl').evaluate('e=>getComputedStyle(e).transform');pg.wait_for_timeout(1000)
-        check('vinyl transform actually rotates',pg.locator('.dedication-vinyl').evaluate('e=>getComputedStyle(e).transform')!=before)
-        pg.locator('#vinyl-pause').click();before=pg.locator('.dedication-vinyl').evaluate('e=>getComputedStyle(e).transform');pg.wait_for_timeout(900)
-        check('vinyl pause works',pg.locator('.dedication-vinyl').evaluate('e=>getComputedStyle(e).transform')==before)
+        before=vinyl_state(pg);pg.wait_for_timeout(1000);after=vinyl_state(pg)
+        check('vinyl transform actually rotates',after['transform']!=before['transform'],{'before':before,'after':after})
+        pg.locator('#vinyl-pause').click();before=vinyl_state(pg)
+        check('vinyl pause acknowledged by CSS and browser',before['css']=='paused' and before['states']==['paused'],before)
+        pg.wait_for_timeout(900);after=vinyl_state(pg)
+        check('vinyl pause works',after['transform']==before['transform'] and after['times']==before['times'],{'before':before,'after':after})
+        pg.locator('#vinyl-pause').click();before=vinyl_state(pg);pg.wait_for_timeout(900);after=vinyl_state(pg)
+        check('vinyl resumes actual rotation',after['states']==['running'] and after['transform']!=before['transform'],{'before':before,'after':after})
         pg.locator('#locale-open').click();pg.locator('#language-select').select_option('en');pg.locator('#region-select').select_option('MX');pg.locator('#locale-form button[type=submit]').click();pg.wait_for_timeout(200)
         check('switch language keeps independent currency',pg.locator('html').get_attribute('lang')=='en' and pg.locator('[data-price=song]').first.inner_text()=='MX$599')
         check('mom unchanged after EN switch','16880087' in pg.locator('[data-idea=mama] img').get_attribute('src'))
@@ -116,11 +129,10 @@ try:
         pg.locator('#ideas-next').click();pg.wait_for_timeout(150);check('manual still works in reduced motion',pg.locator('#ideas-track').evaluate('(e)=>e.scrollLeft')>20)
         pg.locator('.record-sleeve').scroll_into_view_if_needed();check('reduced motion disables vinyl',pg.locator('.dedication-vinyl').evaluate('e=>getComputedStyle(e).animationName')=='none')
         pg.locator('#menu-toggle').click();check('mobile menu opens',pg.locator('#mobile-nav').is_visible());pg.locator('#mobile-nav a[href="#precios"]').click();check('mobile menu closes',not pg.locator('#mobile-nav').is_visible());c.close()
-        # Short recording of the real rendered UI; this is not generated artwork.
         c=context(browser,record_video_dir=str(OUT/'video'),record_video_size={'width':1280,'height':854});pg=load(c);decode_images(pg)
         pg.mouse.move(1,1);pg.wait_for_timeout(6500)
         pg.locator('#ideas-track').scroll_into_view_if_needed();pg.mouse.move(1,1);pg.wait_for_timeout(6000)
-        pg.locator('.record-sleeve').scroll_into_view_if_needed();pg.wait_for_timeout(2200)
+        pg.locator('.record-sleeve').scroll_into_view_if_needed();pg.wait_for_timeout(4000)
         video=pg.video;c.close();video.save_as(str(OUT/'motion-proof.webm'));browser.close()
 except Exception:check('V6 harness completed',False,traceback.format_exc())
 finally:
