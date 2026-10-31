@@ -1,0 +1,18 @@
+/* Only one composited rail moves; individual cards do not scale or repaint on hover. */
+@import url('home-v6-polish.css');
+.continuous-ideas .idea-track{display:block!important;scroll-snap-type:none!important;scroll-behavior:auto!important;overflow-anchor:none;overscroll-behavior-x:contain}
+.continuous-ideas .idea-motion-rail{display:flex;gap:22px;width:100%;position:relative;align-items:stretch;transform:none;transform-origin:0 0}
+.continuous-ideas .is-compositor-driven{overflow-x:hidden}
+.continuous-ideas .is-compositor-driven .idea-motion-rail{will-change:transform}
+.continuous-ideas #ideas-pause,.continuous-ideas #ideas-motion-status{display:none!important}
+.continuous-ideas .idea-controls{gap:10px}
+.continuous-ideas .idea-card{scroll-snap-align:none;transition:none!important;transform:none!important}
+.continuous-ideas:not(.expanded) .idea-card:hover{box-shadow:none}
+.continuous-ideas .idea-photo img{transition:none!important;transform:none!important}
+.continuous-ideas .idea-number{backdrop-filter:none;-webkit-backdrop-filter:none}
+.continuous-ideas.expanded .idea-motion-rail{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));transform:none!important;will-change:auto}
+.continuous-sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
+@media(max-width:1100px){.continuous-ideas.expanded .idea-motion-rail{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:850px){.continuous-ideas.expanded .idea-motion-rail{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:650px){.continuous-ideas .idea-motion-rail{gap:14px}.continuous-ideas.expanded .idea-motion-rail{gap:11px}}
+@media(prefers-reduced-motion:reduce){.continuous-ideas .idea-motion-rail{will-change:auto}}

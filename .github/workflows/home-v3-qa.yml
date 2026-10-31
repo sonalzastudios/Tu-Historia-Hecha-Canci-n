@@ -1,0 +1,33 @@
+name: SONALZA homepage QA
+on:
+  pull_request:
+    branches: [main]
+    paths: ['index.html', 'home-*.js', 'home-*.css', 'home-*.json', 'tests/**', '.github/workflows/home-v3-qa.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: sonalza-home-qa-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  browser-checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install browser test tools
+        run: |
+          python -m pip install playwright==1.56.0
+          python -m playwright install --with-deps chromium
+      - name: Check dots, heart, notes and subpixel carousel motion
+        run: python tests/home_motion_polish_qa.py
+      - name: Save rendered screenshots, motion and actual report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sonalza-motion-polish-review
+          path: qa-output/
+          retention-days: 7

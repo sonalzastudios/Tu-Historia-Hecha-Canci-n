@@ -1,0 +1,5 @@
+/* Final sleeve framing: reveal the label so record rotation is visually legible. */
+@import url('home-v6.css');
+@media(min-width:1191px){.record-sleeve .letter{width:calc(100% - 165px);padding:30px;min-height:425px}.record-sleeve .letter-text{font-size:25px;line-height:1.5}.dedication-vinyl{right:-12px;top:81px}.record-sleeve .story-bottom{max-width:400px;font-size:11px}}
+@media(max-width:650px){.record-sleeve{padding-top:107px;margin-top:27px}.record-sleeve .letter{width:calc(100% - 18px);padding:25px;min-height:360px}.record-sleeve .letter-text{font-size:24px;line-height:1.5}.dedication-vinyl{top:0;right:0;width:248px;height:248px}.record-sleeve .story-bottom{max-width:320px;margin-top:22px}}
+@media(max-width:360px){.record-sleeve{padding-top:92px}.record-sleeve .letter{padding:21px;width:calc(100% - 12px)}.record-sleeve .letter-text{font-size:23px}.dedication-vinyl{width:225px;height:225px;right:0}}

@@ -1,0 +1,3 @@
+@import url("./home-v3-foundation.css");
+/* Prevent the decorative gift caption from colliding with the sample player. */
+@media(min-width:651px){.gift-note{display:none}}

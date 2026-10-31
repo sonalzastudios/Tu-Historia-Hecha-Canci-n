@@ -1,0 +1,6 @@
+@import url('create-v5-base.css');
+/* Visual QA refinements: keep purchase labels readable and mobile choices compact. */
+body.create-v5 #nextBtn{color:#fff!important;background:#b64629!important}
+.create-v5 .form-tools{display:flex;justify-content:flex-end;margin-top:12px}.create-v5 .form-tools .flow-clear-data{font-size:11px;min-height:44px;text-decoration:underline;text-underline-offset:3px;color:#596972}
+@media(max-width:750px){.create-v5 .question .option-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}.create-v5 .option{font-size:13px}.create-v5 .chosen-idea{padding:12px 16px}.create-v5 .chosen-idea small{font-size:10px}.create-v5 .flow-head-actions{gap:16px}.create-v5 .brand-mark{width:30px;height:30px}.create-v5 .brand-lockup{gap:8px}.create-v5 .flow-intro-bar{padding:13px 16px}.create-v5 .form-tools{justify-content:center}.create-v5 .question .option-grid-4{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(max-width:360px){.create-v5 .brand-word strong{font-size:12px}.create-v5 .flow-header-inner{width:calc(100% - 24px);gap:9px}.create-v5 .flow-head-actions{gap:10px}.create-v5 .flow-exit{font-size:10px}.create-v5 .question .option-grid{gap:8px}.create-v5 .option{font-size:12px;padding:10px 8px}}

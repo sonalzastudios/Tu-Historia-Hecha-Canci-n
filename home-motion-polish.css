@@ -1,0 +1,29 @@
+@import url('home-continuous.css');
+/* Dots replace the actual thumbnail DOM; targets remain large and keyboard operable. */
+#hero-motion-status{display:none!important}
+.hero-stage.hero-slideshow-v6{height:auto;min-height:0}
+.hero-slideshow-v6 .hero-motion-bar{flex-wrap:wrap;gap:8px;margin:9px 0 7px;min-height:44px}
+.hero-slideshow-v6 .hero-previews.hero-dots{order:0;display:flex;align-items:center;justify-content:center;gap:0;padding:0;min-height:44px;flex-shrink:0}
+.hero-dots .hero-preview{display:grid;place-items:center;width:30px;height:44px;min-height:44px;padding:0;border:0;background:none!important;box-shadow:none;gap:0}
+.hero-dots .hero-preview .hero-dot{display:block;width:8px;height:8px;background:#c9bdac;border-radius:50%;transition:background .3s,transform .3s}
+.hero-dots .hero-preview[aria-pressed=true] .hero-dot{background:var(--accent);transform:scale(1.2)}
+.hero-dots .hero-preview:focus-visible{outline:2px solid var(--accent);outline-offset:0;border-radius:5px}
+.hero-slideshow-v6 .hero-motion-controls{margin-left:auto}
+.hero-slideshow-v6 .hero-player{margin-top:8px}
+.hero-slideshow-v6:before{bottom:auto;height:430px}
+/* Keep the heart's SVG, stroke, position and layout size; animate only its path. */
+.record-sleeve .letter-head>svg{color:#c6283d;stroke:currentColor;fill:currentColor}
+.record-sleeve .letter-head>svg path{transform-box:fill-box;transform-origin:center;animation:sonalza-heart-pulse 3.6s ease-in-out infinite;animation-play-state:paused}
+.record-sleeve[data-decoration-motion=running] .letter-head>svg path{animation-play-state:running}
+@keyframes sonalza-heart-pulse{0%,30%,100%{transform:scale(1)}12%{transform:scale(1.07)}20%{transform:scale(1.015)}}
+/* Fixed handful of notes, no timers or particle allocation; never cover the dedication. */
+.vinyl-notes{position:absolute;z-index:3;pointer-events:none;user-select:none;overflow:visible}
+.vinyl-note{position:absolute;font-family:Georgia,'Times New Roman',serif;font-size:25px;line-height:1;color:#b74b2e;opacity:0;animation:sonalza-note-drift 5.6s linear infinite;animation-delay:var(--note-delay);animation-play-state:paused}
+.vinyl-note:nth-child(1){left:84%;top:12%}.vinyl-note:nth-child(2){left:76%;top:3%;font-size:29px}.vinyl-note:nth-child(3){left:92%;top:24%;font-size:21px}.vinyl-note:nth-child(4){left:68%;top:1%;font-size:23px}
+.record-sleeve[data-decoration-motion=running] .vinyl-note{animation-play-state:running}
+@keyframes sonalza-note-drift{0%{opacity:0;transform:translate3d(0,12px,0) rotate(-8deg) scale(.9)}18%{opacity:.65}72%{opacity:.42}100%{opacity:0;transform:translate3d(var(--note-drift),-72px,0) rotate(12deg) scale(1.05)}}
+@media(max-width:1190px){.hero-slideshow-v6:before{height:390px}.hero-dots .hero-preview{width:27px}}
+@media(max-width:850px){.hero-slideshow-v6:before{height:385px}.hero-dots .hero-preview{width:25px}.hero-slideshow-v6 .hero-motion-bar{gap:3px}}
+@media(max-width:650px){.hero-stage.hero-slideshow-v6{height:auto}.hero-slideshow-v6:before{height:390px}.hero-dots .hero-preview{width:28px}.hero-slideshow-v6 .hero-motion-bar{gap:4px}.vinyl-note{font-size:21px}.vinyl-note:nth-child(2){font-size:24px}}
+@media(max-width:360px){.hero-dots .hero-preview{width:25px}.hero-slideshow-v6 .hero-motion-bar{justify-content:center}.hero-slideshow-v6 .hero-motion-controls{margin-left:0}.vinyl-note:nth-child(3){left:87%}}
+@media(prefers-reduced-motion:reduce){.vinyl-notes{display:none}.record-sleeve .letter-head>svg path{animation:none!important;transform:none!important}.hero-dots .hero-dot{transition:none!important}}
