@@ -22,12 +22,12 @@ jobs:
         run: |
           python -m pip install playwright==1.56.0
           python -m playwright install --with-deps chromium
-      - name: Verify continuous motion, audio independence, manual arrows and locale
-        run: python tests/home_continuous_qa.py
-      - name: Save screenshots, actual motion recording and regression report
+      - name: Check dots, heart, notes and subpixel carousel motion
+        run: python tests/home_motion_polish_qa.py
+      - name: Save rendered screenshots, motion and actual report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: sonalza-continuous-review
+          name: sonalza-motion-polish-review
           path: qa-output/
           retention-days: 7
