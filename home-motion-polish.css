@@ -12,7 +12,7 @@
 .hero-slideshow-v6 .hero-player{margin-top:8px}
 .hero-slideshow-v6:before{bottom:auto;height:430px}
 /* Keep the heart's SVG, stroke, position and layout size; animate only its path. */
-.record-sleeve .letter-head>svg{color:#c6283d;stroke:currentColor}
+.record-sleeve .letter-head>svg{color:#c6283d;stroke:currentColor;fill:currentColor}
 .record-sleeve .letter-head>svg path{transform-box:fill-box;transform-origin:center;animation:sonalza-heart-pulse 3.6s ease-in-out infinite;animation-play-state:paused}
 .record-sleeve[data-decoration-motion=running] .letter-head>svg path{animation-play-state:running}
 @keyframes sonalza-heart-pulse{0%,30%,100%{transform:scale(1)}12%{transform:scale(1.07)}20%{transform:scale(1.015)}}
