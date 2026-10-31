@@ -27,7 +27,8 @@ def check(label, condition, details=None):
 
 def seed(ctx, lang='en', region='US'):
     values = json.dumps({'sonalzaLanguageV1':lang, 'sonalzaRegionV1':region, 'sonalzaLocalePreferenceV1':'1'})
-    ctx.add_init_script(f"for (const [k,v] of Object.entries({values})) localStorage.setItem(k,v);")
+    # Do not touch about:blank storage; do not overwrite a visitor's changes on navigation.
+    ctx.add_init_script(f"if(location.origin === {json.dumps(BASE)} && !sessionStorage.getItem('__qaSeeded')) {{ for (const [k,v] of Object.entries({values})) localStorage.setItem(k,v); sessionStorage.setItem('__qaSeeded','1'); }}")
     ctx.route('**/api/geo', lambda r: r.fulfill(json={'country':region, 'currency':'MXN' if region=='MX' else 'USD', 'supported':True}))
     ctx.route('**/api/public-config', lambda r: r.fulfill(json={'stripeCheckoutEnabled':False, 'turnstileRequired':False, 'turnstileSiteKey':''}))
 
@@ -83,7 +84,6 @@ try:
         page.locator('#locale-open').click();page.keyboard.press('Escape')
         check('locale closes with Escape',not page.locator('#locale-dialog').is_visible())
         page.locator('#locale-open').click();page.locator('#language-select').select_option('en');page.locator('#locale-form button[type=submit]').click()
-        # Real repository assets: no third-party network or synthetic media.
         assets=page.locator('img[src]').evaluate_all('(els)=>els.map(x=>x.getAttribute("src"))')
         check('referenced images exist in repository',all((ROOT/a).is_file() for a in assets),assets)
         samples=['banda-mujer-de-las-que-quedan.mp3','corrido-los-anos-que-no-vieron.mp3','cumbia-la-limpiadera.mp3','huapango-pasito-de-amor-20-50.mp3']
@@ -111,7 +111,6 @@ try:
         check('mobile menu closes after navigation',not page.locator('#mobile-nav').is_visible())
         check('mobile fixed CTA visible',page.locator('.mobile-buy').is_visible())
         ctx.close()
-        # Explicit link language still works in storage-restricted contexts.
         ctx=browser.new_context(viewport={'width':390,'height':844})
         ctx.add_init_script("Object.defineProperty(window,'localStorage',{get(){throw new DOMException('Blocked','SecurityError')}});Object.defineProperty(window,'sessionStorage',{get(){throw new DOMException('Blocked','SecurityError')}});")
         ctx.route('**/api/geo',lambda r:r.fulfill(json={'country':None,'supported':False}))
