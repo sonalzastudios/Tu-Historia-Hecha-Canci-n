@@ -1,9 +1,9 @@
 name: SONALZA homepage QA
 on:
-  push:
-    branches: [feature/conversion-redesign-oct-2026]
   pull_request:
     branches: [main]
+    paths: ['index.html', 'home-*.js', 'home-*.css', 'home-*.json', 'tests/**', '.github/workflows/home-v3-qa.yml']
+  workflow_dispatch:
 permissions:
   contents: read
 concurrency:
@@ -12,7 +12,7 @@ concurrency:
 jobs:
   browser-checks:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 12
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -22,12 +22,14 @@ jobs:
         run: |
           python -m pip install playwright==1.56.0
           python -m playwright install --with-deps chromium
-      - name: Test carousel, languages, real photos, audio and guided form
-        run: python tests/home_v5_qa.py
-      - name: Save screenshots and actual result report
+      - name: Test JSON, actual rotation, locale, pictures, audio and form continuity
+        run: python tests/home_v6_qa.py
+      - name: Save rendered screenshots, motion recording and actual test report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: sonalza-home-v5-review
-          path: qa-output/
+          name: sonalza-home-v6-review
+          path: |
+            qa-output/
+            home-v6.config.json
           retention-days: 7

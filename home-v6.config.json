@@ -1,0 +1,40 @@
+{
+  "version": 6,
+  "motion": {"ideasIntervalMs": 4800, "heroIntervalMs": 5800, "vinylPeriodSeconds": 18, "respectReducedMotion": true},
+  "typography": {"desktopMenuPx": 16, "mobileMenuPx": 17, "controlPx": 14},
+  "copy": {
+    "ideasIntro": {"es": "Estas ideas son solo el comienzo. Las posibilidades son infinitas: cuéntanos lo que imaginas y creemos una canción a tu medida.", "en": "These ideas are just the beginning. The possibilities are endless: tell us what you imagine and let’s create a song that is uniquely yours."},
+    "customIdea": {"es": "¿Tienes otra idea? Cuéntanosla", "en": "Have another idea? Tell us about it"},
+    "photoNotice": {"es": "Fotografías de inspiración. No representan clientes ni testimonios de SONALZA.", "en": "Inspiration photography. These images do not depict SONALZA customers or testimonials."}
+  },
+  "ideas": [
+    {"id":"mama","group":"family","es":"Para mamá","en":"For mom","descEs":"Por todo lo que hizo. Y lo que sigue haciendo.","descEn":"For everything she did. And everything she still does.","tagEs":"Banda · balada","tagEn":"Banda · ballad","img":16880087,"enImg":16880087,"query":{"relation":"Mamá","occasion":"Gracias","genre":"Banda"},"pos":"50% 0%"},
+    {"id":"corrido","group":"styles","es":"Tu propio corrido","en":"Your own corrido","descEs":"Tu nombre, tu camino y lo que te hace ser tú.","descEn":"Your name, your journey, and what makes you you.","tagEs":"Corrido personalizado","tagEn":"Personalized corrido","img":26536269,"query":{"relation":"Para mí","genre":"Corrido"},"pos":"50% 32%"},
+    {"id":"pareja","group":"love","es":"Para mi persona","en":"For my person","descEs":"Desde aquel primer encuentro hasta hoy.","descEn":"From that first hello to everything since.","tagEs":"Amor · aniversario","tagEn":"Love · anniversary","img":6533186,"enImg":4651050,"query":{"relation":"Pareja","occasion":"Te amo","genre":"Balada"},"pos":"50% 45%"},
+    {"id":"hija","group":"family","es":"Para mi princesa","en":"For my little princess","descEs":"Su nombre dentro de una canción de cuento.","descEn":"Her name in her very own fairytale song.","tagEs":"Para mi hija","tagEn":"For my daughter","img":5789949,"enImg":7139797,"query":{"relation":"Hija","occasion":"Porque sí","genre":"Balada"},"pos":"50% 34%"},
+    {"id":"papa","group":"family","es":"Para papá","en":"For dad","descEs":"Ese hombre que te enseñó a no rendirte.","descEn":"For the man who taught you to keep going.","tagEs":"Norteño · corrido","tagEn":"Norteño · corrido","img":12775208,"query":{"relation":"Papá","occasion":"Gracias","genre":"Norteño"},"pos":"50% 30%"},
+    {"id":"cumbia","group":"styles","es":"Una cumbia con su nombre","en":"A cumbia with their name","descEs":"Para poner a bailar a toda la familia.","descEn":"For getting the whole family on their feet.","tagEs":"Fiesta · cumbia","tagEn":"Party · cumbia","img":14100621,"query":{"genre":"Cumbia","occasion":"Cumpleaños"},"pos":"50% 35%"},
+    {"id":"familia","group":"family","es":"Nuestra familia","en":"Our family","descEs":"Las raíces, los abrazos y todo lo compartido.","descEn":"The roots, the hugs, and everything you share.","tagEs":"Unión · recuerdos","tagEn":"Togetherness · memories","img":8573556,"query":{"relation":"Otro","occasion":"Gracias"},"pos":"50% 38%"},
+    {"id":"cumple","group":"celebrate","es":"Feliz cumple, a tu manera","en":"A birthday, their way","descEs":"Un regalo que no tiene nadie más.","descEn":"A gift nobody else has.","tagEs":"Cumpleaños","tagEn":"Birthday","img":10165858,"query":{"occasion":"Cumpleaños","genre":"Cumbia"},"pos":"50% 40%"},
+    {"id":"quince","group":"celebrate","es":"Sus quince, su canción","en":"Her quince, her song","descEs":"Una dedicatoria para un nuevo capítulo.","descEn":"A dedication for a beautiful new chapter.","tagEs":"Quinceañera","tagEn":"Quinceañera","img":5818398,"enImg":5818398,"query":{"relation":"Hija","occasion":"Cumpleaños","genre":"Balada"},"pos":"50% 35%"},
+    {"id":"boda","group":"love","es":"El sí más importante","en":"The yes that changed it all","descEs":"Sus votos, su historia, una promesa hecha música.","descEn":"Your vows, your story, a promise set to music.","tagEs":"Boda · aniversario","tagEn":"Wedding · anniversary","img":33510700,"query":{"relation":"Pareja","occasion":"Boda","genre":"Balada"},"pos":"50% 35%"},
+    {"id":"abuelos","group":"family","es":"Para los abuelos","en":"For the grandparents","descEs":"Gracias por las historias que siguen con nosotros.","descEn":"For the stories that stay with us.","tagEs":"Raíces · homenaje","tagEn":"Roots · tribute","img":5764903,"query":{"relation":"Abuelo/a","occasion":"Gracias","genre":"Mariachi"},"pos":"50% 40%"},
+    {"id":"amistad","group":"celebrate","es":"Para mi gente","en":"For my favorite people","descEs":"Las risas, las locuras y el estar siempre ahí.","descEn":"The laughs, the adventures, and showing up.","tagEs":"Amistad · recuerdos","tagEn":"Friendship · memories","img":5738213,"enImg":6567249,"query":{"relation":"Amigo/a","occasion":"Amistad","genre":"Pop Latino"},"pos":"50% 38%"},
+    {"id":"hiphop","group":"styles","es":"Tu historia en hip-hop","en":"Your story in hip-hop","descEs":"Tus palabras. Tu actitud. Un estilo para consultar.","descEn":"Your words. Your attitude. Ask us about this style.","tagEs":"Rap · solicitud especial","tagEn":"Rap · special request","img":12847349,"query":{"genre":"Sorpréndeme","relation":"Para mí"},"pos":"50% 32%"},
+    {"id":"mariachi","group":"styles","es":"Una serenata inolvidable","en":"An unforgettable serenade","descEs":"Un te quiero con toda la fuerza del mariachi.","descEn":"An I love you with the soul of mariachi.","tagEs":"Mariachi · dedicatoria","tagEn":"Mariachi · dedication","img":8639397,"query":{"occasion":"Te amo","genre":"Mariachi"},"pos":"50% 30%"},
+    {"id":"logro","group":"celebrate","es":"Mira hasta dónde llegaste","en":"Look how far you have come","descEs":"Su esfuerzo merece algo más que felicidades.","descEn":"Their hard work deserves more than congratulations.","tagEs":"Graduación · logros","tagEn":"Graduation · milestones","img":19566177,"enImg":17192509,"query":{"occasion":"Logro especial","genre":"Pop Latino"},"pos":"50% 28%"}
+  ],
+  "hero": [
+    {"idea":"familia","label":{"es":"Nuestra familia","en":"Our family"},"line":{"es":"Sus raíces. Su canción.","en":"Their roots. Their song."},"position":"50% 38%"},
+    {"idea":"mama","label":{"es":"Para mamá","en":"For mom"},"line":{"es":"Todo lo que nunca le dijiste.","en":"Everything you never told her."},"position":"50% 10%"},
+    {"idea":"pareja","label":{"es":"Para mi persona","en":"For my person"},"line":{"es":"Una historia que es solo suya.","en":"A story that is only yours."},"position":"50% 40%"},
+    {"idea":"quince","label":{"es":"Para sus quince","en":"For her quince"},"line":{"es":"Un nuevo capítulo con su nombre.","en":"A new chapter with her name."},"position":"50% 35%"},
+    {"idea":"corrido","label":{"es":"Tu propio corrido","en":"Your own corrido"},"line":{"es":"Tu camino merece escucharse.","en":"Your journey deserves a song."},"position":"50% 32%"},
+    {"idea":"abuelos","label":{"es":"Para los abuelos","en":"For the grandparents"},"line":{"es":"Las historias que siguen con nosotros.","en":"The stories that stay with us."},"position":"50% 40%"}
+  ],
+  "photoSources": {
+    "mom":"https://www.pexels.com/photo/16880087/",
+    "quince":"https://www.pexels.com/photo/woman-in-pink-dress-wearing-a-tiara-5818398/",
+    "license":"https://www.pexels.com/license/"
+  }
+}
