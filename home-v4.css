@@ -1,2 +1,4 @@
 @import url('home-v4-foundation.css');
 @import url('home-v5.css');
+/* Keep the mother's face inside the image at narrow aspect ratios. */
+html:lang(es) [data-idea="mama"] .idea-photo img{object-position:50% 0%}
