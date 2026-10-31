@@ -4,7 +4,7 @@ on:
     branches: [feature/conversion-redesign-oct-2026]
   pull_request:
     branches: [main]
-    paths: [index.html, home-v3.css, home-v4.css, home-v3.js, tests/home_v3_qa.py, .github/workflows/home-v3-qa.yml]
+    paths: [index.html, home-v3.css, home-v4.css, home-v3.js, tests/home_v3_qa.py, tests/home_v4_visual.py, .github/workflows/home-v3-qa.yml]
 permissions:
   contents: read
 concurrency:
@@ -25,6 +25,8 @@ jobs:
           python -m playwright install --with-deps chromium
       - name: Test languages, layouts, navigation, photographs and audio
         run: python tests/home_v3_qa.py
+      - name: Verify decoded photos and capture complete design
+        run: python tests/home_v4_visual.py
       - name: Save review screenshots and report
         if: always()
         uses: actions/upload-artifact@v4
