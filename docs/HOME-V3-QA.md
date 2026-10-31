@@ -1,33 +1,27 @@
-# SONALZA Home V3 - safe preview and QA
+# SONALZA Home V3: review and release notes
 
-## Scope
-- Replaces the homepage only: index.html, home-v3.css, home-v3.js.
-- Existing checkout, create.html, app.js, payments, APIs, legal pages and audio files are not changed.
-- Restores shared styles.css to the production version so marketing changes cannot affect checkout styles.
-- Main and backup/pre-conversion-redesign-2026-10-30 are not moved.
+## Scope and rollback
+The homepage is rebuilt in index.html, home-v3.css and home-v3.js. The shared styles.css is restored to its production version. Checkout, prices, APIs, payments, existing customer records and production main are not modified. Original backup: backup/pre-conversion-redesign-2026-10-30 at 4dcac71f2fea31fa37bf29673cb04f114a075e68.
 
-## Language fix
-The previous homepage changed Spanish sentences without adding exact-string translations to app.js TEXT_EN. V3 does not load the legacy homepage translator. It renders 128 explicitly paired ES/EN content nodes plus bilingual runtime messages, stories, metadata and accessible labels.
-- Region/currency and website language are independent.
-- US: USD 49 / 249 / 499; MX: MXN 599 / 1999 / 4999.
-- Uses the existing storage keys sonalzaRegionV1, sonalzaLanguageV1, sonalzaLocalePreferenceV1, sonalzaDetectedRegionV1 and sonalzaRegionOverrideV1 to pass preferences into the current order flow.
-- Song titles remain in their original language, marked lang=es and translate=no. The language menu uses native language names.
+## Language correction
+The prior homepage introduced Spanish phrases without updating the exact-string English dictionary in app.js. V3 uses explicit ES/EN content pairs and bilingual dynamic messages instead of that translator on the homepage. Region and language are independent. Song titles retain their original language, with lang=es and translate=no. Checkout preferences use the existing storage keys.
 
-## Design
-Navy, warm ivory and orange; original SONALZA logo; typographic record-sleeve hero; single sample player; interactive dedication examples; clear base vs life-story products; localized FAQs; fixed mobile purchase action. Delivery is digital, not a physical record. Illustration examples are explicitly not customer reviews. No fabricated reviews, ratings, scarcity or guaranteed delivery dates.
+## Commercial design
+Navy, warm ivory and orange; existing SONALZA logo; custom typographic record-sleeve illustration; four actual catalog samples; interactive dedication prompts; clear Custom Song vs Life Story Corrido offers; FAQs; mobile purchase button. Delivery remains digital, not a physical record. No invented reviews, ratings, scarcity or delivery deadlines.
 
-## Local validation completed
-Chromium offline DOM harness: 157/157 assertions passed. Widths 1440, 1024, 768, 390 and 320; US/EN, US/ES, MX/ES and MX/EN at each width. Checked explicit translation pairs, html language, currency, no horizontal overflow, product-preselected links, UTM retention, locale switching, checkout storage keys, keyboard tabs, modal Escape, mobile menu and graceful blocked-storage behavior. Player controls and localized errors were tested with simulated media events. The exact tested file bytes match GitHub blobs.
+## Verification status
+The executable browser checks are in tests/home_v3_qa.py. Results are reported by the SONALZA homepage QA GitHub Actions job, not inferred from commits. This document does not claim that an unrun test has passed. The job tests local repository files in Chromium and saves screenshots plus a JSON report. Geolocation responses are test fixtures. No order is submitted and no payment is made.
 
-## Limits of validation
-The test browser had no external site access. Geo responses and audio playback were fixtures, not live Vercel/MP3 tests. Existing media paths were grounded in repository content. Full live payment, native mobile audio, actual API latency and checkout language on every subsequent page remain release checks. This report is not proof of sales lift or an end-to-end payment test.
+## Coverage
+- Explicit ES/EN copy, dynamic messages, accessible labels and document language.
+- US/EN, US/ES, MX/ES, MX/EN at five viewport widths.
+- Regional price consistency, locale persistence and checkout handoff.
+- Attribution link forwarding, mobile menu, keyboard tabs and modal behavior.
+- Actual catalog file presence and local sample playback where supported by Chromium.
+- Console errors and visible overflow.
 
-## Analytics
-UTM parameters and fbclid are carried to same-origin links. Page emits sonalza:home-event CustomEvents only, with no personal story/customer data. This is not an installed Meta Pixel, a Purchase event, or a verified conversion analytics pipeline.
+## Measurement limits
+The homepage forwards UTMs and fbclid and emits local CustomEvents. This is NOT an installed analytics pipeline, Meta Pixel or verified Purchase tracking. No sales uplift is promised.
 
-## Before merge
-1. Open latest Vercel Preview for this branch (not an old deployment-specific URL).
-2. Check English and Spanish, US and MX, then follow a song order link.
-3. Play real catalog audio on mobile and desktop; check URLs and form preselection.
-4. Confirm actual delivery expectations and public feedback permissions before adding claims.
-5. Approve visual design before merging. Original remains available on the backup branch.
+## Before production
+Inspect the latest Vercel Preview, compare desktop/mobile ES and EN, play the real samples on a phone and verify the existing order/payment flow with authorized test settings. Confirm current delivery policy and feedback publication consent before adding claims. Keep this PR as a draft until the owner approves the design. Do not use an old deployment-specific preview URL.
