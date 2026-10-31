@@ -89,28 +89,37 @@
       if('IntersectionObserver' in window){const observer=new IntersectionObserver(entries=>{inView=entries[0].isIntersecting;sync();},{threshold:.12});observer.observe(hoverTarget);}else{inView=true;sync();}
       const result={sync,pause,state:reason};controllers.push(result);return result;
     }
+    let continuousMotion=null;
     function visible(){return cards.filter(c=>!c.hidden);}
     function position(){const a=visible(),left=track.getBoundingClientRect().left;let nearest=0,distance=Infinity;a.forEach((c,i)=>{const d=Math.abs(c.getBoundingClientRect().left-left);if(d<distance){nearest=i;distance=d;}});return nearest;}
     function countRender(){
+      if(continuousMotion){continuousMotion.renderCount();return;}
       const a=visible(),rect=track.getBoundingClientRect();const fullyVisible=a.filter(c=>{const r=c.getBoundingClientRect();return r.left>=rect.left-4&&r.right<=rect.right+4;});
       const current=position()+1,last=Math.min(a.length,current+Math.max(fullyVisible.length,1)-1);
       count.textContent=expanded?`${a.length} ${t('ideas para inspirarte','ideas for inspiration')}`:`${String(current).padStart(2,'0')}\u2013${String(last).padStart(2,'0')} / ${a.length}`;
       prev.disabled=next.disabled=expanded||track.scrollWidth<=track.clientWidth+4;count.setAttribute('aria-live',gallery.dataset.motionState==='running'?'off':'polite');
     }
     function move(delta,automatic=false){
+      if(continuousMotion){continuousMotion.move(delta);return;}
       const a=visible();if(a.length<2||expanded)return;const max=track.scrollWidth-track.clientWidth,current=position();let target;
       if(delta>0&&track.scrollLeft>=max-4)target=0;else if(delta<0&&track.scrollLeft<=4)target=max;else{const i=Math.max(0,Math.min(a.length-1,current+delta));target=track.scrollLeft+a[i].getBoundingClientRect().left-track.getBoundingClientRect().left;}
       track.scrollTo({left:Math.min(max,Math.max(0,target)),behavior:reduced.matches?'instant':'smooth'});if(!automatic)ideaMotion.pause();setTimeout(countRender,550);
     }
-    const ideaMotion=makeController({region:gallery,hoverTarget:track,button:pause,status:ideaStatus,interval:config.motion.ideasIntervalMs,advance:()=>move(1,true),enabled:()=>!expanded&&track.scrollWidth>track.clientWidth+4});
-    filters.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{const filter=b.dataset.filter;ideaMotion.pause();filters.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));cards.forEach(c=>c.hidden=filter!=='all'&&c.dataset.group!==filter);track.scrollTo({left:0,behavior:'instant'});countRender();ideaMotion.sync();}));
+    if(typeof window.createSonalzaContinuousCarousel==='function'){
+      continuousMotion=window.createSonalzaContinuousCarousel({gallery,track,cards,prev,next,count,t,isExpanded:()=>expanded,speed:config.motion.ideasPixelsPerSecond});
+      pause.hidden=true;ideaStatus.hidden=true;controllers.push(continuousMotion);
+    }
+    const ideaMotion=continuousMotion||makeController({region:gallery,hoverTarget:track,button:pause,status:ideaStatus,interval:config.motion.ideasIntervalMs,advance:()=>move(1,true),enabled:()=>!expanded&&track.scrollWidth>track.clientWidth+4});
+    filters.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{const filter=b.dataset.filter;if(!continuousMotion)ideaMotion.pause();filters.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));cards.forEach(c=>c.hidden=filter!=='all'&&c.dataset.group!==filter);track.scrollTo({left:0,behavior:'instant'});if(continuousMotion)continuousMotion.reset();countRender();ideaMotion.sync();}));
     prev.addEventListener('click',()=>move(-1));next.addEventListener('click',()=>move(1));
-    all.addEventListener('click',()=>{ideaMotion.pause();expanded=!expanded;gallery.classList.toggle('expanded',expanded);all.setAttribute('aria-expanded',String(expanded));track.scrollTo({left:0,behavior:'instant'});localized();ideaMotion.sync();});
-    // Vertical scrolling is not a request to disable automatic rotation.
+    all.addEventListener('click',()=>{if(!continuousMotion)ideaMotion.pause();expanded=!expanded;gallery.classList.toggle('expanded',expanded);all.setAttribute('aria-expanded',String(expanded));track.scrollTo({left:0,behavior:'instant'});if(continuousMotion)continuousMotion.reset();localized();ideaMotion.sync();});
+    // Legacy interactions are only retained if the continuous enhancement fails to load.
+    if(!continuousMotion){
     track.addEventListener('wheel',e=>{if(Math.abs(e.deltaX)>Math.abs(e.deltaY))ideaMotion.pause();},{passive:true});
     let pointerStart=null;
     track.addEventListener('pointerdown',e=>{pointerStart={x:e.clientX,y:e.clientY};},{passive:true});
     track.addEventListener('pointerup',e=>{if(pointerStart&&Math.abs(e.clientX-pointerStart.x)>20&&Math.abs(e.clientX-pointerStart.x)>Math.abs(e.clientY-pointerStart.y))ideaMotion.pause();pointerStart=null;},{passive:true});
+    }
     track.addEventListener('scroll',countRender,{passive:true});track.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key==='ArrowLeft'){e.preventDefault();move(e.key==='ArrowRight'?1:-1);}});
     // Hero photos rotate separately. The catalog sample remains accurately labeled.
     const stage=document.querySelector('.hero-stage');stage.classList.add('hero-slideshow-v6');stage.setAttribute('role','region');stage.setAttribute('aria-roledescription','carousel');
