@@ -75,3 +75,13 @@ html:lang(es) [data-idea="mama"] .idea-photo img{object-position:50% 0%}
 #verifiedReviews[hidden],#sonalzaVerifiedHeading[hidden]{display:none!important}
 @media(max-width:900px){.sonalza-trust-pillars{grid-template-columns:1fr 1fr}.sonalza-trust-pillar:last-child{grid-column:1/-1}}
 @media(max-width:620px){.sonalza-trust-pillars{grid-template-columns:1fr;gap:12px;margin:24px 0 13px}.sonalza-trust-pillar:last-child{grid-column:auto}.sonalza-trust-pillar{padding:22px}.sonalza-trust-pillar h3{font-size:18px}}
+
+
+/* Honest social proof: sample count or verified delivered-order count only. */
+.sonalza-impact{display:flex;align-items:center;justify-content:center;gap:24px;max-width:660px;margin:4px auto 34px;padding:23px 30px;background:#f2eadf;border:1px solid #dfcfbd;border-radius:18px}
+.sonalza-impact-number{font-family:Georgia,serif;font-size:clamp(52px,6vw,75px);font-variant-numeric:tabular-nums;line-height:1;color:#9a5034;letter-spacing:-.065em;min-width:75px;text-align:right}
+.sonalza-impact-copy{min-width:0;max-width:430px}
+.sonalza-impact-copy strong{display:block;font-size:16px;font-weight:750;letter-spacing:-.025em;color:#1d3942}
+.sonalza-impact-copy p{color:#637079;font-size:11px;line-height:1.65;margin:5px 0}
+.sonalza-impact-copy a{color:#935138;text-decoration:underline;text-underline-offset:4px;font-size:11px;font-weight:700}
+@media(max-width:600px){.sonalza-impact{padding:21px 19px;gap:16px;margin:6px auto 24px;justify-content:flex-start}.sonalza-impact-number{font-size:51px;min-width:55px}.sonalza-impact-copy strong{font-size:14px}}
