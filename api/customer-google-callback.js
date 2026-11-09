@@ -1,0 +1,11 @@
+const crypto=require('crypto');const auth=require('./_customer-access');
+const closeCookie='sonalza_oauth=; Path=/api/customer-google-callback; Secure; HttpOnly; SameSite=Lax; Max-Age=0';
+function equal(a,b){const x=Buffer.from(String(a||''));const y=Buffer.from(String(b||''));return x.length===y.length&&crypto.timingSafeEqual(x,y);}
+module.exports=async(req,res)=>{auth.noStore(res);if(req.method!=='GET')return res.status(405).end();res.setHeader('Set-Cookie',closeCookie);
+const cookie=auth.verify(auth.cookie(req,'sonalza_oauth'),'oauth');const code=String(req.query.code||'');const state=String(req.query.state||'');const client=String(process.env.SONALZA_GOOGLE_CLIENT_ID||'');const secret=String(process.env.SONALZA_GOOGLE_CLIENT_SECRET||'');const redirect=String(process.env.SONALZA_GOOGLE_REDIRECT_URI||'');
+if(!cookie||!state||!equal(cookie.state,state)||!code||code.length>3000||!client||!secret||!redirect)return res.redirect(302,'/mi-sonalza.html?auth=failed');
+try{const tok=await fetch('https://oauth2.googleapis.com/token',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({code,client_id:client,client_secret:secret,redirect_uri:redirect,grant_type:'authorization_code'})});if(!tok.ok)throw Error('exchange '+tok.status);const body=await tok.json();if(!body.id_token)throw Error('missing identity token');
+const ver=await fetch('https://oauth2.googleapis.com/tokeninfo?id_token='+encodeURIComponent(body.id_token),{headers:{Accept:'application/json'}});if(!ver.ok)throw Error('verification failed');const user=await ver.json();
+if(user.aud!==client||!['accounts.google.com','https://accounts.google.com'].includes(user.iss)||user.email_verified!=='true'||!user.email||Number(user.exp)*1000<Date.now())throw Error('identity not trusted');
+const session=auth.sign({purpose:'session',email:String(user.email).toLowerCase(),name:String(user.name||'').slice(0,80),sub:String(user.sub||'')},43200);
+res.setHeader('Set-Cookie',[closeCookie,'sonalza_customer_session='+encodeURIComponent(session)+'; Path=/; Secure; HttpOnly; SameSite=Lax; Max-Age=43200']);return res.redirect(302,'/mi-sonalza.html?auth=ok');}catch(e){console.error('google auth',e.message);return res.redirect(302,'/mi-sonalza.html?auth=failed');}};
