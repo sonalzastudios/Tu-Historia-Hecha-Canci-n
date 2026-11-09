@@ -1,10 +1,10 @@
 module.exports = async function handler(req,res){
   const action=typeof req.query?.action==='string'?req.query.action:'';
   if(action){
-    const handlers={access:'access',orders:'orders','google-start':'google-start','google-callback':'google-callback',signout:'signout',config:'config',review:'review','reviews-public':'reviews-public','admin-review':'admin-review','admin-reviews':'admin-reviews',gift:'gift','admin-gift':'admin-gift'};
+    const handlers={"access":()=>require('../lib/sonalza-customer/access'),"orders":()=>require('../lib/sonalza-customer/orders'),"google-start":()=>require('../lib/sonalza-customer/google-start'),"google-callback":()=>require('../lib/sonalza-customer/google-callback'),"signout":()=>require('../lib/sonalza-customer/signout'),"config":()=>require('../lib/sonalza-customer/config'),"review":()=>require('../lib/sonalza-customer/review'),"reviews-public":()=>require('../lib/sonalza-customer/reviews-public'),"admin-review":()=>require('../lib/sonalza-customer/admin-review'),"admin-reviews":()=>require('../lib/sonalza-customer/admin-reviews'),"gift":()=>require('../lib/sonalza-customer/gift'),"admin-gift":()=>require('../lib/sonalza-customer/admin-gift')};
     if(!Object.prototype.hasOwnProperty.call(handlers,action))return res.status(404).json({ok:false,error:'Unknown customer action'});
     res.setHeader('X-Content-Type-Options','nosniff');
-    return require('../lib/sonalza-customer/'+handlers[action])(req,res);
+    return handlers[action]()(req,res);
   }
   const raw = String(req.headers['x-vercel-ip-country'] || req.headers['x-country'] || '').toUpperCase();
   const country = raw === 'MX' ? 'MX' : raw === 'US' ? 'US' : null;
