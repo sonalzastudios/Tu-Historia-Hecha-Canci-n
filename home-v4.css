@@ -2,3 +2,34 @@
 @import url('home-v5.css');
 /* Keep the mother's face inside the image at narrow aspect ratios. */
 html:lang(es) [data-idea="mama"] .idea-photo img{object-position:50% 0%}
+
+
+/* SONALZA: editorial story-to-song explainer; scoped to homepage only. */
+.sonalza-story-proof{padding:88px 0 92px;background:#fffaf3;color:var(--ink)}
+.sonalza-story-proof-heading{max-width:820px;margin:0 auto 38px;text-align:center}
+.sonalza-story-proof-heading .eyebrow{margin-bottom:14px;color:#99593b}
+.sonalza-story-proof-heading h2{font-size:clamp(30px,3.6vw,46px);letter-spacing:-.045em;line-height:1.13;font-weight:650}
+.sonalza-story-proof-heading h2 em{font-family:var(--serif);font-weight:400;color:#925f40}
+.sonalza-story-proof-heading>p:last-child{max-width:670px;margin:18px auto 0;color:var(--muted);font-size:14px;line-height:1.85}
+.sonalza-proof-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;align-items:stretch}
+.sonalza-proof-card{display:flex;flex-direction:column;gap:18px;min-width:0;min-height:292px;padding:30px 27px;border:1px solid #e4d7c6;border-radius:16px;background:#fffdf9;box-shadow:0 10px 26px #62402808}
+.sonalza-proof-memory{background:#f5ede2}
+.sonalza-proof-creative{background:#fffdf9}
+.sonalza-proof-delivery{background:#edf1ef}
+.sonalza-proof-kicker{display:flex;align-items:center;gap:11px;color:#946549;letter-spacing:.1em;font-size:10px;font-weight:750}
+.sonalza-proof-count{display:grid;place-items:center;width:31px;height:31px;border-radius:50%;background:#ffffffaf;border:1px solid #decebd;color:#9b5738;letter-spacing:0;font-size:11px;flex:none}
+.sonalza-proof-memory blockquote{margin:8px 0 0;font-family:var(--serif);font-size:clamp(19px,1.7vw,25px);line-height:1.5;color:#3b302a}
+.sonalza-proof-memory small{margin-top:auto;font-size:10px;color:#786b5c}
+.sonalza-proof-card h3{font-size:22px;line-height:1.24;letter-spacing:-.03em;font-weight:650;margin:8px 0 0}
+.sonalza-proof-card p{font-size:13px;line-height:1.85;color:#5c686e}
+.sonalza-proof-tag{margin-top:auto;color:#956046;font-size:12px;font-weight:650}
+.sonalza-proof-tag>span[aria-hidden]{font-size:18px}
+.sonalza-proof-link{display:inline-flex;align-items:center;justify-content:space-between;gap:12px;align-self:flex-start;max-width:100%;margin-top:auto;padding:10px 0;border-bottom:1px solid #a77862;font-size:12px;font-weight:700;color:#8d3e28}
+.sonalza-proof-link:hover{color:var(--accent)}
+.sonalza-proof-note{text-align:center;color:var(--muted);font-size:12px;line-height:1.8;margin:24px auto 0;max-width:780px}
+.sonalza-proof-note a{font-weight:700;text-decoration:underline;text-underline-offset:4px;color:var(--accent)}
+.sonalza-process-action{display:flex;flex-direction:column;align-items:center;gap:17px;margin:28px auto 0;text-align:center}
+.sonalza-process-action p{max-width:600px;font-size:12px;color:var(--muted);line-height:1.7}
+.sonalza-process-action .button{width:auto;min-width:220px}
+@media(max-width:900px){.sonalza-proof-grid{grid-template-columns:1fr 1fr}.sonalza-proof-card:last-child{grid-column:1/-1;min-height:unset}.sonalza-story-proof{padding:72px 0}.sonalza-proof-card{min-height:260px}}
+@media(max-width:620px){.sonalza-story-proof{padding:58px 0}.sonalza-story-proof-heading{text-align:left;margin-bottom:28px}.sonalza-story-proof-heading>p:last-child{font-size:13px}.sonalza-proof-grid{grid-template-columns:1fr;gap:12px}.sonalza-proof-card,.sonalza-proof-card:last-child{grid-column:auto;min-height:unset;padding:24px 21px;gap:14px}.sonalza-proof-memory blockquote{font-size:21px}.sonalza-story-proof-heading h2{font-size:34px}.sonalza-proof-note{text-align:left}.sonalza-process-action .button{width:100%}}
