@@ -1,0 +1,9 @@
+const crypto=require('crypto');
+function secret(){return process.env.ORDER_TOKEN_SECRET||'';}
+function enc(x){return Buffer.from(JSON.stringify(x)).toString('base64url');}
+function sign(payload,ttl=172800){if(!secret()||secret().length<20)throw Error('Customer access unavailable'); const data=enc({...payload,v:1,exp:Math.floor(Date.now()/1000)+ttl}); const sig=crypto.createHmac('sha256',secret()).update('sonalza.customer.'+data).digest('base64url'); return data+'.'+sig;}
+function verify(token,purpose){try{if(!secret()||typeof token!=='string'||token.length>4000)return null; const parts=token.split('.');if(parts.length!==2)return null;const [body,sig]=parts;const expected=crypto.createHmac('sha256',secret()).update('sonalza.customer.'+body).digest();const actual=Buffer.from(sig,'base64url');if(expected.length!==actual.length||!crypto.timingSafeEqual(expected,actual))return null;const p=JSON.parse(Buffer.from(body,'base64url').toString('utf8'));if(p.v!==1||p.purpose!==purpose||!Number.isInteger(p.exp)||p.exp<Math.floor(Date.now()/1000)||p.exp>Math.floor(Date.now()/1000)+366*86400)return null;return p;}catch(_){return null;}}
+function cookie(req,name){const raw=String(req.headers.cookie||'');const found=raw.split(';').map(x=>x.trim()).find(x=>x.startsWith(name+'='));return found?decodeURIComponent(found.slice(name.length+1)):'';}
+function session(req){return verify(cookie(req,'sonalza_customer_session'),'session');}
+function noStore(res){res.setHeader('Cache-Control','no-store');res.setHeader('Referrer-Policy','no-referrer');}
+module.exports={sign,verify,cookie,session,noStore};
