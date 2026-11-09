@@ -3,7 +3,7 @@ const panel=document.getElementById('verifiedReviews');if(!panel)return;
 const locale=()=>{const q=new URLSearchParams(location.search).get('lang');return q==='en'||(q!=='es'&&document.documentElement.lang==='en')};
 const t=(es,en)=>locale()?en:es;
 function node(tag,cls,value){const e=document.createElement(tag);if(cls)e.className=cls;if(value!==undefined)e.textContent=value;return e;}
-function placeholder(){panel.replaceChildren(node('p','sonalza-no-reviews',t('Aquí aparecerán comentarios auténticos de clientes SONALZA, una vez comprobados y autorizados para publicarse.','Authentic SONALZA customer reviews will appear here after verification and consent.')));}
+function placeholder(){panel.hidden=true;panel.replaceChildren();const heading=document.getElementById('sonalzaVerifiedHeading');if(heading)heading.hidden=true;}
 function cardFor(review){const rating=Number(review.rating);if(!Number.isInteger(rating)||rating<1||rating>5||String(review.message||'').trim().length<10)return null;
 const card=node('article','sonalza-review-card');card.setAttribute('aria-label',t('Opinión de cliente','Customer review'));
 const head=node('div','sonalza-review-head');
@@ -17,7 +17,7 @@ return card;
 fetch('/api/geo?action=reviews-public',{headers:{Accept:'application/json'}}).then(r=>r.ok?r.json():Promise.reject(Error('Unavailable'))).then(d=>{
 if(!Array.isArray(d.reviews)||!d.reviews.length){placeholder();return;}
 const cards=d.reviews.slice(0,8).map(cardFor).filter(Boolean);if(!cards.length){placeholder();return;}
-panel.replaceChildren();panel.classList.add('sonalza-reviews-ready');
+panel.replaceChildren();panel.hidden=false;const heading=document.getElementById('sonalzaVerifiedHeading');if(heading)heading.hidden=false;panel.classList.add('sonalza-reviews-ready');
 const track=node('div','sonalza-reviews-track');track.id='sonalzaReviewsTrack';track.tabIndex=0;track.setAttribute('aria-label',t('Comentarios de clientes verificados','Verified customer reviews'));
 for(const card of cards)track.append(card);panel.append(track);
 if(cards.length>2){const controls=node('div','sonalza-reviews-controls');const prev=node('button','sonalza-reviews-arrow','←'),next=node('button','sonalza-reviews-arrow','→');prev.type=next.type='button';prev.setAttribute('aria-label',t('Comentarios anteriores','Previous reviews'));next.setAttribute('aria-label',t('Más comentarios','Next reviews'));prev.addEventListener('click',()=>track.scrollBy({left:-Math.max(track.clientWidth*.72,280),behavior:'smooth'}));next.addEventListener('click',()=>track.scrollBy({left:Math.max(track.clientWidth*.72,280),behavior:'smooth'}));controls.append(prev,next);panel.append(controls);}
