@@ -2,6 +2,20 @@
 const panel=document.getElementById('verifiedReviews');if(!panel)return;
 const locale=()=>{const q=new URLSearchParams(location.search).get('lang');return q==='en'||(q!=='es'&&document.documentElement.lang==='en')};
 const t=(es,en)=>locale()?en:es;
+const impactNumber=document.getElementById('sonalzaImpactNumber');
+if(impactNumber){
+  const examples=new Set(Array.from(document.querySelectorAll('[data-play]')).map(el=>el.getAttribute('data-play')).filter(Boolean)).size;
+  impactNumber.textContent=String(examples);
+  fetch('/api/geo?action=impact',{headers:{Accept:'application/json'}}).then(r=>r.ok?r.json():Promise.reject(Error('No count'))).then(data=>{
+    const n=data.deliveredSongs;
+    if(data.verified!==true||data.metric!=='paid_delivered_orders'||!Number.isSafeInteger(n)||n<=0)return;
+    impactNumber.textContent=new Intl.NumberFormat(locale()?'en-US':'es-MX').format(n);
+    const title=document.getElementById('sonalzaImpactTitle'),details=document.getElementById('sonalzaImpactDetails'),link=document.getElementById('sonalzaImpactLink');
+    if(title)title.textContent=t('Pedidos musicales entregados','Music orders delivered');
+    if(details)details.textContent=t('Pedidos pagados y marcados como entregados en nuestro sistema. No incluye versiones de prueba.','Paid orders marked as delivered in our system. Does not include test versions.');
+    if(link){link.href='#escuchar';link.querySelector('span').textContent=t('Escuchar nuestras canciones','Listen to our songs');}
+  }).catch(()=>{});
+}
 function node(tag,cls,value){const e=document.createElement(tag);if(cls)e.className=cls;if(value!==undefined)e.textContent=value;return e;}
 function placeholder(){panel.hidden=true;panel.replaceChildren();const heading=document.getElementById('sonalzaVerifiedHeading');if(heading)heading.hidden=true;}
 function cardFor(review){const rating=Number(review.rating);if(!Number.isInteger(rating)||rating<1||rating>5||String(review.message||'').trim().length<10)return null;
