@@ -1,0 +1,4 @@
+const db=require('./_supabase');
+module.exports=async(req,res)=>{res.setHeader('Cache-Control','public, max-age=60, s-maxage=300');if(req.method!=='GET')return res.status(405).json({ok:false});if(!db.configured())return res.status(200).json({ok:true,reviews:[]});
+try{const list=await db.select('order_events','event_type=eq.customer_review_approved&select=metadata,created_at&order=created_at.desc&limit=8');
+const reviews=(list||[]).map(e=>({name:String(e.metadata?.name||'Cliente SONALZA').slice(0,40),rating:Number(e.metadata?.rating||0),message:String(e.metadata?.message||'').slice(0,600),date:e.created_at})).filter(x=>Number.isInteger(x.rating)&&x.rating>=1&&x.rating<=5&&x.message.length>=10);return res.status(200).json({ok:true,reviews});}catch(e){console.error('public reviews',e.message);return res.status(200).json({ok:true,reviews:[]});}};
