@@ -4,8 +4,8 @@ const db = require('./_supabase');
 const orderToken = require('./_order-token');
 
 const PRICING = {
-  song: { USD: 49, MXN: 599 },
-  corrido: { USD: 249, MXN: 1999 },
+  song: { USD: 24.99, MXN: 199 },
+  corrido: { USD: 49.99, MXN: 399 },
   premium: { USD: 29, MXN: 299 },
   rush: { USD: 19, MXN: 199 },
   video: { USD: 29, MXN: 299 },
@@ -170,7 +170,7 @@ module.exports = async function handler(req, res) {
         retos: clean(draft.retos),
         logros: clean(draft.logros),
         legado: clean(draft.legado),
-        duracion: product === 'corrido' ? clean(draft.duracion, 20) : '2-3 min',
+        duracion: product === 'corrido' ? clean(draft.duracion, 20) : 'Hasta 3 min 30 s',
         customCoverPrompt: clean(draft.coverPrompt, 1500),
         customCoverMustShow: clean(draft.coverCropMustShow, 800),
         customCoverImageName: clean(draft.coverImageName, 180)
