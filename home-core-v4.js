@@ -6,7 +6,7 @@
   const PREF_KEY = 'sonalzaLocalePreferenceV1';
   const DETECTED_KEY = 'sonalzaDetectedRegionV1';
   const OVERRIDE_KEY = 'sonalzaRegionOverrideV1';
-  const PRICES = {US: {song:24.99, corrido:49.99, business:499}, MX: {song:599, corrido:1999, business:4999}};
+  const PRICES = {US: {song:24.99, corrido:49.99, business:499}, MX: {song:229, corrido:499, business:4999}};
   const TRACKS = [
     {title:'Mujer de las que quedan', file:'assets/audio/banda-mujer-de-las-que-quedan.mp3'},
     {title:'Los A\u00f1os Que No Vieron', file:'assets/audio/corrido-los-anos-que-no-vieron.mp3'},
