@@ -1,0 +1,1 @@
+module.exports=async(req,res)=>{if(req.method!=='POST')return res.status(405).json({ok:false});res.setHeader('Cache-Control','no-store');res.setHeader('Set-Cookie','sonalza_customer_session=; Path=/; Secure; HttpOnly; SameSite=Lax; Max-Age=0');return res.status(200).json({ok:true});};
