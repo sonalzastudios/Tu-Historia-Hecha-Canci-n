@@ -3,7 +3,7 @@
   'use strict';
   const root=document.documentElement;
   const scriptBase=new URL('.',document.currentScript.src);
-  function loadCore(){return new Promise((resolve,reject)=>{const s=document.createElement('script');s.src=new URL('home-core-v4.js',scriptBase).href;s.onload=resolve;s.onerror=()=>reject(new Error('Core unavailable'));document.head.append(s);});}
+  function loadCore(){return new Promise((resolve,reject)=>{const s=document.createElement('script');s.src=new URL('home-core-v4.js?v=20261108-restore-audio',scriptBase).href;s.onload=resolve;s.onerror=()=>reject(new Error('Core unavailable'));document.head.append(s);});}
   async function start(){
     const abort=new AbortController(),timeout=setTimeout(()=>abort.abort(),6000);
     try{
