@@ -60,3 +60,18 @@ html:lang(es) [data-idea="mama"] .idea-photo img{object-position:50% 0%}
 .sonalza-reviews-arrow:hover{background:#f1e9df}
 .sonalza-reviews-note{font-size:11px;text-align:center;color:#66757c;line-height:1.65;max-width:700px;margin:12px auto}
 @media(max-width:720px){.sonalza-reviews-ready .sonalza-reviews-track{display:flex;gap:12px}.sonalza-reviews-track .sonalza-review-card{flex:0 0 min(85vw,330px);min-height:215px}}
+
+
+/* Concrete trust evidence; no unverified counters or testimonials. */
+.sonalza-trust-pillars{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:32px 0 20px}
+.sonalza-trust-pillar{display:flex;flex-direction:column;min-width:0;gap:12px;padding:29px 27px;border:1px solid #e5d6c4;border-radius:17px;background:#fffaf4;box-shadow:0 9px 22px rgba(73,45,21,.035)}
+.sonalza-trust-symbol{display:grid;place-items:center;width:44px;height:44px;flex:none;border-radius:12px;background:#efe5d7;color:#975438;font-size:21px;font-weight:700}
+.sonalza-trust-pillar h3{font-size:19px;line-height:1.25;letter-spacing:-.035em;margin:5px 0 0;color:#1c3944}
+.sonalza-trust-pillar p{font-size:13px;line-height:1.78;color:#66727a;margin:0 0 11px;flex:1}
+.sonalza-trust-pillar a{display:flex;align-items:center;justify-content:space-between;gap:16px;align-self:flex-start;max-width:100%;font-size:12px;font-weight:750;color:#9a432b;padding-bottom:5px;border-bottom:1px solid #bd9a85}
+.sonalza-trust-pillar a:hover{color:#6d291a}
+.sonalza-reviewed-heading{text-align:center;padding:34px 0 17px}
+.sonalza-reviewed-heading h3{font-size:clamp(22px,3vw,30px);margin:8px 0 0;letter-spacing:-.035em}
+#verifiedReviews[hidden],#sonalzaVerifiedHeading[hidden]{display:none!important}
+@media(max-width:900px){.sonalza-trust-pillars{grid-template-columns:1fr 1fr}.sonalza-trust-pillar:last-child{grid-column:1/-1}}
+@media(max-width:620px){.sonalza-trust-pillars{grid-template-columns:1fr;gap:12px;margin:24px 0 13px}.sonalza-trust-pillar:last-child{grid-column:auto}.sonalza-trust-pillar{padding:22px}.sonalza-trust-pillar h3{font-size:18px}}
