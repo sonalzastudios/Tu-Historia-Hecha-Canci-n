@@ -22,12 +22,19 @@
         <div><span>3</span><p><strong>Comienza la producción</strong><small>Tu canción entra al proceso creativo SONALZA.</small></p></div>
       </div>
       <p class="thanks-note" id="thanksNote">Por privacidad, el borrador del formulario se elimina de este dispositivo después de registrar el pedido. El equipo de SONALZA conserva únicamente la información asociada al número de pedido.</p>
-      <a href="index.html" class="btn btn-primary">Volver a SONALZA →</a>
+      <div class="sonalza-thanks-customer" style="padding:20px;margin:25px auto;border:1px solid #e4d7c6;border-radius:16px;background:#fffcf8;max-width:620px;text-align:center"><strong id="newCustomerTitle">Ahora puedes seguir tu pedido</strong><p id="newCustomerText" style="font-size:13px;color:#63717a">Por privacidad, solicita un enlace de seguimiento con el correo que utilizaste al comprar.</p><a href="seguimiento.html" id="newCustomerTracking" class="btn btn-primary">Seguir mi pedido →</a><a href="mi-sonalza.html" id="newCustomerAccount" class="btn" style="margin-left:8px">Mi SONALZA</a></div><a href="index.html" class="btn btn-primary">Volver a SONALZA →</a>
     </div>
   </main>
   <script src="app.js"></script><script>
   const q=new URLSearchParams(location.search);
   const order=q.get('order')||'SONALZA';
+  const uiLang=new URLSearchParams(location.search).get('lang')||localStorage.getItem('sonalzaLanguageV1')||'es';
+  const uiEnglish=uiLang==='en';
+  document.getElementById('newCustomerTitle').textContent=uiEnglish?'Follow your song progress':'Ahora puedes seguir tu pedido';
+  document.getElementById('newCustomerText').textContent=uiEnglish?'For privacy, request a tracking link with the email used for your order.':'Por privacidad, solicita un enlace de seguimiento con el correo que utilizaste al comprar.';
+  document.getElementById('newCustomerTracking').textContent=uiEnglish?'Track my order →':'Seguir mi pedido →';
+  document.getElementById('newCustomerAccount').textContent=uiEnglish?'My SONALZA':'Mi SONALZA';
+
   const returnedFromStripe=Boolean(q.get('session_id'));
   const lang=(localStorage.getItem('sonalzaLanguage')||document.documentElement.lang||'es').toLowerCase().startsWith('en')?'en':'es';
   document.getElementById('thanksOrder').textContent=order;
