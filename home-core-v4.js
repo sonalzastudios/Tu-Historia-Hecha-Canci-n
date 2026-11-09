@@ -6,7 +6,7 @@
   const PREF_KEY = 'sonalzaLocalePreferenceV1';
   const DETECTED_KEY = 'sonalzaDetectedRegionV1';
   const OVERRIDE_KEY = 'sonalzaRegionOverrideV1';
-  const PRICES = {US: {song:49, corrido:249, business:499}, MX: {song:599, corrido:1999, business:4999}};
+  const PRICES = {US: {song:24.99, corrido:49.99, business:499}, MX: {song:599, corrido:1999, business:4999}};
   const TRACKS = [
     {title:'Mujer de las que quedan', file:'assets/audio/banda-mujer-de-las-que-quedan.mp3'},
     {title:'Los A\u00f1os Que No Vieron', file:'assets/audio/corrido-los-anos-que-no-vieron.mp3'},
@@ -75,7 +75,7 @@
     const detected = get('sessionStorage',DETECTED_KEY);
     if(detected) put('localStorage',OVERRIDE_KEY,detected === region ? null : '1');
   }
-  function money(product) { return (region === 'MX' ? 'MX$' : 'US$') + new Intl.NumberFormat(region === 'MX' ? 'es-MX':'en-US',{maximumFractionDigits:0}).format(PRICES[region][product]); }
+  function money(product) { return (region === 'MX' ? 'MX$' : 'US$') + new Intl.NumberFormat(region === 'MX' ? 'es-MX':'en-US',{minimumFractionDigits:region === 'MX' ? 0 : 2,maximumFractionDigits:2}).format(PRICES[region][product]); }
   function updateStory() {
     const story = STORIES[occasion][language];
     ['story-label','story-text','story-detail'].forEach((id,i) => { document.getElementById(id).textContent=story[i]; });
@@ -113,6 +113,7 @@
     document.querySelectorAll('[data-es][data-en]').forEach(el=> { el.textContent=el.dataset[language]; });
     document.querySelectorAll('[data-aria-es][data-aria-en]').forEach(el=> {el.setAttribute('aria-label',language==='es'?el.dataset.ariaEs:el.dataset.ariaEn);});
     document.querySelectorAll('[data-price]').forEach(el=> {el.textContent=money(el.dataset.price);});
+    document.querySelectorAll('[data-old-price]').forEach(el=>{el.hidden=region!=='US';});
     document.getElementById('locale-summary').textContent=region+' \u00b7 '+language.toUpperCase();
     document.getElementById('region-select').value=region;
     document.getElementById('language-select').value=language;
