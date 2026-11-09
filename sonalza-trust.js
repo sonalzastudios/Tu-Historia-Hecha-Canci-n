@@ -8,7 +8,7 @@ if(impactNumber){
   impactNumber.textContent=String(examples);
   fetch('/api/geo?action=impact',{headers:{Accept:'application/json'}}).then(r=>r.ok?r.json():Promise.reject(Error('No count'))).then(data=>{
     const n=data.deliveredSongs;
-    if(data.verified!==true||data.metric!=='paid_delivered_orders'||!Number.isSafeInteger(n)||n<=0)return;
+    if(data.verified!==true||data.metric!=='paid_delivered_orders'||!Number.isSafeInteger(n)||n<25)return;
     impactNumber.textContent=new Intl.NumberFormat(locale()?'en-US':'es-MX').format(n);
     const title=document.getElementById('sonalzaImpactTitle'),details=document.getElementById('sonalzaImpactDetails'),link=document.getElementById('sonalzaImpactLink');
     if(title)title.textContent=t('Pedidos musicales entregados','Music orders delivered');
