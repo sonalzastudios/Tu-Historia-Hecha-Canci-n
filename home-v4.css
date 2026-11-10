@@ -105,3 +105,9 @@ html:lang(es) [data-idea="mama"] .idea-photo img{object-position:50% 0%}
 .sonalza-reviews-arrow{transition:background .25s ease,border-color .25s ease,transform .25s ease}
 .sonalza-reviews-arrow:hover{transform:translateY(-2px);border-color:#bd9a85}
 @media(prefers-reduced-motion:reduce){.sonalza-reviews-arrow,.sonalza-reviews-motion .sonalza-review-card{transition:none!important}.sonalza-reviews-track{scroll-behavior:auto}}
+
+/* Homepage editorial rhythm: remove the oversized empty handoff after gift ideas. */
+.occasions.section{padding-bottom:28px}
+.sonalza-story-proof{padding-top:40px}
+@media(max-width:900px){.occasions.section{padding-bottom:22px}.sonalza-story-proof{padding-top:34px}}
+@media(max-width:620px){.occasions.section{padding-bottom:18px}.sonalza-story-proof{padding-top:30px}}
