@@ -75,9 +75,10 @@ const autoMotion=cards.length>3&&typeof window.requestAnimationFrame==='function
 if(autoMotion){for(const card of cards){const copy=card.cloneNode(true);copy.setAttribute('aria-hidden','true');copy.inert=true;track.append(copy);}track.classList.add('sonalza-reviews-motion');}
 panel.append(track);
 if(autoMotion){
-let raf=0,last=0,pausedUntil=0,hover=false,focused=false;const pause=()=>{pausedUntil=performance.now()+12000;};
+let raf=0,last=0,pausedUntil=0,hover=false,focused=false,position=0;
+const pause=()=>{pausedUntil=performance.now()+1800;};
 track.addEventListener('pointerenter',()=>{hover=true;});
-track.addEventListener('pointerleave',()=>{hover=false;pause();});
+track.addEventListener('pointerleave',()=>{hover=false;pausedUntil=performance.now()+300;});
 track.addEventListener('focusin',()=>{focused=true;});
 track.addEventListener('focusout',()=>{focused=false;pause();});
 track.addEventListener('pointerdown',pause,{passive:true});
@@ -88,8 +89,13 @@ const dt=Math.min(now-last,100);last=now;
 if(!hover&&!focused&&!document.hidden&&now>pausedUntil){
 const first=track.children[0],clone=track.children[cards.length];
 const span=clone&&first?clone.offsetLeft-first.offsetLeft:0;
-if(span>0){track.scrollLeft+=dt*.022;if(track.scrollLeft>=span)track.scrollLeft-=span;}
+if(span>0){
+  // Accumulate subpixel distance independently from scrollLeft: some browsers round each write.
+  position+=dt*.085; // 85 pixels/second, visibly moving but comfortable to read.
+  if(position>=span)position%=span;
+  track.scrollLeft=position;
 }
+}else{position=track.scrollLeft;}
 raf=requestAnimationFrame(frame);
 };
 raf=requestAnimationFrame(frame);
