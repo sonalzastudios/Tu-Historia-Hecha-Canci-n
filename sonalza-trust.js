@@ -27,14 +27,26 @@ const stories=[
  'I had a corrido made for my grandfather without telling him it was about him. I played it and he recognized himself immediately. I had never seen him cry until that day. He told me: “When I’m no longer here, I’d like you to play this song to remember me.” That’s when I understood how meaningful it is to create songs for feelings we cannot sing ourselves.']},
 {symbol:'♡',name:'Juan Pablo Gonzalez',label:['Una propuesta de matrimonio','A marriage proposal'],
  quote:['Le hice una canción a mi novia para pedirle matrimonio. Conté cómo nos conocimos, cuánto me importa y lo feliz que me haría compartir una vida juntos. Lloró de emoción, me abrazó fuertemente y, sin dudarlo, me dijo que sí. Gracias a SONALZA por crear un momento tan único; aunque tenía mis dudas, creo que no hubiera hecho un mejor trabajo por mi cuenta.',
- 'I had a song made for my girlfriend to propose. It told the story of how we met, how much she means to me, and how happy I would be to share a life together. She cried, hugged me tightly, and said yes without hesitation. Thank you, SONALZA, for creating such a unique moment. I had my doubts at first, but I don’t think I could have done a better job myself.']}
+ 'I had a song made for my girlfriend to propose. It told the story of how we met, how much she means to me, and how happy I would be to share a life together. She cried, hugged me tightly, and said yes without hesitation. Thank you, SONALZA, for creating such a unique moment. I had my doubts at first, but I don’t think I could have done a better job myself.']},
+{symbol:'♥',name:'Pablo Jiménez',label:['Aniversario de bodas','Wedding anniversary'],permission:'shared',
+ quote:['Le regalé una canción a mi esposa por nuestro aniversario y vaya que le encantó. No sabía que una canción tan fácil de crear iba a tener un impacto tan fuerte en ella.',
+ 'I gave my wife a song for our anniversary, and she absolutely loved it. I had no idea that a song so easy to create could have such a powerful impact on her.']},
+{symbol:'♡',name:'Rosa Bustamante',label:['Agradecimiento a mi esposo','A thank-you for my husband'],permission:'shared',
+ quote:['Llevaba mucho tiempo queriendo regalarle algo a mi esposo y era difícil saber qué elegir. Encontré SONALZA y decidí hacerle una canción para agradecerle por el gran padre que ha sido para nuestros hijos. Su reacción fue inesperada. Me hubiera encantado conocer esta página antes. Gracias por todo lo que hacen.',
+ 'I had wanted to give my husband something special for a long time, but I struggled to find the right gift. I found SONALZA and decided to make him a song to thank him for being such a wonderful father to our children. His reaction was unexpected. I wish I had found this website sooner. Thank you for everything you do.']},
+{symbol:'♫',name:'César Miramontes',label:['Música electrónica','Electronic music'],permission:'shared',
+ quote:['¡Wow! Esta canción de electrónica realmente me encanta. Voy a generar más. 😎',
+ 'Wow! I really love this electronic track. I’m going to create more! 😎']},
+{symbol:'✦',name:'Eduardo Ramos',label:['Una canción para mi hija','A song for my daughter'],permission:'shared',
+ quote:['Le hice una canción a mi hija sobre una historieta que a ella le encanta y quedó fascinada. Me sentí todavía más querido como padre al ver su expresión de alegría desde la primera vez que escuchó la canción.',
+ 'I made my daughter a song about a story she loves, and she was fascinated. Seeing the joy on her face the very first time she heard it made me feel even more loved as a father.']}
 ];
 function storyCard(item){const card=node('article','sonalza-review-card sonalza-editorial-review');
 card.setAttribute('aria-label',t('Testimonio compartido por un cliente','Testimonial shared by a customer'));
 const head=node('div','sonalza-review-head');
 const avatar=node('span','sonalza-review-avatar',item.symbol);avatar.setAttribute('aria-hidden','true');
 const about=node('div','sonalza-review-about');
-about.append(node('strong','sonalza-review-author',item.name),bilingual(node('span','sonalza-review-source'),item.label[0]+' · Testimonio autorizado',item.label[1]+' · Shared with permission'));
+about.append(node('strong','sonalza-review-author',item.name),bilingual(node('span','sonalza-review-source'),item.label[0]+(item.permission==='shared'?' · Reseña compartida':' · Testimonio autorizado'),item.label[1]+(item.permission==='shared'?' · Customer feedback':' · Shared with permission')));
 head.append(avatar,about);card.append(head,bilingual(node('p','sonalza-review-message'),item.quote[0],item.quote[1]));
 return card;}
 function verifiedCard(review){const rating=Number(review.rating);if(!Number.isInteger(rating)||rating<1||rating>5||String(review.message||'').trim().length<10)return null;
