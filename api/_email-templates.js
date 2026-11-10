@@ -28,7 +28,7 @@ function paymentConfirmation(order, reviewRequired = false) {
 
   const statusTitle = reviewRequired
     ? (isEs ? 'Pago confirmado · verificación en curso' : 'Payment confirmed · verification in progress')
-    : (isEs ? 'Tu canción ya está en proceso' : 'Your song is now in progress');
+    : (isEs ? 'Tu pedido está confirmado' : 'Your order is confirmed');
 
   const intro = reviewRequired
     ? (isEs
