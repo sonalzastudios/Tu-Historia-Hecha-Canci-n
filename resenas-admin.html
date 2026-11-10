@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><meta name="referrer" content="no-referrer">
+<title>SONALZA · Administración de reseñas</title>
+<style>
+:root{font-family:Inter,ui-sans-serif,system-ui,-apple-system,Arial,sans-serif;color:#1e3640;background:#faf6ef}
+*{box-sizing:border-box}body{margin:0}header{background:#12303c;color:white;padding:21px max(20px,calc((100vw - 1060px)/2));display:flex;align-items:center;justify-content:space-between;gap:18px}header strong{letter-spacing:.13em;font-size:14px}header small{display:block;color:#deb994;font-size:11px;margin-top:5px}main{max-width:1060px;margin:0 auto;padding:44px 20px 100px}h1{font-size:clamp(26px,4vw,40px);letter-spacing:-.045em;margin:8px 0 12px}h2{font-size:22px;margin:0 0 10px}.sub{color:#65757c;line-height:1.65;font-size:14px;max-width:690px;margin-bottom:30px}.card{background:white;border:1px solid #e8dbca;box-shadow:0 7px 22px #2f3c4510;border-radius:15px;padding:23px;margin:15px 0}.eyebrow{color:#a26a4d;letter-spacing:.13em;font-size:11px;font-weight:800}.row{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap}.actions{display:flex;gap:10px;flex-wrap:wrap}label{display:block;font-size:12px;font-weight:700;margin:15px 0 7px}input{font:inherit;border:1px solid #d6c8b8;border-radius:9px;padding:12px;width:min(100%,450px);background:#fff}button{border:1px solid #23414d;background:#23414d;color:white;padding:12px 19px;border-radius:10px;cursor:pointer;font-size:13px;font-weight:700}button.secondary{background:white;color:#23414d}button:disabled{opacity:.55;cursor:wait}button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #dbac7a;outline-offset:3px}a{color:#a55c3d}article{border:1px solid #e6dacd;padding:22px;border-radius:13px;background:#fdfaf6;margin:13px 0}.text{white-space:pre-wrap;line-height:1.7;font-size:14px;margin:13px 0}.muted{font-size:12px;color:#64737a}#notice{margin:18px 0;padding:13px;border-radius:10px;background:#e8f2ed;color:#245c43}#notice.error{background:#fae8e4;color:#9f3830}[hidden]{display:none!important}.empty{padding:25px;text-align:center;background:#f7f0e7;border-radius:13px;color:#65757c}.footer{font-size:12px;color:#7b878c;margin-top:35px}
+</style></head>
+<body><header><div><strong>SONALZA STUDIOS</strong><small>Centro administrativo · Reseñas</small></div><a href="/" style="color:#f0d2b2">Ver tienda</a></header>
+<main>
+<span class="eyebrow">ACCESO ADMINISTRATIVO</span><h1>Reseñas de clientes</h1>
+<p class="sub">Revisa comentarios recibidos mediante pedidos pagados y autoriza su publicación. Las reseñas nunca se publican automáticamente. Esta pantalla solo está disponible con la sesión administrativa de SONALZA.</p>
+<div id="notice" role="status" hidden></div>
+<section id="login" class="card" hidden><h2>Acceso seguro</h2><p class="muted">Usa la clave administrativa existente. No se guarda en el navegador.</p><form id="loginForm"><label for="key">Clave administrativa</label><input id="key" type="password" autocomplete="off" required minlength="16"><div style="margin-top:17px"><button type="submit">Entrar</button></div></form></section>
+<section id="dashboard" hidden><div class="row"><h2>Comentarios por revisar</h2><div class="actions"><button id="refresh" type="button" class="secondary">Actualizar</button><button id="logout" type="button" class="secondary">Cerrar sesión</button></div></div>
+<p class="muted">Solo se muestran comentarios con consentimiento registrado y pendientes de aprobación. Confirma el contenido antes de publicar.</p>
+<div id="reviews" aria-live="polite"></div></section>
+<p class="footer">SONALZA STUDIOS · Acceso restringido · No compartas la clave de administración.</p>
+</main>
+<script>
+(()=>{'use strict';
+const $=id=>document.getElementById(id);
+function notice(message,error=false){const n=$('notice');n.textContent=message;n.className=error?'error':'';n.hidden=false;}
+async function request(url,options){const r=await fetch(url,{credentials:'same-origin',cache:'no-store',...options,headers:{Accept:'application/json',...(options?.headers||{})}});let body={};try{body=await r.json();}catch(_){}if(!r.ok)throw Error(body.error||'Solicitud no disponible ('+r.status+').');return body;}
+const post=(url,body)=>request(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+function text(tag,cls,value){const n=document.createElement(tag);if(cls)n.className=cls;n.textContent=value;return n;}
+function setLogged(on){$('login').hidden=on;$('dashboard').hidden=!on;if(on)loadReviews();}
+async function loadReviews(){const root=$('reviews');root.replaceChildren(text('p','muted','Consultando reseñas pendientes…'));
+try{const d=await request('/api/geo?action=admin-reviews');root.replaceChildren();
+if(!Array.isArray(d.reviews)||!d.reviews.length){root.append(text('div','empty','No hay reseñas nuevas pendientes de aprobación.'));return;}
+for(const item of d.reviews){
+const card=document.createElement('article');
+const title=text('strong','',item.name||'Cliente SONALZA');
+const meta=text('div','muted','Pedido: '+item.orderId+' · '+(item.rating?item.rating+'/5 estrellas registradas':'Sin calificación')+' · '+(item.createdAt?new Date(item.createdAt).toLocaleDateString('es-US'):''));
+const comment=text('p','text',item.message||'');
+const button=text('button','', 'Aprobar y publicar');button.type='button';
+button.addEventListener('click',async()=>{if(!confirm('¿Publicar este comentario para el pedido '+item.orderId+'?'))return;
+button.disabled=true;try{await post('/api/geo?action=admin-review',{orderId:item.orderId});notice('Reseña aprobada. Puede tardar unos minutos en aparecer en la tienda.');await loadReviews();}catch(e){notice(e.message,true);button.disabled=false;}});
+card.append(title,meta,comment,button);root.append(card);
+}
+}catch(e){root.replaceChildren();notice(e.message,true);}}
+$('loginForm').addEventListener('submit',async e=>{e.preventDefault();const button=e.target.querySelector('button');button.disabled=true;try{await post('/api/admin-auth',{key:$('key').value,action:'login'});$('key').value='';notice('Sesión iniciada.');setLogged(true);}catch(err){notice(err.message,true);}finally{button.disabled=false;}});
+$('refresh').addEventListener('click',loadReviews);
+$('logout').addEventListener('click',async()=>{try{await post('/api/admin-auth',{action:'logout'});setLogged(false);notice('Sesión cerrada.');}catch(e){notice(e.message,true);}});
+request('/api/admin-auth').then(d=>setLogged(Boolean(d.authenticated))).catch(()=>setLogged(false));
+})();
+</script></body></html>
