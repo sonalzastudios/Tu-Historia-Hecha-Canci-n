@@ -1,6 +1,7 @@
 (function(){'use strict';
 const doc=document;const locale=(new URLSearchParams(location.search).get('lang')||localStorage.getItem('sonalzaLanguageV1')||'es').toLowerCase()==='en'?'en':'es';doc.documentElement.lang=locale;const en=locale==='en';const tr=(es,eng)=>en?eng:es;
 doc.querySelectorAll('[data-es][data-en]').forEach(n=>n.textContent=n.dataset[locale]);
+doc.querySelectorAll('[data-es-placeholder][data-en-placeholder]').forEach(n=>n.placeholder=n.getAttribute('data-'+locale+'-placeholder')||'');
 function $(id){return doc.getElementById(id);}function showNotice(el,text,error=false){if(!el)return;el.textContent=text;el.className='notice'+(error?' error':' success');el.hidden=false;}
 function el(tag,cls,txt){const n=doc.createElement(tag);if(cls)n.className=cls;if(txt!==undefined)n.textContent=txt;return n;}
 const qs=new URLSearchParams(location.search);
