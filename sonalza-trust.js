@@ -19,13 +19,13 @@ if(impactNumber){
 function node(tag,cls,value){const e=document.createElement(tag);if(cls)e.className=cls;if(value!==undefined)e.textContent=value;return e;}
 function bilingual(el,es,en){el.dataset.es=es;el.dataset.en=en;el.textContent=t(es,en);return el;}
 const stories=[
-{symbol:'♥',label:['Para mamá','For Mom'],
+{symbol:'♥',name:'Raul Martinez',label:['Para mamá','For Mom'],
  quote:['El día que mi mamá escuchó la canción que le dediqué, se quedó sin palabras. Lloró de emoción y alegría. Ver su reacción me hizo muy feliz y me demostró el impacto que puede tener transmitir un mensaje por medio de una canción.',
  'The day my mom heard the song I dedicated to her, she was speechless. She cried tears of joy. Seeing her reaction made me so happy and showed me the impact a message delivered through a song can have.']},
-{symbol:'♫',label:['Un corrido para mi abuelo','A corrido for my grandfather'],
+{symbol:'♫',name:'Julia Domnguez Bustillos',label:['Un corrido para mi abuelo','A corrido for my grandfather'],
  quote:['Le hice un corrido a mi abuelo sin decirle que era para él. Puse la canción y se identificó de inmediato. Nunca lo había visto llorar hasta ese día. Me dijo: “Me gustaría que el día que yo ya no esté pongan esta canción para recordarme”. Ahí comprendí lo importante que es crear canciones para expresar lo que no sabemos cantar.',
  'I had a corrido made for my grandfather without telling him it was about him. I played it and he recognized himself immediately. I had never seen him cry until that day. He told me: “When I’m no longer here, I’d like you to play this song to remember me.” That’s when I understood how meaningful it is to create songs for feelings we cannot sing ourselves.']},
-{symbol:'♡',label:['Una propuesta de matrimonio','A marriage proposal'],
+{symbol:'♡',name:'Juan Pablo Gonzalez',label:['Una propuesta de matrimonio','A marriage proposal'],
  quote:['Le hice una canción a mi novia para pedirle matrimonio. Conté cómo nos conocimos, cuánto me importa y lo feliz que me haría compartir una vida juntos. Lloró de emoción, me abrazó fuertemente y, sin dudarlo, me dijo que sí. Gracias a SONALZA por crear un momento tan único; aunque tenía mis dudas, creo que no hubiera hecho un mejor trabajo por mi cuenta.',
  'I had a song made for my girlfriend to propose. It told the story of how we met, how much she means to me, and how happy I would be to share a life together. She cried, hugged me tightly, and said yes without hesitation. Thank you, SONALZA, for creating such a unique moment. I had my doubts at first, but I don’t think I could have done a better job myself.']}
 ];
@@ -34,7 +34,7 @@ card.setAttribute('aria-label',t('Testimonio compartido por un cliente','Testimo
 const head=node('div','sonalza-review-head');
 const avatar=node('span','sonalza-review-avatar',item.symbol);avatar.setAttribute('aria-hidden','true');
 const about=node('div','sonalza-review-about');
-about.append(bilingual(node('strong','sonalza-review-author'),item.label[0],item.label[1]),bilingual(node('span','sonalza-review-source'),'Cliente SONALZA · testimonio autorizado','SONALZA customer · shared with permission'));
+about.append(node('strong','sonalza-review-author',item.name),bilingual(node('span','sonalza-review-source'),item.label[0]+' · Testimonio autorizado',item.label[1]+' · Shared with permission'));
 head.append(avatar,about);card.append(head,bilingual(node('p','sonalza-review-message'),item.quote[0],item.quote[1]));
 return card;}
 function verifiedCard(review){const rating=Number(review.rating);if(!Number.isInteger(rating)||rating<1||rating>5||String(review.message||'').trim().length<10)return null;
