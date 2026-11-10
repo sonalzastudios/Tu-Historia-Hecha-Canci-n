@@ -201,16 +201,16 @@ async function finalizeDelivery(body) {
     throw new Error('Order is not paid.');
   }
   if (!order.customer_email) throw new Error('Customer email is missing.');
+  const isRevision = String(order.fulfillment_status || '') === 'revision_requested';
   if (['delivered','revision_delivered'].includes(String(order.fulfillment_status || ''))) {
     throw new Error('This order is already delivered. Check its history before sending another email.');
   }
   const sentPreviously = await db.selectOne('order_events',
     `order_id=eq.${eq(orderId)}&event_type=eq.delivery_email_sent&select=created_at&order=created_at.desc&limit=1`);
-  if (sentPreviously) {
+  if (sentPreviously && !isRevision) {
     throw new Error('A delivery email has already been accepted for this order. Do not send it twice.');
   }
 
-  const isRevision = String(order.fulfillment_status || '') === 'revision_requested';
   const deliveryToken = orderToken.sign(orderId, 365 * 24 * 60 * 60);
   const baseUrl = String(process.env.SONALZA_BASE_URL || 'https://sonalza.com').replace(/\/$/, '');
   const deliveryUrl = `${baseUrl}/delivery.html?token=${encodeURIComponent(deliveryToken)}`;
