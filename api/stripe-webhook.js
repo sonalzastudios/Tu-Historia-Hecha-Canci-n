@@ -179,6 +179,10 @@ async function sendPaidEmails(order, reviewRequired) {
 
 // Customer orders are queued for human review. Automatic OpenAI music generation is intentionally not used here.
 async function ensureManualProductionTask(order) {
+  if (['completed','delivered'].includes(String(order.status||'').toLowerCase()) ||
+      ['delivered','revision_delivered'].includes(String(order.fulfillment_status||'').toLowerCase())) {
+    return {queued:false,skipped:true,reason:'already_delivered'};
+  }
   const existing = await db.selectOne('order_events',
     `order_id=eq.${eq(order.order_id)}&event_type=eq.production_task_created&select=created_at&limit=1`);
   if (existing) return {queued:true, duplicate:true};
