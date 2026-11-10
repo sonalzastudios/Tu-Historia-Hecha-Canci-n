@@ -238,6 +238,7 @@ async function finalizeDelivery(body) {
     adminNote
   });
 
+  // Only a successfully accepted email can advance fulfillment to delivered.
   await email.send({
     to: order.customer_email,
     subject: message.subject,
@@ -245,10 +246,30 @@ async function finalizeDelivery(body) {
     replyTo: process.env.SONALZA_REPLY_TO || undefined
   });
 
-  await db.update('orders', `order_id=eq.${eq(orderId)}`, {
-    status:'completed',
-    fulfillment_status:isRevision ? 'revision_delivered' : 'delivered'
-  }).catch(() => {});
+  // Durable evidence supports customer tracking if updating the order row fails.
+  let emailEventRecorded = false;
+  try {
+    await db.insertEvent(orderId, 'delivery_email_sent', {
+      song_title: songTitle,
+      delivery_type: isRevision ? 'revision' : 'initial',
+      delivered_at: new Date().toISOString()
+    }, 'sonalza-admin');
+    emailEventRecorded = true;
+  } catch (error) {
+    console.error('delivery email sent event failed', error);
+  }
+
+  let statusSynced = false;
+  try {
+    const updated = await db.update('orders', `order_id=eq.${eq(orderId)}`, {
+      status:'completed',
+      fulfillment_status:isRevision ? 'revision_delivered' : 'delivered'
+    }, {returning:'representation'});
+    statusSynced = Array.isArray(updated) && updated.some(row => row.order_id === orderId);
+    if (!statusSynced) console.error('delivery status update returned no rows', orderId);
+  } catch (error) {
+    console.error('delivery order status sync failed', error);
+  }
 
   await surveyFollowup.schedule({
     order,
@@ -256,7 +277,7 @@ async function finalizeDelivery(body) {
     reason:isRevision ? 'revision_delivery' : 'initial_delivery'
   }).catch(err => console.error('survey followup schedule', err));
 
-  return { orderId, deliveryUrl, customerEmail:order.customer_email, isRevision };
+  return { orderId, deliveryUrl, customerEmail:order.customer_email, isRevision, statusSynced, emailEventRecorded };
 }
 
 async function sendDeliverabilityTest(body) {
