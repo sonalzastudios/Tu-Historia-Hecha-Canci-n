@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><meta name="referrer" content="no-referrer">
+<title>SONALZA · Entrega musical</title>
+<style>
+:root{font-family:Inter,ui-sans-serif,system-ui,-apple-system,Arial,sans-serif;background:#faf6ef;color:#1c3440}*{box-sizing:border-box}body{margin:0}header{background:#12303c;color:white;padding:22px max(20px,calc((100vw - 1080px)/2));display:flex;justify-content:space-between;align-items:center;gap:15px}header strong{letter-spacing:.12em}header a{color:#f1c9a0;font-size:13px}main{max-width:1080px;margin:auto;padding:43px 20px 90px}h1{font-size:clamp(27px,4vw,40px);letter-spacing:-.04em;margin:9px 0}h2{font-size:21px;margin:0 0 15px}p{line-height:1.65}.eyebrow{font-size:11px;font-weight:800;letter-spacing:.15em;color:#9d644a}.intro{font-size:14px;color:#607178;max-width:780px}.card{margin:22px 0;padding:27px;border:1px solid #dfd4c7;border-radius:15px;background:white;box-shadow:0 8px 25px #18343c0a}.row{display:flex;gap:14px;align-items:center;flex-wrap:wrap}label{display:block;font-weight:700;font-size:12px;margin:17px 0 7px}input,textarea{font:inherit;padding:11px;border:1px solid #cfc1b2;border-radius:10px;width:100%;max-width:650px;background:#fff}textarea{min-height:75px}input[type=file]{padding:13px}button{padding:12px 19px;font:700 13px Inter,system-ui;border-radius:10px;border:1px solid #173847;background:#173847;color:white;cursor:pointer}button.secondary{background:#fff;color:#173847}button:disabled{opacity:.45;cursor:not-allowed}button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{outline:3px solid #d9aa79;outline-offset:3px}#notice{padding:15px 18px;background:#eaf4ef;color:#23583e;border-radius:10px;margin:16px 0}#notice.error{background:#fcece8;color:#a13a30}.muted{font-size:12px;color:#65737a}.status{padding:14px 16px;border-radius:10px;background:#f6eee3;margin:16px 0;line-height:1.65;font-size:13px}.divider{height:1px;background:#eadfd1;margin:27px 0}.warning{background:#fff4dd;color:#724a0c;padding:15px;border-radius:10px;font-size:13px;line-height:1.6}a{color:#8d4a33}[hidden]{display:none!important}
+</style></head>
+<body><header><strong>SONALZA STUDIOS · Entregas</strong><nav class="row"><a href="resenas-admin.html">Reseñas</a><a href="/">Tienda</a></nav></header>
+<main><span class="eyebrow">OPERACIONES INTERNAS</span><h1>Entrega privada de canciones</h1>
+<p class="intro">Prepara y entrega una canción desde un pedido pagado. Los archivos se suben al almacenamiento privado de SONALZA. <strong>La entrega solo se envía después de pulsar el botón final y confirmarla.</strong></p>
+<div id="notice" role="status" hidden></div>
+<section id="login" class="card" hidden><h2>Acceso administrativo</h2><form id="loginForm"><label for="password">Clave de SONALZA</label><input id="password" type="password" minlength="16" autocomplete="off" required><p><button type="submit">Entrar</button></p></form></section>
+<section id="workspace" hidden><div class="row"><h2>Preparar entrega</h2><button type="button" id="logout" class="secondary">Cerrar sesión</button></div>
+<div class="card"><label for="orderId">Número de pedido</label><div class="row"><input id="orderId" type="text" autocomplete="off" placeholder="SON-..." style="max-width:350px"><button type="button" id="lookup">Consultar pedido</button></div><div id="orderStatus" class="status" hidden></div></div>
+<form id="deliveryForm" class="card" hidden>
+<h2>Archivos y mensaje</h2>
+<label for="songTitle">Título de la canción</label><input id="songTitle" maxlength="180" required placeholder="Título final de la canción">
+<label for="audioFile">Audio final en MP3 (máximo 50 MB)</label><input id="audioFile" type="file" accept=".mp3,audio/mpeg" required>
+<label for="coverFile">Portada JPG, PNG o WebP (opcional, máximo 10 MB)</label><input id="coverFile" type="file" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp">
+<label for="adminNote">Mensaje para el cliente (opcional)</label><textarea id="adminNote" maxlength="2000" placeholder="Tu canción está lista."></textarea>
+<div class="divider"></div>
+<div class="row"><button type="button" id="upload">1. Subir archivos privados</button><span id="uploadState" class="muted">Aún no se han subido archivos.</span></div>
+<div class="divider"></div>
+<p class="warning"><strong>Importante:</strong> el siguiente paso enviará un correo real al cliente y registrará la entrega. Revisa el pedido, título, MP3 y destinatario antes de confirmar.</p>
+<label style="display:flex;align-items:start;gap:8px"><input type="checkbox" id="confirmDelivery" style="width:auto;margin-top:2px"> He verificado el archivo de audio y confirmo que es el pedido correcto.</label>
+<button id="sendDelivery" type="submit" disabled>2. Confirmar y enviar canción</button>
+</form></section>
+<p class="muted">Esta herramienta usa la autenticación y el sistema de entrega ya existentes; no crea pedidos ni realiza cobros.</p>
+</main>
+<script>
+(()=>{'use strict';
+const $=id=>document.getElementById(id);let order=null,uploads=null;
+function notice(message,error=false){const e=$('notice');e.hidden=false;e.className=error?'error':'';e.textContent=message;}
+async function api(url,body){const o=body===undefined?{}:{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)};
+const r=await fetch(url,{credentials:'same-origin',cache:'no-store',...o,headers:{Accept:'application/json',...(o.headers||{})}});
+let d={};try{d=await r.json();}catch(_){}if(!r.ok)throw Error(d.error||'Error de solicitud ('+r.status+').');return d;}
+function access(yes){$('login').hidden=yes;$('workspace').hidden=!yes;}
+function resetUpload(){uploads=null;$('uploadState').textContent='Aún no se han subido archivos.';$('sendDelivery').disabled=true;$('confirmDelivery').checked=false;}
+$('loginForm').addEventListener('submit',async e=>{e.preventDefault();const b=e.target.querySelector('button');b.disabled=true;try{await api('/api/admin-auth',{action:'login',key:$('password').value});$('password').value='';access(true);notice('Sesión administrativa abierta.');}catch(err){notice(err.message,true);}finally{b.disabled=false;}});
+$('logout').addEventListener('click',async()=>{try{await api('/api/admin-auth',{action:'logout'});access(false);notice('Sesión cerrada.');}catch(e){notice(e.message,true);}});
+$('lookup').addEventListener('click',async()=>{const id=$('orderId').value.trim().toUpperCase();resetUpload();$('deliveryForm').hidden=true;$('orderStatus').hidden=true;
+if(!/^[A-Z0-9-]{6,64}$/.test(id)){notice('Introduce un número de pedido válido.',true);return;}
+$('lookup').disabled=true;
+try{const d=await api('/api/admin-auth',{action:'get-order-delivery-status',order_id:id});order=d;
+$('orderStatus').textContent='Pedido: '+d.orderId+' · Correo: '+d.customerEmail+' · Estado: '+d.fulfillmentStatus+(d.isRevision?' · Revisión solicitada':'');
+$('orderStatus').hidden=false;$('deliveryForm').hidden=false;notice('Pedido encontrado. Verifica el destinatario y prepara los archivos.');
+}catch(e){order=null;notice(e.message,true);}finally{$('lookup').disabled=false;}
+});
+$('audioFile').addEventListener('change',resetUpload);
+$('coverFile').addEventListener('change',resetUpload);
+$('orderId').addEventListener('change',()=>{order=null;$('deliveryForm').hidden=true;resetUpload();});
+function fileType(file,kind){const type=file.type.toLowerCase();if(kind==='audio')return ['audio/mpeg','audio/mp3','audio/x-mpeg'].includes(type)?type:'audio/mpeg';
+return ({'image/jpeg':'image/jpeg','image/png':'image/png','image/webp':'image/webp'})[type]||null;}
+async function uploadFile(file,kind){
+const type=fileType(file,kind);if(!type)throw Error('Tipo de portada no permitido.');
+const limit=kind==='audio'?50*1024*1024:10*1024*1024;if(file.size<1||file.size>limit)throw Error('Archivo demasiado grande o vacío.');
+const d=await api('/api/admin-auth',{action:'sign-delivery-upload',order_id:order.orderId,kind,content_type:type,size:file.size});
+if(!d.upload||!d.upload.signedUrl)throw Error('No se obtuvo un enlace seguro de subida.');
+const up=await fetch(d.upload.signedUrl,{method:'PUT',headers:{'Content-Type':type},body:file});
+if(!up.ok)throw Error('Falló la subida de '+kind+' ('+up.status+').');
+return {bucket:d.upload.bucket,path:d.upload.path};}
+$('upload').addEventListener('click',async()=>{if(!order){notice('Consulta un pedido primero.',true);return;}
+const audio=$('audioFile').files[0],cover=$('coverFile').files[0];if(!audio||!audio.name.toLowerCase().endsWith('.mp3')){notice('Selecciona un archivo MP3 válido.',true);return;}
+$('upload').disabled=true;resetUpload();$('uploadState').textContent='Subiendo archivos privados…';
+try{const a=await uploadFile(audio,'audio');const c=cover?await uploadFile(cover,'cover'):null;uploads={audio:a,cover:c};
+$('uploadState').textContent='Archivos subidos. Confirma el contenido antes de enviar.';$('sendDelivery').disabled=false;notice('Subida privada completada. No se ha enviado ningún correo.');
+}catch(e){resetUpload();notice(e.message,true);}finally{$('upload').disabled=false;}});
+$('deliveryForm').addEventListener('submit',async e=>{e.preventDefault();if(!order||!uploads||!$('confirmDelivery').checked){notice('Sube los archivos y confirma el pedido.',true);return;}
+const title=$('songTitle').value.trim();if(!title){notice('Falta el título de la canción.',true);return;}
+const message='ATENCIÓN: enviarás la canción al correo '+order.customerEmail+'. ¿Confirmas el envío real?';if(!confirm(message))return;
+const button=$('sendDelivery');button.disabled=true;
+try{const d=await api('/api/admin-auth',{action:'finalize-delivery',order_id:order.orderId,song_title:title,admin_note:$('adminNote').value,audio:uploads.audio,cover:uploads.cover});
+notice('Entrega enviada a '+d.customerEmail+' para el pedido '+d.orderId+'.');$('deliveryForm').hidden=true;uploads=null;}
+catch(err){notice(err.message,true);button.disabled=false;}});
+api('/api/admin-auth').then(d=>access(Boolean(d.authenticated))).catch(()=>access(false));
+})();
+</script></body></html>
