@@ -11,11 +11,12 @@ function esc(value = '') {
   }[c]));
 }
 
+// The historical survey event names remain for compatibility; this email now invites a public review.
 function surveyEmail({ order, surveyUrl }) {
   const isEs = order?.language === 'es';
   const subject = isEs
-    ? '¿Nos regalas menos de 60 segundos? · SONALZA'
-    : 'Can you give us less than 60 seconds? · SONALZA';
+    ? '¿Qué te pareció tu canción? · SONALZA'
+    : 'How did you like your song? · SONALZA';
 
   const html = `<!doctype html>
 <html>
@@ -29,19 +30,19 @@ function surveyEmail({ order, surveyUrl }) {
                 <div style="font-size:24px;font-weight:800;letter-spacing:.12em;color:#0b1f3a;">SONALZA</div>
                 <div style="margin-top:6px;font-size:10px;letter-spacing:.28em;color:#7b8797;">STUDIOS</div>
                 <div style="margin:26px auto 12px;display:inline-block;padding:8px 12px;border-radius:999px;background:#fff6ed;color:#a85311;font-size:11px;font-weight:700;letter-spacing:.08em;">${isEs ? 'TU OPINIÓN IMPORTA' : 'YOUR FEEDBACK MATTERS'}</div>
-                <h1 style="margin:10px 0 12px;font-size:32px;line-height:1.12;letter-spacing:-.035em;color:#0b1f3a;">${isEs ? '¿Cómo fue tu experiencia?' : 'How was your experience?'}</h1>
+                <h1 style="margin:10px 0 12px;font-size:32px;line-height:1.12;letter-spacing:-.035em;color:#0b1f3a;">${isEs ? '¿Qué te pareció tu canción y SONALZA?' : 'How was your song and SONALZA experience?'}</h1>
                 <p style="margin:0 auto;max-width:500px;font-size:16px;line-height:1.65;color:#59687b;">
                   ${isEs
-                    ? 'Gracias por elegir SONALZA. Si ya disfrutaste tu canción, nos ayudaría muchísimo conocer tu opinión. Son solo 4 preguntas y toma menos de 60 segundos.'
-                    : 'Thank you for choosing SONALZA. If you have already enjoyed your song, we would really value your feedback. It is only 4 questions and takes less than 60 seconds.'}
+                    ? 'Si ya escuchaste tu canción, nos encantaría conocer tu opinión sobre la letra, la música y tu experiencia con SONALZA. Puedes autorizar su publicación en nuestra página; es completamente opcional.'
+                    : 'If you have listened to your song, we would love to hear what you thought about the lyrics, music, and your experience with SONALZA. You can authorize publication on our website; it is entirely optional.'}
                 </p>
                 <a href="${esc(surveyUrl)}" style="display:inline-block;margin-top:26px;background:#0b1f3a;color:#fff;text-decoration:none;padding:16px 28px;border-radius:999px;font-size:15px;font-weight:700;">
-                  ${isEs ? 'Responder encuesta' : 'Answer survey'}
+                  ${isEs ? 'Dejar mi reseña' : 'Leave my review'}
                 </a>
                 <p style="margin:22px auto 0;max-width:500px;font-size:13px;line-height:1.6;color:#7b8797;">
                   ${isEs
-                    ? 'Si ya nos compartiste tu opinión, muchas gracias; no necesitas hacer nada más.'
-                    : 'If you already shared your feedback with us, thank you; there is nothing else you need to do.'}
+                    ? 'Si ya dejaste tu reseña, muchas gracias; no necesitas hacer nada más.'
+                    : 'If you already shared your review with us, thank you; there is nothing else you need to do.'}
                 </p>
               </td>
             </tr>
@@ -103,15 +104,18 @@ async function schedule({ order, deliveryUrl, reason = 'delivery' }) {
     return { scheduled:false, skipped:true, reason:'missing_order_data' };
   }
 
+  if (await latestEvent(order.order_id, 'customer_review_submitted') || await latestEvent(order.order_id, 'customer_review_approved')) {
+    return {scheduled:false,skipped:true,reason:'review_already_received'};
+  }
   if (await surveyCompleted(order.order_id)) {
-    return { scheduled:false, skipped:true, reason:'survey_already_completed' };
+    return {scheduled:false,skipped:true,reason:'survey_already_completed'};
   }
 
   await cancelPending(order.order_id, 'replaced_by_new_delivery');
 
   const scheduledAt = new Date(Date.now() + 72 * 60 * 60 * 1000).toISOString();
   const joiner = String(deliveryUrl).includes('?') ? '&' : '?';
-  const surveyUrl = `${deliveryUrl}${joiner}survey=1`;
+  const surveyUrl = `${deliveryUrl}${joiner}review=1`;
   const message = surveyEmail({ order, surveyUrl });
 
   const result = await email.send({
