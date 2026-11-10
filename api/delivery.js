@@ -3,6 +3,7 @@ const db = require('./_supabase');
 const orderToken = require('./_order-token');
 const email = require('./_email');
 const surveyFollowup = require('./_survey-followup');
+const reviews = require('../lib/sonalza-customer/review-core');
 
 function eq(value) {
   return encodeURIComponent(String(value));
@@ -231,13 +232,14 @@ async function handleGet(req, res) {
     return res.status(404).json({ ok:false, error:'Delivery not available.' });
   }
 
-  const [audioUrl, coverUrl, consentHistory, surveyState] = await Promise.all([
+  const [audioUrl, coverUrl, consentHistory, surveyState, reviewState] = await Promise.all([
     signedAssetUrl(meta.audio_bucket, meta.audio_path),
     meta.cover_bucket && meta.cover_path
       ? signedAssetUrl(meta.cover_bucket, meta.cover_path)
       : Promise.resolve(''),
     getSongConsentHistory(orderId),
-    getSurveyState(orderId)
+    getSurveyState(orderId),
+    reviews.status(orderId)
   ]);
 
   res.setHeader('Cache-Control', 'private, no-store, max-age=0');
@@ -256,7 +258,8 @@ async function handleGet(req, res) {
     fulfillment_status: String(order.fulfillment_status || ''),
     revision_available: !['revision_delivered','revision_approved','approved'].includes(String(order.fulfillment_status || '')),
     song_consent:songConsentState(consentHistory),
-    survey:surveyState
+    survey:surveyState,
+    review:reviewState
   });
 }
 
@@ -271,6 +274,24 @@ async function handlePost(req, res) {
 
   const orderId = verified.payload.orderId;
   const action = String(body.action || '');
+
+  if (action === 'customer_review') {
+    const order = await db.selectOne('orders',
+      'order_id=eq.'+eq(orderId)+'&select=payment_status&limit=1');
+    if (!order || order.payment_status !== 'paid') {
+      return res.status(409).json({ok:false,error:'Las reseñas requieren un pedido pagado.'});
+    }
+    try {
+      const saved = await reviews.submit(orderId, body, 'delivery_page');
+      res.setHeader('Cache-Control','no-store');
+      return res.status(200).json(saved);
+    } catch (error) {
+      if (error.status === 409 || error.status === 400) {
+        return res.status(error.status).json({ok:false,error:error.message});
+      }
+      throw error;
+    }
+  }
 
   if (action === 'song_publish_consent') {
     const choice = cleanChoice(body.choice);
