@@ -63,7 +63,7 @@
     document.querySelector('.hero-copy .hero-description').after(badges);
     document.querySelector('.hero-description').replaceChildren(pair('span','','Una cumbia con su nombre. Un corrido con tu historia. Una canci\u00f3n para decir lo que llevas en el coraz\u00f3n.','A cumbia with their name. A corrido with your story. A personal song for the words that matter.'));
     const closing=document.querySelector('.final-cta img');if(closing){closing.dataset.esPhoto='6532607';closing.dataset.enPhoto='7951784';closing.dataset.photoWidth='1000';}
-    const credit=document.querySelector('.photo-note');if(credit)credit.replaceChildren(pair('span','',config.copy.photoNotice.es,config.copy.photoNotice.en));
+
     const audio=document.getElementById('sample-audio'),reduced=matchMedia('(prefers-reduced-motion: reduce)'),controllers=[];
     let expanded=false;
     function makeController({region,hoverTarget,button,status,interval,advance,enabled=()=>true}){
