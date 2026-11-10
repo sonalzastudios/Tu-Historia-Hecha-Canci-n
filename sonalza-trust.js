@@ -58,7 +58,9 @@ about.append(node('strong','sonalza-review-author',String(review.name||t('Client
 head.append(node('span','sonalza-review-avatar',initials),about);
 const stars=node('div','sonalza-review-stars','★'.repeat(rating)+'☆'.repeat(5-rating));stars.setAttribute('aria-label',rating+'/5');
 card.append(head,stars,node('p','sonalza-review-message',String(review.message).slice(0,600)));return card;}
+let stopReviewMotion=()=>{};
 function displayReviews(approved=[]){
+stopReviewMotion();
 const cards=[...stories.map(storyCard),...approved.slice(0,5).map(verifiedCard).filter(Boolean)];
 const heading=document.getElementById('sonalzaVerifiedHeading');
 const pillars=document.querySelector('.sonalza-trust-pillars');
@@ -69,15 +71,38 @@ panel.classList.add('sonalza-reviews-ready');
 const track=node('div','sonalza-reviews-track');track.id='sonalzaReviewsTrack';track.tabIndex=0;
 track.setAttribute('aria-label',t('Testimonios de clientes SONALZA','SONALZA customer testimonials'));
 for(const card of cards)track.append(card);
+const autoMotion=cards.length>3&&typeof window.requestAnimationFrame==='function'&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+if(autoMotion){for(const card of cards){const copy=card.cloneNode(true);copy.setAttribute('aria-hidden','true');copy.inert=true;track.append(copy);}track.classList.add('sonalza-reviews-motion');}
 panel.append(track);
+if(autoMotion){
+let raf=0,last=0,pausedUntil=0,hover=false,focused=false;const pause=()=>{pausedUntil=performance.now()+12000;};
+track.addEventListener('pointerenter',()=>{hover=true;});
+track.addEventListener('pointerleave',()=>{hover=false;pause();});
+track.addEventListener('focusin',()=>{focused=true;});
+track.addEventListener('focusout',()=>{focused=false;pause();});
+track.addEventListener('pointerdown',pause,{passive:true});
+track.addEventListener('wheel',pause,{passive:true});
+const frame=now=>{
+if(last===0)last=now;
+const dt=Math.min(now-last,100);last=now;
+if(!hover&&!focused&&!document.hidden&&now>pausedUntil){
+const first=track.children[0],clone=track.children[cards.length];
+const span=clone&&first?clone.offsetLeft-first.offsetLeft:0;
+if(span>0){track.scrollLeft+=dt*.022;if(track.scrollLeft>=span)track.scrollLeft-=span;}
+}
+raf=requestAnimationFrame(frame);
+};
+raf=requestAnimationFrame(frame);
+stopReviewMotion=()=>cancelAnimationFrame(raf);
+}
 if(cards.length>2){const controls=node('div','sonalza-reviews-controls');
 for(const [direction,es,en,glyph] of [[-1,'Comentarios anteriores','Previous testimonials','←'],[1,'Más comentarios','More testimonials','→']]){
 const button=node('button','sonalza-reviews-arrow',glyph);button.type='button';button.setAttribute('aria-label',t(es,en));
-button.addEventListener('click',()=>track.scrollBy({left:direction*Math.max(track.clientWidth*.72,280),behavior:'smooth'}));controls.append(button);}
+button.addEventListener('click',()=>{if(track.classList.contains('sonalza-reviews-motion'))track.dispatchEvent(new Event('wheel'));track.scrollBy({left:direction*Math.max(track.clientWidth*.72,280),behavior:'smooth'});});controls.append(button);}
 panel.append(controls);}
 const note=bilingual(node('p','sonalza-reviews-note'),
-'Testimonios de clientes compartidos con autorización. Textos editados por claridad y traducidos al inglés; sin calificaciones atribuidas.',
-'Customer testimonials shared with permission. Edited for clarity and translated into English; no ratings attributed.');
+'Experiencias compartidas por clientes de SONALZA. Textos editados ligeramente para claridad y traducidos al inglés; sin calificaciones inventadas.',
+'Experiences shared by SONALZA customers. Lightly edited for clarity and translated into English; no fabricated ratings.');
 panel.append(note);}
 displayReviews();
 fetch('/api/geo?action=reviews-public',{headers:{Accept:'application/json'}})
