@@ -70,7 +70,9 @@ const title=$('songTitle').value.trim();if(!title){notice('Falta el título de l
 const message='ATENCIÓN: enviarás la canción al correo '+order.customerEmail+'. ¿Confirmas el envío real?';if(!confirm(message))return;
 const button=$('sendDelivery');button.disabled=true;
 try{const d=await api('/api/admin-auth',{action:'finalize-delivery',order_id:order.orderId,song_title:title,admin_note:$('adminNote').value,audio:uploads.audio,cover:uploads.cover});
-notice('Entrega enviada a '+d.customerEmail+' para el pedido '+d.orderId+'.');$('deliveryForm').hidden=true;uploads=null;}
+notice('Correo de entrega enviado a '+d.customerEmail+'. '+(d.statusSynced?'Mi SONALZA actualizado.':d.emailEventRecorded?'El envío quedó registrado; Mi SONALZA podrá mostrar la entrega desde ese registro.':'ATENCIÓN: no se pudo confirmar la actualización del seguimiento. No reenvíes sin revisar.'));$('deliveryForm').hidden=true;uploads=null;
+const link=document.createElement('a');link.href=d.deliveryUrl;link.target='_blank';link.rel='noopener noreferrer';link.textContent='Abrir página privada de entrega';link.style.display='inline-block';link.style.marginTop='12px';link.style.fontWeight='700';
+$('orderStatus').append(document.createElement('br'),link);}
 catch(err){notice(err.message,true);button.disabled=false;}});
 api('/api/admin-auth').then(d=>access(Boolean(d.authenticated))).catch(()=>access(false));
 })();
