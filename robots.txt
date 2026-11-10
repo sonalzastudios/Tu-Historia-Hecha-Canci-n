@@ -1,8 +1,5 @@
 User-agent: *
 Allow: /
 Disallow: /api/
-Disallow: /entregas-admin
-Disallow: /resenas-admin
-Disallow: /admin-delivery
 
 Sitemap: https://sonalza.com/sitemap.xml
