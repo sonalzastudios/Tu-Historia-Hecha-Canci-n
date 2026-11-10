@@ -37,6 +37,10 @@ function deliveryEmail({ order, songTitle, deliveryUrl, downloadUrl = '', coverU
       ? 'Tu pedido incluye 1 ronda consolidada de revisión. Si deseas solicitar cambios, escucha primero la canción completa y envía todos tus ajustes juntos desde tu página de entrega.'
       : 'Your order includes 1 consolidated revision round. If you would like changes, listen to the full song first and submit all requested adjustments together from your delivery page.');
 
+  const gratitudeCopy = isEs
+    ? 'Esperamos que esta canción se convierta en un recuerdo inolvidable. Gracias por confiar en SONALZA STUDIOS.'
+    : 'We hope this song becomes an unforgettable memory. Thank you for trusting SONALZA STUDIOS.';
+
   const supportCopy = isEs
     ? '¿Necesitas ayuda con esta orden? Puedes responder directamente a este correo.'
     : 'Need help with this order? You can reply directly to this email.';
@@ -63,6 +67,7 @@ function deliveryEmail({ order, songTitle, deliveryUrl, downloadUrl = '', coverU
                 <h1 style="margin:22px 0 10px 0;font-size:34px;line-height:1.12;letter-spacing:-.035em;color:#0b1f3a;">${isRevision ? (isEs ? 'Tu versión corregida está lista.' : 'Your corrected version is ready.') : (isEs ? 'Tu canción está lista.' : 'Your song is ready.')}</h1>
                 <p style="margin:0 auto 8px auto;font-size:20px;line-height:1.35;font-weight:700;color:#0b1f3a;">${title}</p>
                 <p style="margin:0 auto;max-width:510px;font-size:16px;line-height:1.65;color:#536274;">${esc(intro)}</p>
+                <p style="margin:16px auto 0;max-width:510px;font-size:15px;line-height:1.65;color:#536274;">${esc(gratitudeCopy)}</p>
               </td>
             </tr>
 
