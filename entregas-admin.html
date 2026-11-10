@@ -43,7 +43,7 @@ $('lookup').addEventListener('click',async()=>{const id=$('orderId').value.trim(
 if(!/^[A-Z0-9-]{6,64}$/.test(id)){notice('Introduce un número de pedido válido.',true);return;}
 $('lookup').disabled=true;
 try{const d=await api('/api/admin-auth',{action:'get-order-delivery-status',order_id:id});order=d;
-$('orderStatus').textContent='Pedido: '+d.orderId+' · Correo: '+d.customerEmail+' · Estado: '+d.fulfillmentStatus+(d.isRevision?' · Revisión solicitada':'');
+$('orderStatus').textContent='Pedido: '+d.orderId+' · Correo: '+d.customerEmail+' · Estado BD: '+d.orderStatus+' / '+d.fulfillmentStatus+' · Entregas preparadas: '+d.deliveryReadyCount+' · Correos de entrega registrados: '+d.emailEventCount+' · Reseña: '+(d.reviewApproved?'Publicada':d.reviewSubmitted?'Recibida, pendiente de revisión':'Sin registro')+(d.isRevision?' · Revisión solicitada':'');
 $('orderStatus').hidden=false;$('deliveryForm').hidden=false;notice('Pedido encontrado. Verifica el destinatario y prepara los archivos.');
 }catch(e){order=null;notice(e.message,true);}finally{$('lookup').disabled=false;}
 });
