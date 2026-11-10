@@ -300,7 +300,28 @@ async function sendDeliverabilityTest(body) {
     currency:'USD',
     product:'song'
   };
-  const message = paymentConfirmation(testOrder, false);
+  const mode = String(body.template || 'payment_confirmation');
+  if (!['payment_confirmation','delivery_preview'].includes(mode)) {
+    throw new Error('Invalid test email template.');
+  }
+  let message;
+  if (mode === 'delivery_preview') {
+    const sampleOrder = {order_id:testOrder.order_id,language:'es'};
+    message = deliveryEmail({
+      order:sampleOrder,
+      songTitle:'Canción de ejemplo · SONALZA',
+      deliveryUrl:'https://sonalza.com/seguimiento?lang=es',
+      adminNote:'SIMULACIÓN: este correo es una prueba del diseño. No representa una compra ni una canción entregada.'
+    });
+    // Keep the standard delivery design, but never offer a dead/private playback link.
+    message.html = message.html.replace('>Escuchar mi canción</a>', '>Ver seguimiento (prueba)</a>');
+    message.html = message.html.replace(/<body([^>]*)>/i,
+      '<body$1><div style="background:#fff1d6;color:#734300;padding:16px;text-align:center;font:700 15px Arial,sans-serif">PRUEBA DE SONALZA · NO ES UNA ENTREGA REAL</div>');
+    message.subject = '[PRUEBA · SIN ENTREGA] '+message.subject;
+  } else {
+    message = paymentConfirmation(testOrder, false);
+    message.subject = '[PRUEBA] '+message.subject;
+  }
 
   await email.send({
     to,
@@ -309,7 +330,7 @@ async function sendDeliverabilityTest(body) {
     replyTo:process.env.SONALZA_REPLY_TO || undefined
   });
 
-  return { to, timestamp, template:'payment_confirmation' };
+  return { to, timestamp, template:mode };
 }
 
 module.exports = async function handler(req, res) {
