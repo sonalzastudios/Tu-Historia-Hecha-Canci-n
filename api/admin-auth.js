@@ -184,6 +184,7 @@ async function getDeliveryAdminStatus(orderId) {
     isRevision,
     fulfillmentStatus:String(order.fulfillment_status || ''),
     orderStatus:String(order.status || ''),
+    paymentStatus:String(order.payment_status || ''),
     sheetsSyncStatus: (syncEvents||[]).some(x=>x.event_type==='sheets_sync_succeeded') ? 'synced' : (syncEvents||[]).some(x=>x.event_type==='sheets_sync_failed') ? 'failed' : 'unknown',
     manualProductionTaskCreated:Boolean(productionTask),
     deliveredByOrder:['completed','delivered'].includes(String(order.status||''))||['delivered','revision_delivered'].includes(String(order.fulfillment_status||'')),
