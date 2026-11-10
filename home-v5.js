@@ -66,7 +66,6 @@
   document.querySelector('.hero-description').replaceChildren(pair('span','', 'Una cumbia con su nombre. Un corrido con tu historia. Una canci\u00f3n para decir lo que llevas en el coraz\u00f3n.', 'A cumbia with their name. A corrido with your story. A personal song for the words that matter.'));
   const hero=document.querySelector('.hero-photo img');hero.dataset.esPhoto='8573556';hero.dataset.enPhoto='4651050';hero.width=1400;hero.height=1120;
   const closing=document.querySelector('.final-cta img');if(closing){closing.dataset.esPhoto='6532607';closing.dataset.enPhoto='7951784';}
-  const credit=document.querySelector('.photo-note');if(credit)credit.replaceChildren(pair('span','', 'Fotograf\u00edas ilustrativas de Pexels. No son clientes, artistas de SONALZA ni testimonios.', 'Illustrative Pexels photography. Not SONALZA customers, artists, or testimonials.'));
   let activeFilter='all', expanded=false, stopped=false, hovering=false, inView=false, timer=null;
   const reduced=matchMedia('(prefers-reduced-motion: reduce)');stopped=reduced.matches;
   function visible(){return cards.filter(c=>!c.hidden);}
