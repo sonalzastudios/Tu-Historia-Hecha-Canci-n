@@ -12,7 +12,7 @@ if(impactNumber){
     impactNumber.textContent=new Intl.NumberFormat(locale()?'en-US':'es-MX').format(n);
     const title=document.getElementById('sonalzaImpactTitle'),details=document.getElementById('sonalzaImpactDetails'),link=document.getElementById('sonalzaImpactLink');
     if(title)title.textContent=t('Pedidos musicales entregados','Music orders delivered');
-    if(details)details.textContent=t('Pedidos pagados y registrados como entregados en nuestro sistema.','Paid orders recorded as delivered in our system.');
+    if(details)details.textContent=t('Gracias por confiar tus historias a SONALZA.','Thank you for trusting SONALZA with your stories.');
     if(link){link.href='#escuchar';link.querySelector('span').textContent=t('Escuchar nuestras canciones','Listen to our songs');}
   }).catch(()=>{});
 }
