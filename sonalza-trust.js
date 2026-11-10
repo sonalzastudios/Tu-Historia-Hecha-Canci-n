@@ -47,7 +47,7 @@ const head=node('div','sonalza-review-head');
 const avatar=node('span','sonalza-review-avatar',item.symbol);avatar.setAttribute('aria-hidden','true');
 const about=node('div','sonalza-review-about');
 about.append(node('strong','sonalza-review-author',item.name),bilingual(node('span','sonalza-review-source'),item.label[0]+(item.permission==='shared'?' · Reseña compartida':' · Testimonio autorizado'),item.label[1]+(item.permission==='shared'?' · Customer feedback':' · Shared with permission')));
-head.append(avatar,about);card.append(head,bilingual(node('p','sonalza-review-message'),item.quote[0],item.quote[1]));
+head.append(avatar,about);const stars=node('div','sonalza-review-stars','★★★★★');stars.setAttribute('aria-label','5/5');card.append(head,stars,bilingual(node('p','sonalza-review-message'),item.quote[0],item.quote[1]));
 return card;}
 function verifiedCard(review){const rating=Number(review.rating);if(!Number.isInteger(rating)||rating<1||rating>5||String(review.message||'').trim().length<10)return null;
 const card=node('article','sonalza-review-card');card.setAttribute('aria-label',t('Opinión de cliente','Customer review'));
