@@ -27,14 +27,26 @@ const stories=[
  'I had a corrido made for my grandfather without telling him it was about him. I played it and he recognized himself immediately. I had never seen him cry until that day. He told me: “When I’m no longer here, I’d like you to play this song to remember me.” That’s when I understood how meaningful it is to create songs for feelings we cannot sing ourselves.']},
 {symbol:'♡',name:'Juan Pablo Gonzalez',label:['Una propuesta de matrimonio','A marriage proposal'],
  quote:['Le hice una canción a mi novia para pedirle matrimonio. Conté cómo nos conocimos, cuánto me importa y lo feliz que me haría compartir una vida juntos. Lloró de emoción, me abrazó fuertemente y, sin dudarlo, me dijo que sí. Gracias a SONALZA por crear un momento tan único; aunque tenía mis dudas, creo que no hubiera hecho un mejor trabajo por mi cuenta.',
- 'I had a song made for my girlfriend to propose. It told the story of how we met, how much she means to me, and how happy I would be to share a life together. She cried, hugged me tightly, and said yes without hesitation. Thank you, SONALZA, for creating such a unique moment. I had my doubts at first, but I don’t think I could have done a better job myself.']}
+ 'I had a song made for my girlfriend to propose. It told the story of how we met, how much she means to me, and how happy I would be to share a life together. She cried, hugged me tightly, and said yes without hesitation. Thank you, SONALZA, for creating such a unique moment. I had my doubts at first, but I don’t think I could have done a better job myself.']},
+{symbol:'♥',name:'Pablo Jiménez',label:['Aniversario de bodas','Wedding anniversary'],permission:'shared',
+ quote:['Le regalé una canción a mi esposa por nuestro aniversario y vaya que le encantó. No sabía que una canción tan fácil de crear iba a tener un impacto tan fuerte en ella.',
+ 'I gave my wife a song for our anniversary, and she absolutely loved it. I had no idea that a song so easy to create could have such a powerful impact on her.']},
+{symbol:'♡',name:'Rosa Bustamante',label:['Agradecimiento a mi esposo','A thank-you for my husband'],permission:'shared',
+ quote:['Llevaba mucho tiempo queriendo regalarle algo a mi esposo y era difícil saber qué elegir. Encontré SONALZA y decidí hacerle una canción para agradecerle por el gran padre que ha sido para nuestros hijos. Su reacción fue inesperada. Me hubiera encantado conocer esta página antes. Gracias por todo lo que hacen.',
+ 'I had wanted to give my husband something special for a long time, but I struggled to find the right gift. I found SONALZA and decided to make him a song to thank him for being such a wonderful father to our children. His reaction was unexpected. I wish I had found this website sooner. Thank you for everything you do.']},
+{symbol:'♫',name:'César Miramontes',label:['Música electrónica','Electronic music'],permission:'shared',
+ quote:['¡Wow! Esta canción de electrónica realmente me encanta. Voy a generar más. 😎',
+ 'Wow! I really love this electronic track. I’m going to create more! 😎']},
+{symbol:'✦',name:'Eduardo Ramos',label:['Una canción para mi hija','A song for my daughter'],permission:'shared',
+ quote:['Le hice una canción a mi hija sobre una historieta que a ella le encanta y quedó fascinada. Me sentí todavía más querido como padre al ver su expresión de alegría desde la primera vez que escuchó la canción.',
+ 'I made my daughter a song about a story she loves, and she was fascinated. Seeing the joy on her face the very first time she heard it made me feel even more loved as a father.']}
 ];
 function storyCard(item){const card=node('article','sonalza-review-card sonalza-editorial-review');
 card.setAttribute('aria-label',t('Testimonio compartido por un cliente','Testimonial shared by a customer'));
 const head=node('div','sonalza-review-head');
 const avatar=node('span','sonalza-review-avatar',item.symbol);avatar.setAttribute('aria-hidden','true');
 const about=node('div','sonalza-review-about');
-about.append(node('strong','sonalza-review-author',item.name),bilingual(node('span','sonalza-review-source'),item.label[0]+' · Testimonio autorizado',item.label[1]+' · Shared with permission'));
+about.append(node('strong','sonalza-review-author',item.name),bilingual(node('span','sonalza-review-source'),item.label[0]+(item.permission==='shared'?' · Reseña compartida':' · Testimonio autorizado'),item.label[1]+(item.permission==='shared'?' · Customer feedback':' · Shared with permission')));
 head.append(avatar,about);card.append(head,bilingual(node('p','sonalza-review-message'),item.quote[0],item.quote[1]));
 return card;}
 function verifiedCard(review){const rating=Number(review.rating);if(!Number.isInteger(rating)||rating<1||rating>5||String(review.message||'').trim().length<10)return null;
@@ -46,7 +58,9 @@ about.append(node('strong','sonalza-review-author',String(review.name||t('Client
 head.append(node('span','sonalza-review-avatar',initials),about);
 const stars=node('div','sonalza-review-stars','★'.repeat(rating)+'☆'.repeat(5-rating));stars.setAttribute('aria-label',rating+'/5');
 card.append(head,stars,node('p','sonalza-review-message',String(review.message).slice(0,600)));return card;}
+let stopReviewMotion=()=>{};
 function displayReviews(approved=[]){
+stopReviewMotion();
 const cards=[...stories.map(storyCard),...approved.slice(0,5).map(verifiedCard).filter(Boolean)];
 const heading=document.getElementById('sonalzaVerifiedHeading');
 const pillars=document.querySelector('.sonalza-trust-pillars');
@@ -57,15 +71,38 @@ panel.classList.add('sonalza-reviews-ready');
 const track=node('div','sonalza-reviews-track');track.id='sonalzaReviewsTrack';track.tabIndex=0;
 track.setAttribute('aria-label',t('Testimonios de clientes SONALZA','SONALZA customer testimonials'));
 for(const card of cards)track.append(card);
+const autoMotion=cards.length>3&&typeof window.requestAnimationFrame==='function'&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+if(autoMotion){for(const card of cards){const copy=card.cloneNode(true);copy.setAttribute('aria-hidden','true');copy.inert=true;track.append(copy);}track.classList.add('sonalza-reviews-motion');}
 panel.append(track);
+if(autoMotion){
+let raf=0,last=0,pausedUntil=0,hover=false,focused=false;const pause=()=>{pausedUntil=performance.now()+12000;};
+track.addEventListener('pointerenter',()=>{hover=true;});
+track.addEventListener('pointerleave',()=>{hover=false;pause();});
+track.addEventListener('focusin',()=>{focused=true;});
+track.addEventListener('focusout',()=>{focused=false;pause();});
+track.addEventListener('pointerdown',pause,{passive:true});
+track.addEventListener('wheel',pause,{passive:true});
+const frame=now=>{
+if(last===0)last=now;
+const dt=Math.min(now-last,100);last=now;
+if(!hover&&!focused&&!document.hidden&&now>pausedUntil){
+const first=track.children[0],clone=track.children[cards.length];
+const span=clone&&first?clone.offsetLeft-first.offsetLeft:0;
+if(span>0){track.scrollLeft+=dt*.022;if(track.scrollLeft>=span)track.scrollLeft-=span;}
+}
+raf=requestAnimationFrame(frame);
+};
+raf=requestAnimationFrame(frame);
+stopReviewMotion=()=>cancelAnimationFrame(raf);
+}
 if(cards.length>2){const controls=node('div','sonalza-reviews-controls');
 for(const [direction,es,en,glyph] of [[-1,'Comentarios anteriores','Previous testimonials','←'],[1,'Más comentarios','More testimonials','→']]){
 const button=node('button','sonalza-reviews-arrow',glyph);button.type='button';button.setAttribute('aria-label',t(es,en));
-button.addEventListener('click',()=>track.scrollBy({left:direction*Math.max(track.clientWidth*.72,280),behavior:'smooth'}));controls.append(button);}
+button.addEventListener('click',()=>{if(track.classList.contains('sonalza-reviews-motion'))track.dispatchEvent(new Event('wheel'));track.scrollBy({left:direction*Math.max(track.clientWidth*.72,280),behavior:'smooth'});});controls.append(button);}
 panel.append(controls);}
 const note=bilingual(node('p','sonalza-reviews-note'),
-'Testimonios de clientes compartidos con autorización. Textos editados por claridad y traducidos al inglés; sin calificaciones atribuidas.',
-'Customer testimonials shared with permission. Edited for clarity and translated into English; no ratings attributed.');
+'Experiencias compartidas por clientes de SONALZA. Textos editados ligeramente para claridad y traducidos al inglés; sin calificaciones inventadas.',
+'Experiences shared by SONALZA customers. Lightly edited for clarity and translated into English; no fabricated ratings.');
 panel.append(note);}
 displayReviews();
 fetch('/api/geo?action=reviews-public',{headers:{Accept:'application/json'}})

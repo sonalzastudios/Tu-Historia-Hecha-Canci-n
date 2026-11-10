@@ -94,3 +94,14 @@ html:lang(es) [data-idea="mama"] .idea-photo img{object-position:50% 0%}
 .sonalza-editorial-review .sonalza-review-source{font-size:10px}
 #verifiedReviews.sonalza-reviews-ready{margin-bottom:20px}
 @media(max-width:620px){.sonalza-editorial-review{min-height:320px!important}.sonalza-editorial-review .sonalza-review-message{font-size:13px;line-height:1.72}}
+
+/* Premium continuous testimonial movement; respects reduced-motion preference. */
+.sonalza-reviews-track.sonalza-reviews-motion{scroll-snap-type:none;scrollbar-width:none;scroll-behavior:auto;touch-action:pan-x pan-y}
+.sonalza-reviews-motion::-webkit-scrollbar{display:none}
+.sonalza-reviews-motion .sonalza-review-card{scroll-snap-align:none;transition:border-color .35s ease,box-shadow .35s ease;will-change:auto}
+.sonalza-reviews-motion .sonalza-review-card:hover{border-color:#c9a48d!important;box-shadow:0 14px 32px rgba(60,37,20,.10)}
+.sonalza-reviews-ready{position:relative}
+.sonalza-reviews-controls{gap:14px}
+.sonalza-reviews-arrow{transition:background .25s ease,border-color .25s ease,transform .25s ease}
+.sonalza-reviews-arrow:hover{transform:translateY(-2px);border-color:#bd9a85}
+@media(prefers-reduced-motion:reduce){.sonalza-reviews-arrow,.sonalza-reviews-motion .sonalza-review-card{transition:none!important}.sonalza-reviews-track{scroll-behavior:auto}}
