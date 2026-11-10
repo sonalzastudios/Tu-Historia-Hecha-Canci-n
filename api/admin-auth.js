@@ -160,7 +160,7 @@ async function getDeliveryAdminStatus(orderId) {
 
   const order = await db.selectOne(
     'orders',
-    `order_id=eq.${eq(cleanId)}&select=order_id,customer_email,language,payment_status,fulfillment_status,brief&limit=1`
+    `order_id=eq.${eq(cleanId)}&select=order_id,customer_email,language,payment_status,status,fulfillment_status,brief&limit=1`
   );
   if (!order) throw new Error('Order not found.');
 
@@ -169,11 +169,21 @@ async function getDeliveryAdminStatus(orderId) {
     `order_id=eq.${eq(cleanId)}&event_type=eq.revision_requested&select=metadata,created_at&order=created_at.desc&limit=1`
   );
 
+  const deliveryEvents = await db.select('order_events',
+    `order_id=eq.${eq(cleanId)}&event_type=in.(delivery_ready,delivery_email_sent)&select=event_type,created_at&order=created_at.desc&limit=20`);
+  const reviewEvents = await db.select('order_events',
+    `order_id=eq.${eq(cleanId)}&event_type=in.(customer_review_submitted,customer_review_approved)&select=event_type,created_at&order=created_at.desc&limit=20`);
   const isRevision = String(order.fulfillment_status || '') === 'revision_requested';
   return {
     orderId:cleanId,
     isRevision,
     fulfillmentStatus:String(order.fulfillment_status || ''),
+    orderStatus:String(order.status || ''),
+    deliveredByOrder:['completed','delivered'].includes(String(order.status||''))||['delivered','revision_delivered'].includes(String(order.fulfillment_status||'')),
+    emailEventCount:(deliveryEvents||[]).filter(x=>x.event_type==='delivery_email_sent').length,
+    deliveryReadyCount:(deliveryEvents||[]).filter(x=>x.event_type==='delivery_ready').length,
+    reviewSubmitted:(reviewEvents||[]).some(x=>x.event_type==='customer_review_submitted'||x.event_type==='customer_review_approved'),
+    reviewApproved:(reviewEvents||[]).some(x=>x.event_type==='customer_review_approved'),
     customerEmail:order.customer_email || '',
     recipientName:order.brief?.nombre || '',
     revisionNotes:isRevision ? String(revisionEvent?.metadata?.notes || '') : ''

@@ -25,13 +25,7 @@
 <label style="display:flex;align-items:start;gap:8px"><input type="checkbox" id="confirmDelivery" style="width:auto;margin-top:2px"> He verificado el archivo de audio y confirmo que es el pedido correcto.</label>
 <button id="sendDelivery" type="submit" disabled>2. Confirmar y enviar canción</button>
 </form></section>
-<section id="testEmailPanel" class="card" hidden>
-<h2>Probar el correo predeterminado</h2>
-<p class="muted">Envía una muestra del diseño final de entrega. Se identifica claramente como PRUEBA: no crea pedidos, no incluye enlaces privados ni entrega archivos.</p>
-<form id="testEmailForm"><label for="testEmailRecipient">Correo para recibir la prueba</label>
-<div class="row"><input type="email" id="testEmailRecipient" value="mlbdemw@gmail.com" autocomplete="email" required style="max-width:350px"><button type="submit">Enviar correo de prueba</button></div></form>
-<p id="testEmailResult" class="muted" role="status" aria-live="polite"></p>
-</section>
+
 <p class="muted">Esta herramienta usa la autenticación y el sistema de entrega ya existentes; no crea pedidos ni realiza cobros.</p>
 </main>
 <script>
@@ -41,26 +35,15 @@ function notice(message,error=false){const e=$('notice');e.hidden=false;e.classN
 async function api(url,body){const o=body===undefined?{}:{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)};
 const r=await fetch(url,{credentials:'same-origin',cache:'no-store',...o,headers:{Accept:'application/json',...(o.headers||{})}});
 let d={};try{d=await r.json();}catch(_){}if(!r.ok)throw Error(d.error||'Error de solicitud ('+r.status+').');return d;}
-function access(yes){$('login').hidden=yes;$('workspace').hidden=!yes;$('testEmailPanel').hidden=!yes;}
+function access(yes){$('login').hidden=yes;$('workspace').hidden=!yes;}
 function resetUpload(){uploads=null;$('uploadState').textContent='Aún no se han subido archivos.';$('sendDelivery').disabled=true;$('confirmDelivery').checked=false;}
-$('testEmailForm').addEventListener('submit',async e=>{
-  e.preventDefault();
-  const button=e.target.querySelector('button');button.disabled=true;
-  const result=$('testEmailResult');result.textContent='Enviando prueba...';
-  try{
-    const to=$('testEmailRecipient').value.trim();
-    const data=await api('/api/admin-auth',{action:'send-email-auth-test',template:'delivery_preview',to});
-    result.textContent='Prueba enviada a '+data.to+'. Busca un asunto que comience con [PRUEBA · SIN ENTREGA].';
-  }catch(error){result.textContent='No se pudo enviar: '+error.message;}
-  finally{button.disabled=false;}
-});
 $('loginForm').addEventListener('submit',async e=>{e.preventDefault();const b=e.target.querySelector('button');b.disabled=true;try{await api('/api/admin-auth',{action:'login',key:$('password').value});$('password').value='';access(true);notice('Sesión administrativa abierta.');}catch(err){notice(err.message,true);}finally{b.disabled=false;}});
 $('logout').addEventListener('click',async()=>{try{await api('/api/admin-auth',{action:'logout'});access(false);notice('Sesión cerrada.');}catch(e){notice(e.message,true);}});
 $('lookup').addEventListener('click',async()=>{const id=$('orderId').value.trim().toUpperCase();resetUpload();$('deliveryForm').hidden=true;$('orderStatus').hidden=true;
 if(!/^[A-Z0-9-]{6,64}$/.test(id)){notice('Introduce un número de pedido válido.',true);return;}
 $('lookup').disabled=true;
 try{const d=await api('/api/admin-auth',{action:'get-order-delivery-status',order_id:id});order=d;
-$('orderStatus').textContent='Pedido: '+d.orderId+' · Correo: '+d.customerEmail+' · Estado: '+d.fulfillmentStatus+(d.isRevision?' · Revisión solicitada':'');
+$('orderStatus').textContent='Pedido: '+d.orderId+' · Correo: '+d.customerEmail+' · Estado BD: '+d.orderStatus+' / '+d.fulfillmentStatus+' · Entregas preparadas: '+d.deliveryReadyCount+' · Correos de entrega registrados: '+d.emailEventCount+' · Reseña: '+(d.reviewApproved?'Publicada':d.reviewSubmitted?'Recibida, pendiente de revisión':'Sin registro')+(d.isRevision?' · Revisión solicitada':'');
 $('orderStatus').hidden=false;$('deliveryForm').hidden=false;notice('Pedido encontrado. Verifica el destinatario y prepara los archivos.');
 }catch(e){order=null;notice(e.message,true);}finally{$('lookup').disabled=false;}
 });
