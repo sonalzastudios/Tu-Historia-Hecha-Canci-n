@@ -5,7 +5,7 @@
   "copy": {
     "ideasIntro": {"es": "Estas ideas son solo el comienzo. Las posibilidades son infinitas: cuéntanos lo que imaginas y creemos una canción a tu medida.", "en": "These ideas are just the beginning. The possibilities are endless: tell us what you imagine and let’s create a song that is uniquely yours."},
     "customIdea": {"es": "¿Tienes otra idea? Cuéntanosla", "en": "Have another idea? Tell us about it"},
-    "photoNotice": {"es": "Fotografías de inspiración. No representan clientes ni testimonios de SONALZA.", "en": "Inspiration photography. These images do not depict SONALZA customers or testimonials."}
+    "photoNotice": {"es": "Tu historia puede ser la próxima canción.", "en": "Your story could be the next song."}
   },
   "ideas": [
     {"id":"mama","group":"family","es":"Para mamá","en":"For mom","descEs":"Por todo lo que hizo. Y lo que sigue haciendo.","descEn":"For everything she did. And everything she still does.","tagEs":"Banda · balada","tagEn":"Banda · ballad","img":16880087,"enImg":16880087,"query":{"relation":"Mamá","occasion":"Gracias","genre":"Banda"},"pos":"50% 0%"},
