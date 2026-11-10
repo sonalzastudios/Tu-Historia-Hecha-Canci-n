@@ -2,7 +2,6 @@ const db = require('./_supabase');
 const stripe = require('./_stripe');
 const email = require('./_email');
 const emailTemplates = require('./_email-templates');
-const autoProduction = require('./_auto-production');
 
 function eq(value) { return encodeURIComponent(String(value)); }
 function esc(value = '') { return String(value ?? '').replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c])); }
@@ -178,16 +177,46 @@ async function sendPaidEmails(order, reviewRequired) {
   return { customerSent, adminSent };
 }
 
-async function triggerAutoProduction(orderId) {
-  try {
-    return await autoProduction.processOrder(orderId);
-  } catch (err) {
-    console.error('auto-production', err);
-    await db.insertEvent(orderId, 'production_auto_failed', {
-      error: String(err.message || err).slice(0, 700)
-    }, 'sonalza-production-director').catch(() => {});
-    return { ok: false, error: String(err.message || err) };
+// Customer orders are queued for human review. Automatic OpenAI music generation is intentionally not used here.
+async function ensureManualProductionTask(order) {
+  if (['completed','delivered'].includes(String(order.status||'').toLowerCase()) ||
+      ['delivered','revision_delivered'].includes(String(order.fulfillment_status||'').toLowerCase())) {
+    return {queued:false,skipped:true,reason:'already_delivered'};
   }
+  const existing = await db.selectOne('order_events',
+    `order_id=eq.${eq(order.order_id)}&event_type=eq.production_task_created&select=created_at&limit=1`);
+  if (existing) return {queued:true, duplicate:true};
+  await db.insertEvent(order.order_id, 'production_task_created', {
+    director:'SONALZA Production Director',
+    workstream:'customer_order',
+    production_mode:'human_review',
+    source_sheet:'SONALZA Production Database',
+    artist_requested:String(order.brief?.voz || '').slice(0,100),
+    genre_requested:String(order.brief?.genero || '').slice(0,100),
+    rush:Array.isArray(order.addons) && order.addons.includes('rush')
+  }, 'sonalza-production-director');
+  return {queued:true,duplicate:false};
+}
+
+// Google Sheets is a secondary system: a sync problem is recorded, never a failed payment.
+async function syncPaidOrderToSheets(order, session, paidAt) {
+  const previous = await db.selectOne('order_events',
+    `order_id=eq.${eq(order.order_id)}&event_type=eq.sheets_sync_succeeded&select=created_at&limit=1`);
+  if (previous) return {synced:true,duplicate:true};
+  try {
+    await sendPaidOrderToSheets(order,session,paidAt);
+  } catch (err) {
+    console.error('sonalza sheets sync', err);
+    await db.insertEvent(order.order_id,'sheets_sync_failed',{
+      error:String(err.message || err).slice(0,250),
+      failed_at:new Date().toISOString()
+    },'sonalza-integration').catch(error=>console.error('sheets sync audit',error));
+    return {synced:false};
+  }
+  await db.insertEvent(order.order_id,'sheets_sync_succeeded',{
+    synced_at:new Date().toISOString()
+  },'sonalza-integration').catch(error=>console.error('sheets sync audit',error));
+  return {synced:true,duplicate:false};
 }
 
 async function handleCheckoutPaid(session, eventType) {
@@ -238,9 +267,9 @@ async function handleCheckoutPaid(session, eventType) {
 
   const updated = {
     ...order,
-    status: targetStatus,
+    status: paymentAlreadyRecorded ? order.status : targetStatus,
     payment_status: targetPaymentStatus,
-    fulfillment_status: targetFulfillmentStatus,
+    fulfillment_status: paymentAlreadyRecorded ? order.fulfillment_status : targetFulfillmentStatus,
     paid_at: paidAt,
     payment_provider: 'stripe',
     stripe_session_id: session.id,
@@ -255,8 +284,9 @@ async function handleCheckoutPaid(session, eventType) {
   if (Object.keys(notifyPatch).length) await db.update('orders', `order_id=eq.${eq(orderId)}`, notifyPatch);
 
   if (!reviewRequired) {
-    await sendPaidOrderToSheets(updated, session, paidAt);
-    await triggerAutoProduction(orderId);
+    // A paid order always enters the human production queue, even when Sheets is unavailable.
+    await ensureManualProductionTask(updated);
+    await syncPaidOrderToSheets(updated, session, paidAt);
   }
 }
 
@@ -324,4 +354,5 @@ async function handler(req, res) {
 }
 
 module.exports = handler;
+module.exports.syncPaidOrderToSheets = syncPaidOrderToSheets;
 module.exports.config = { api: { bodyParser: false } };

@@ -11,7 +11,7 @@
 <div id="notice" role="status" hidden></div>
 <section id="login" class="card" hidden><h2>Acceso administrativo</h2><form id="loginForm"><label for="password">Clave de SONALZA</label><input id="password" type="password" minlength="16" autocomplete="off" required><p><button type="submit">Entrar</button></p></form></section>
 <section id="workspace" hidden><div class="row"><h2>Preparar entrega</h2><button type="button" id="logout" class="secondary">Cerrar sesión</button></div>
-<div class="card"><label for="orderId">Número de pedido</label><div class="row"><input id="orderId" type="text" autocomplete="off" placeholder="SON-..." style="max-width:350px"><button type="button" id="lookup">Consultar pedido</button></div><div id="orderStatus" class="status" hidden></div></div>
+<div class="card"><label for="orderId">Número de pedido</label><div class="row"><input id="orderId" type="text" autocomplete="off" placeholder="SON-..." style="max-width:350px"><button type="button" id="lookup">Consultar pedido</button></div><div id="orderStatus" class="status" hidden></div><button id="syncSheets" class="secondary" type="button" hidden>Reintentar sincronización con Google Sheets</button></div>
 <form id="deliveryForm" class="card" hidden>
 <h2>Archivos y mensaje</h2>
 <label for="songTitle">Título de la canción</label><input id="songTitle" maxlength="180" required placeholder="Título final de la canción">
@@ -39,13 +39,26 @@ function access(yes){$('login').hidden=yes;$('workspace').hidden=!yes;}
 function resetUpload(){uploads=null;$('uploadState').textContent='Aún no se han subido archivos.';$('sendDelivery').disabled=true;$('confirmDelivery').checked=false;}
 $('loginForm').addEventListener('submit',async e=>{e.preventDefault();const b=e.target.querySelector('button');b.disabled=true;try{await api('/api/admin-auth',{action:'login',key:$('password').value});$('password').value='';access(true);notice('Sesión administrativa abierta.');}catch(err){notice(err.message,true);}finally{b.disabled=false;}});
 $('logout').addEventListener('click',async()=>{try{await api('/api/admin-auth',{action:'logout'});access(false);notice('Sesión cerrada.');}catch(e){notice(e.message,true);}});
-$('lookup').addEventListener('click',async()=>{const id=$('orderId').value.trim().toUpperCase();resetUpload();$('deliveryForm').hidden=true;$('orderStatus').hidden=true;
+$('lookup').addEventListener('click',async()=>{const id=$('orderId').value.trim().toUpperCase();resetUpload();$('deliveryForm').hidden=true;$('orderStatus').hidden=true;$('syncSheets').hidden=true;
 if(!/^[A-Z0-9-]{6,64}$/.test(id)){notice('Introduce un número de pedido válido.',true);return;}
 $('lookup').disabled=true;
 try{const d=await api('/api/admin-auth',{action:'get-order-delivery-status',order_id:id});order=d;
-$('orderStatus').textContent='Pedido: '+d.orderId+' · Correo: '+d.customerEmail+' · Estado BD: '+d.orderStatus+' / '+d.fulfillmentStatus+' · Entregas preparadas: '+d.deliveryReadyCount+' · Correos de entrega registrados: '+d.emailEventCount+' · Reseña: '+(d.reviewApproved?'Publicada':d.reviewSubmitted?'Recibida, pendiente de revisión':'Sin registro')+(d.isRevision?' · Revisión solicitada':'');
+$('orderStatus').textContent='Pedido: '+d.orderId+' · Correo: '+d.customerEmail+' · Estado BD: '+d.orderStatus+' / '+d.fulfillmentStatus+' · Entregas preparadas: '+d.deliveryReadyCount+' · Correos de entrega registrados: '+d.emailEventCount+' · Reseña: '+(d.reviewApproved?'Publicada':d.reviewSubmitted?'Recibida, pendiente de revisión':'Sin registro')+' · Google Sheets: '+(d.sheetsSyncStatus==='synced'?'Sincronizado':d.sheetsSyncStatus==='failed'?'Error de sincronización':'Sin evidencia de sincronización')+' · Tarea Production Director: '+(d.manualProductionTaskCreated?'Registrada':'Sin registro')+(d.isRevision?' · Revisión solicitada':'');
+$('syncSheets').hidden=d.sheetsSyncStatus==='synced'||d.paymentStatus!=='paid';
 $('orderStatus').hidden=false;$('deliveryForm').hidden=false;notice('Pedido encontrado. Verifica el destinatario y prepara los archivos.');
 }catch(e){order=null;notice(e.message,true);}finally{$('lookup').disabled=false;}
+});
+$('syncSheets').addEventListener('click',async()=>{
+  if(!order||order.paymentStatus!=='paid')return;
+  if(!confirm('¿Reintentar el registro en Google Sheets del pedido '+order.orderId+'? No se realizará ningún cobro ni se enviará una canción.'))return;
+  const button=$('syncSheets');button.disabled=true;
+  try {
+    const result=await api('/api/admin-auth',{action:'retry-sheets-sync',order_id:order.orderId});
+    notice(result.alreadySynced?'Este pedido ya figuraba sincronizado.':'Google Sheets confirmó la sincronización.');
+    button.hidden=true;
+    $('lookup').click();
+  }catch(error){notice('No se completó la sincronización: '+error.message,true);}
+  finally{button.disabled=false;}
 });
 $('audioFile').addEventListener('change',resetUpload);
 $('coverFile').addEventListener('change',resetUpload);

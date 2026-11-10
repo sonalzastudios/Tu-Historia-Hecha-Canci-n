@@ -6,6 +6,7 @@ const email = require('./_email');
 const { deliveryEmail } = require('./_delivery-email-template');
 const { paymentConfirmation } = require('./_email-templates');
 const surveyFollowup = require('./_survey-followup');
+const stripeWebhook = require('./stripe-webhook');
 
 function readBody(req) {
   if (req.body && typeof req.body === 'object') return req.body;
@@ -173,12 +174,19 @@ async function getDeliveryAdminStatus(orderId) {
     `order_id=eq.${eq(cleanId)}&event_type=in.(delivery_ready,delivery_email_sent)&select=event_type,created_at&order=created_at.desc&limit=20`);
   const reviewEvents = await db.select('order_events',
     `order_id=eq.${eq(cleanId)}&event_type=in.(customer_review_submitted,customer_review_approved)&select=event_type,created_at&order=created_at.desc&limit=20`);
+  const [syncEvents, productionTask] = await Promise.all([
+    db.select('order_events', `order_id=eq.${eq(cleanId)}&event_type=in.(sheets_sync_succeeded,sheets_sync_failed)&select=event_type,created_at&order=created_at.desc&limit=20`),
+    db.selectOne('order_events', `order_id=eq.${eq(cleanId)}&event_type=eq.production_task_created&select=created_at&limit=1`)
+  ]);
   const isRevision = String(order.fulfillment_status || '') === 'revision_requested';
   return {
     orderId:cleanId,
     isRevision,
     fulfillmentStatus:String(order.fulfillment_status || ''),
     orderStatus:String(order.status || ''),
+    paymentStatus:String(order.payment_status || ''),
+    sheetsSyncStatus: (syncEvents||[]).some(x=>x.event_type==='sheets_sync_succeeded') ? 'synced' : (syncEvents||[]).some(x=>x.event_type==='sheets_sync_failed') ? 'failed' : 'unknown',
+    manualProductionTaskCreated:Boolean(productionTask),
     deliveredByOrder:['completed','delivered'].includes(String(order.status||''))||['delivered','revision_delivered'].includes(String(order.fulfillment_status||'')),
     emailEventCount:(deliveryEvents||[]).filter(x=>x.event_type==='delivery_email_sent').length,
     deliveryReadyCount:(deliveryEvents||[]).filter(x=>x.event_type==='delivery_ready').length,
@@ -373,6 +381,30 @@ module.exports = async function handler(req, res) {
       } catch (err) {
         console.error('get-order-delivery-status', err);
         return res.status(400).json({ ok:false, error:String(err.message || 'Unable to load order.').slice(0,300) });
+      }
+    }
+
+    if (action === 'retry-sheets-sync') {
+      if (!adminAuth.isAuthenticated(req)) {
+        return res.status(401).json({ok:false,error:'Admin authentication required.'});
+      }
+      const cleanId = cleanOrderId(body.order_id);
+      if (!cleanId) return res.status(400).json({ok:false,error:'Invalid order ID.'});
+      try {
+        const order = await db.selectOne('orders', `order_id=eq.${eq(cleanId)}&select=*&limit=1`);
+        if (!order || order.payment_status !== 'paid' || !order.paid_at) {
+          return res.status(409).json({ok:false,error:'Only a verified paid order can be synchronized.'});
+        }
+        const result = await stripeWebhook.syncPaidOrderToSheets(order,{
+          payment_intent:order.stripe_payment_intent_id||'',
+          id:order.stripe_session_id||''
+        }, order.paid_at);
+        res.setHeader('Cache-Control','no-store');
+        if (!result.synced) return res.status(503).json({ok:false,error:'Google Sheets did not confirm synchronization. The order remains paid and needs review.'});
+        return res.status(200).json({ok:true,synced:true,alreadySynced:Boolean(result.duplicate)});
+      } catch (err) {
+        console.error('retry-sheets-sync',err);
+        return res.status(500).json({ok:false,error:'Could not synchronize the order to Google Sheets.'});
       }
     }
 
