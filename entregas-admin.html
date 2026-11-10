@@ -44,7 +44,7 @@ if(!/^[A-Z0-9-]{6,64}$/.test(id)){notice('Introduce un número de pedido válido
 $('lookup').disabled=true;
 try{const d=await api('/api/admin-auth',{action:'get-order-delivery-status',order_id:id});order=d;
 $('orderStatus').textContent='Pedido: '+d.orderId+' · Correo: '+d.customerEmail+' · Estado BD: '+d.orderStatus+' / '+d.fulfillmentStatus+' · Entregas preparadas: '+d.deliveryReadyCount+' · Correos de entrega registrados: '+d.emailEventCount+' · Reseña: '+(d.reviewApproved?'Publicada':d.reviewSubmitted?'Recibida, pendiente de revisión':'Sin registro')+' · Google Sheets: '+(d.sheetsSyncStatus==='synced'?'Sincronizado':d.sheetsSyncStatus==='failed'?'Error de sincronización':'Sin evidencia de sincronización')+' · Tarea Production Director: '+(d.manualProductionTaskCreated?'Registrada':'Sin registro')+(d.isRevision?' · Revisión solicitada':'');
-$('syncSheets').hidden=d.sheetsSyncStatus==='synced'||d.paymentStatus!=='paid';
+$('syncSheets').hidden=d.sheetsSyncStatus!=='failed'||d.paymentStatus!=='paid';
 $('orderStatus').hidden=false;$('deliveryForm').hidden=false;notice('Pedido encontrado. Verifica el destinatario y prepara los archivos.');
 }catch(e){order=null;notice(e.message,true);}finally{$('lookup').disabled=false;}
 });
