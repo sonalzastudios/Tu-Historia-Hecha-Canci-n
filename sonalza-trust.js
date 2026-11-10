@@ -106,10 +106,7 @@ for(const [direction,es,en,glyph] of [[-1,'Comentarios anteriores','Previous tes
 const button=node('button','sonalza-reviews-arrow',glyph);button.type='button';button.setAttribute('aria-label',t(es,en));
 button.addEventListener('click',()=>{if(track.classList.contains('sonalza-reviews-motion'))track.dispatchEvent(new Event('wheel'));track.scrollBy({left:direction*Math.max(track.clientWidth*.72,280),behavior:'smooth'});});controls.append(button);}
 panel.append(controls);}
-const note=bilingual(node('p','sonalza-reviews-note'),
-'Experiencias compartidas por clientes de SONALZA. Textos editados ligeramente para claridad y traducidos al inglés; sin calificaciones inventadas.',
-'Experiences shared by SONALZA customers. Lightly edited for clarity and translated into English; no fabricated ratings.');
-panel.append(note);}
+}
 displayReviews();
 fetch('/api/geo?action=reviews-public',{headers:{Accept:'application/json'}})
 .then(r=>r.ok?r.json():Promise.reject(Error('unavailable')))
